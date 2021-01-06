@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'NKUtility'
-  s.version          = '0.0.1'
+  s.version          = '0.1.0'
   s.summary          = 'NKUtility is utility of NikiKit'
   
   # This description is used to generate tags and improve search results.
@@ -21,6 +21,8 @@ Pod::Spec.new do |s|
   TODO: Add long description of the pod here.
   DESC
   
+  s.module_name = 'NKUtility'
+  
   s.homepage         = 'https://github.com/wenghengcong/NKUtility'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -30,12 +32,9 @@ Pod::Spec.new do |s|
   
   s.ios.deployment_target = '10.0'
   
-  s.source_files = 'NKUtility/Classes/**/*'
-  s.swift_version = '5'
-
-  s.resource_bundles = {
-    'NKUtility' => ['NKUtility/Assets/**/*']
-  }
+  s.source_files = 'Source/Classes/**/*.swift'
+  s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}' }
+  s.swift_version = '5.0'
   
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'MapKit', 'QuartzCore', 'AVFoundation'

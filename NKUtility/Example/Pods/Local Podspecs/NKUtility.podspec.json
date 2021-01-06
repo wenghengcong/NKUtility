@@ -1,8 +1,9 @@
 {
   "name": "NKUtility",
   "version": "0.1.0",
-  "summary": "A short description of NKUtility.",
+  "summary": "NKUtility is utility of NikiKit",
   "description": "TODO: Add long description of the pod here.",
+  "module_name": "NKUtility",
   "homepage": "https://github.com/wenghengcong/NKUtility",
   "license": {
     "type": "MIT",
@@ -19,13 +20,11 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "NKUtility/Classes/**/*",
-  "swift_versions": "5",
+  "source_files": "Source/Classes/**/*.swift",
   "resource_bundles": {
-    "NKUtility": [
-      "NKUtility/Assets/**/*"
-    ]
+    "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}"
   },
+  "swift_versions": "5.0",
   "frameworks": [
     "UIKit",
     "MapKit",
@@ -37,5 +36,5 @@
 
     ]
   },
-  "swift_version": "5"
+  "swift_version": "5.0"
 }
