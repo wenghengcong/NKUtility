@@ -1,0 +1,6 @@
+framework module Pods_NKUtility_Tests {
+  umbrella header "Pods-NKUtility_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

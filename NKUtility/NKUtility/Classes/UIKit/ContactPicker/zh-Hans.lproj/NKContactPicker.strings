@@ -1,0 +1,11 @@
+/* 
+  NKContactPicker.strings
+  FireFly
+
+  Created by Hunt on 2020/11/26.
+  
+*/
+"Search"="搜索";
+"Contacts"="通讯录";
+"No phone numbers available"="无号码";
+"No emails available"="无邮箱";

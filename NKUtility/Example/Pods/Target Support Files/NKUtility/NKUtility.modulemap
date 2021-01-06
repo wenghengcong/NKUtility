@@ -1,0 +1,6 @@
+framework module NKUtility {
+  umbrella header "NKUtility-umbrella.h"
+
+  export *
+  module * { export * }
+}

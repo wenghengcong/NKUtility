@@ -1,0 +1,11 @@
+/* 
+  NKContactPicker.strings
+  FireFly
+
+  Created by Hunt on 2020/11/26.
+  
+*/
+"Search"="Search";
+"Contacts"="Contacts";
+"No phone numbers available"="No phone numbers available";
+"No emails available"="No emails available";

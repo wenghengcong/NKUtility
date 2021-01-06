@@ -1,0 +1,15 @@
+/* 
+  NKPlaceholder.strings
+  FireFly
+
+  Created by Hunt on 2020/12/4.
+  
+*/
+"Whoops!"="Whoops!";
+"We tried, but something went\nteriblly wrong"="We tried, but something went\nteriblly wrong";
+"Try Again"="Try Again";
+"Slow or no internet connections.\nPlease check your internet settings"="Slow or no internet connections.\nPlease check your internet settings";
+"The bits are flowing\nslowly today"="The bits are flowing\nslowly today";
+"No results founds"="No results founds";
+"We can’t find what\nyou’re looking for."="We can’t find what\nyou’re looking for.";
+

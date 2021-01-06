@@ -1,0 +1,53 @@
+/* 
+  NKCommonString.strings
+  FireFly
+
+  Created by Hunt on 2020/12/7.
+  
+*/
+
+//1.words
+"default"="default";
+"Success"="Success";
+"Failure"="Failure";
+"OK"="OK";
+"Cancel"="Cancel";
+"Sure"="Sure";
+
+//2.Action
+"Delete"="Delete";
+"Add"="Add";
+"New"="New";
+
+//3. Place
+"home"="home";
+"work"="work";
+"school"="school";
+
+
+//4.object
+"email"="email";
+"E-mail"="E-mail";
+
+
+// 5.Brand
+"iCloud"="iCloud";
+"Google"="Google";
+"QQ"="QQ";
+"163"="163";
+
+//6.address
+"Street"="Street";
+"State"="State";
+"City"="City";
+"Country"="Country";
+"Zip code"="Zip code";
+
+
+//7.person info
+"Birthday"="Birthday";
+"Avatar"="Avatar";
+"Nickname"="Nickname";
+
+// 8.sentence
+"Loading..."="Loading...";
