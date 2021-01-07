@@ -43,13 +43,11 @@ extension NKDevice {
         }
         
         /// The free disk space in string format (megabytes).
-        @available(*, deprecated, message: "Use freeSpace(measureUnit:) instead.")
         public static var freeSpace: String {
             return ByteCountFormatter.string(fromByteCount: freeSpaceInBytes, countStyle: ByteCountFormatter.CountStyle.binary)
         }
         
         /// The used disk space in string format (megabytes).
-        @available(*, deprecated, message: "Use usedSpace(measureUnit:) instead.")
         public static var usedSpace: String {
             return ByteCountFormatter.string(fromByteCount: usedSpaceInBytes, countStyle: ByteCountFormatter.CountStyle.binary)
         }
