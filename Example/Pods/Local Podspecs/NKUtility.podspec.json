@@ -1,6 +1,6 @@
 {
   "name": "NKUtility",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "NKUtility is utility of NikiKit",
   "description": "TODO: Add long description of the pod here.",
   "module_name": "NKUtility",
@@ -14,7 +14,7 @@
   },
   "source": {
     "git": "https://github.com/wenghengcong/NKUtility.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "social_media_url": "https://twitter.com/wenghengcong",
   "platforms": {
