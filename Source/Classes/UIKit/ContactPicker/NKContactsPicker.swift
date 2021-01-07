@@ -397,7 +397,7 @@ open class NKContactsPicker: UIViewController, UITableViewDelegate, UITableViewD
     
     open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if let searchText = searchBar.text, !searchText.isEmpty { return 0 }
-        return sortedContactKeys.index(of: title)!
+        return sortedContactKeys.firstIndex(of: title)!
     }
     
     open func sectionIndexTitles(for tableView: UITableView) -> [String]? {

@@ -52,7 +52,7 @@ final class NKContactImplementiDataSource: NKContactDataSource {
     
     @discardableResult func addContactWith(contact: CNMutableContact) -> CNContact? {
         var addedCon: CNContact?
-        NKContactService.shared.addContact(contact: contact) { (contact, error) in
+        _ = NKContactService.shared.addContact(contact: contact) { (contact, error) in
             if error == nil , let ct = contact {
                 self.allResults.append(ct)
                 self.privousResults.append(ct)

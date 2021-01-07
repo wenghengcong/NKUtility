@@ -77,14 +77,12 @@ extension NKDevice {
         }
         
         /// The used disk space in bytes. 0 if something went wrong.
-        @available(*, deprecated, message: "Use usedSpace(measureUnit:) instead.")
         public static var usedSpaceInBytes: Int64 {
             let usedSpace = totalSpaceInBytes - freeSpaceInBytes
             return usedSpace
         }
         
         /// The free disk space in percentage.
-        @available(*, deprecated, message: "Use freeSpace(measureUnit:) instead.")
         public static var freeSpaceInPercentage: Float {
             
             let freeSpace = Float(freeSpaceInBytes)
@@ -96,7 +94,7 @@ extension NKDevice {
         /// The used disk space in percentage.
         public static var usedSpaceInPercentage: Float {
             
-            let usedSpace = Float(usedSpaceInBytes)
+            let usedSpace =  Float(usedSpaceInBytes)
             let totalSpace = Float(totalSpaceInBytes)
             
             return (usedSpace * 100) / totalSpace
