@@ -20,7 +20,7 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "Source/Classes/**/*.swift",
+  "source_files": "Source/Classes/**/*.{swift,xib,storyboard}",
   "resource_bundles": {
     "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}"
   },
@@ -31,10 +31,5 @@
     "QuartzCore",
     "AVFoundation"
   ],
-  "dependencies": {
-    "L10n-swift": [
-
-    ]
-  },
   "swift_version": "5.0"
 }

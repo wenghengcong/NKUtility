@@ -38,6 +38,6 @@ Pod::Spec.new do |s|
   
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'MapKit', 'QuartzCore', 'AVFoundation'
-  s.dependency 'L10n-swift'
+#  s.dependency 'L10n-swift'
   
 end
