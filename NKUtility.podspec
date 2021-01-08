@@ -32,12 +32,12 @@ Pod::Spec.new do |s|
   
   s.ios.deployment_target = '10.0'
   
-  s.source_files = 'Source/Classes/**/*.{swift,xib,storyboard}'
+  s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md}'
   s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}' }
   s.swift_version = '5.0'
   
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'MapKit', 'QuartzCore', 'AVFoundation'
-#  s.dependency 'L10n-swift'
+  s.dependency 'SwiftTheme'
   
 end

@@ -20,7 +20,10 @@
   "platforms": {
     "ios": "10.0"
   },
-  "source_files": "Source/Classes/**/*.{swift,xib,storyboard}",
+  "source_files": [
+    "Source/*.{h,m,swift,xib,storyboard,md}",
+    "Source/Classes/**/*.{h,m,swift,xib,storyboard,md}"
+  ],
   "resource_bundles": {
     "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}"
   },
@@ -31,5 +34,10 @@
     "QuartzCore",
     "AVFoundation"
   ],
+  "dependencies": {
+    "SwiftTheme": [
+
+    ]
+  },
   "swift_version": "5.0"
 }

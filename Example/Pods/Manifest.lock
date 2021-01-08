@@ -15,8 +15,10 @@ PODS:
   - Nimble-Snapshots/Core (9.1.0):
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble
-  - NKUtility (0.1.1)
+  - NKUtility (0.1.1):
+    - SwiftTheme
   - Quick (3.0.0)
+  - SwiftTheme (0.5.5)
 
 DEPENDENCIES:
   - FBSnapshotTestCase
@@ -32,6 +34,7 @@ SPEC REPOS:
     - Nimble
     - Nimble-Snapshots
     - Quick
+    - SwiftTheme
 
 EXTERNAL SOURCES:
   NKUtility:
@@ -42,8 +45,9 @@ SPEC CHECKSUMS:
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
   Nimble-Snapshots: 6605431525245f967ca9d558bb12a49da3d040e3
-  NKUtility: 1b97f7acc3aabfd585fee5b9b49a813f9de01a56
+  NKUtility: ce8c6ddc52847e1328b90347c97f893af0331cda
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
+  SwiftTheme: 585ead917c78ea3fc508437b0a141d29c034bdb0
 
 PODFILE CHECKSUM: 2b2cf7ae8f67a7c0278adeadbc0792ccf7b7f936
 

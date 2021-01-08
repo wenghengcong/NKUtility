@@ -6,7 +6,13 @@
 import UIKit
 import Contacts
 import ContactsUI
-import L10n_swift
+
+fileprivate extension String {
+    var localizedInContact: String {
+        let outString = localizedInside(using: "NKContactPicker")
+        return outString
+    }
+}
 
 //Declare all the static constants here
 public struct NKContactConstants {
@@ -78,11 +84,11 @@ public struct NKContactConstants {
     
     //MARK: String Constants
     public struct Strings {
-        static let searchBarPlaceHloder = "Search".l10n(resource: "NKContactPicker")
+        static let searchBarPlaceHloder = "Search".localizedInContact
         static let birthdayDateFormat = "MMM d"
-        static let contactsTitle = "Contacts".l10n(resource: "NKContactPicker")
-        static let phoneNumberNotAvaialable = "No phone numbers available".l10n(resource: "NKContactPicker")
-        static let emailNotAvaialable = "No emails available".l10n(resource: "NKContactPicker")
+        static let contactsTitle = "Contacts".localizedInContact
+        static let phoneNumberNotAvaialable = "No phone numbers available".localizedInContact
+        static let emailNotAvaialable = "No emails available".localizedInContact
         static let bundleIdentifier = "NKContactsPicker"
         static let cellNibIdentifier = "NKContactPickerCell"
     }
