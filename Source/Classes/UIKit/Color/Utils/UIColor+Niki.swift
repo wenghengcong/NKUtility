@@ -129,7 +129,7 @@ public extension Color {
     
     // MARK: - Color to Hex/RGBA/HSBA/CIE_LAB/CMYK
     
-    func rgba() -> (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
+    public func rgba() -> (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
         let components = self.cgColor.components
         let numberOfComponents = self.cgColor.numberOfComponents
         

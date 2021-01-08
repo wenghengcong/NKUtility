@@ -8,7 +8,7 @@
 import Foundation
 import Contacts
 
-final class NKContactImplementiDataSource: NKContactDataSource {
+final public class NKContactImplementiDataSource: NKContactDataSource {
 
     fileprivate var results: [CNContact] = []
     fileprivate var allResults: [CNContact] = []
@@ -17,9 +17,13 @@ final class NKContactImplementiDataSource: NKContactDataSource {
     fileprivate var uniqueFirstLetters = [String]()
     fileprivate var selectedContactGroup: ContactGroups = .all
     
-    var dataCompletion: ContactDataFetchCompletion?
+    public var dataCompletion: ContactDataFetchCompletion?
     
-    func requestAccesIfNeeded() {
+    public init() {
+        
+    }
+    
+    public func requestAccesIfNeeded() {
         NKContactService.shared.requestAcces { [weak self](success, error) in
             guard let weakSelf = self else { return }
             if success {
@@ -28,29 +32,29 @@ final class NKContactImplementiDataSource: NKContactDataSource {
         }
     }
     
-    func titleForHeaderInSection(section: Int) -> String? {
+    public func titleForHeaderInSection(section: Int) -> String? {
         return uniqueFirstLetters[section]
     }
     
-    func sectionIndexTitles() -> [String]? {
+    public func sectionIndexTitles() -> [String]? {
         return NKGlobalConstants.indexAlphabets
     }
     
-    func numberOfSections() -> Int {
+    public func numberOfSections() -> Int {
         return sectionedContactsViewModel.count
     }
     
-    func numberOfRowsInSection(section: Int) -> Int {
+    public func numberOfRowsInSection(section: Int) -> Int {
         return sectionedContactsViewModel[section].count
     }
     
-    func viewModelForRowAt(indexPath: IndexPath) -> ContactCellViewModel{
+    public func viewModelForRowAt(indexPath: IndexPath) -> ContactCellViewModel{
         let viewModel = sectionedContactsViewModel[indexPath.section][indexPath.row]
         viewModel.isPrivusContact = privousResults.contains(viewModel.contact)
         return viewModel
     }
     
-    @discardableResult func addContactWith(contact: CNMutableContact) -> CNContact? {
+    @discardableResult public func addContactWith(contact: CNMutableContact) -> CNContact? {
         var addedCon: CNContact?
         _ = NKContactService.shared.addContact(contact: contact) { (contact, error) in
             if error == nil , let ct = contact {
@@ -63,7 +67,7 @@ final class NKContactImplementiDataSource: NKContactDataSource {
         return addedCon
     }
     
-    func deleteContactAtIndexPath(indexPath: IndexPath) {
+    public func deleteContactAtIndexPath(indexPath: IndexPath) {
          let viewModel = sectionedContactsViewModel[indexPath.section][indexPath.row]
         let contactToDelete = viewModel.contact
         allResults = allResults.filter { (contact) -> Bool in
@@ -76,7 +80,7 @@ final class NKContactImplementiDataSource: NKContactDataSource {
         setSelectedContactGroup(group: selectedContactGroup)
     }
     
-    func updateContact(updatedContact: CNContact) {
+    public func updateContact(updatedContact: CNContact) {
         allResults = allResults.map({ (contact) -> CNContact in
              return (updatedContact.identifier == contact.identifier) ? updatedContact : contact
         })
@@ -101,7 +105,7 @@ final class NKContactImplementiDataSource: NKContactDataSource {
         dataCompletion?(true)
     }
     
-    func setSelectedContactGroup(group: ContactGroups) {
+    public func setSelectedContactGroup(group: ContactGroups) {
         selectedContactGroup = group
         switch group {
         case .all:
@@ -152,11 +156,11 @@ enum HomeViewOption {
     }
 }
 
-enum ContactGroups {
+public enum ContactGroups {
     case all
     case privusOnly
     
-    static func groupFromIndex(index: Int) -> ContactGroups {
+    public static func groupFromIndex(index: Int) -> ContactGroups {
         return index == 0 ?  .all : .privusOnly
     }
     

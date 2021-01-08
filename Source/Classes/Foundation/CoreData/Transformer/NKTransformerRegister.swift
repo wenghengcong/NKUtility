@@ -8,8 +8,8 @@
 import Foundation
 
 
-struct NKValueTransformer {
-   static func registe() {
+public struct NKValueTransformer {
+    public static func registe() {
         DispatchQueue.once(token: "com.vectorform.test") {
             let transformer = NKImageTransformer()
             ValueTransformer.setValueTransformer(transformer, forName: NSValueTransformerName(rawValue: "NKImageTransformer"))

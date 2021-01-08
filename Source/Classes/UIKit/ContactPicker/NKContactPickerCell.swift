@@ -6,11 +6,11 @@
 import UIKit
 import Contacts
 
-protocol NKContactPickerCellDelegate: class {
+public protocol NKContactPickerCellDelegate: class {
     func clickInfo(cell: NKContactPickerCell, contact: CNContact?)
 }
 
-class NKContactPickerCell: UITableViewCell {
+public class NKContactPickerCell: UITableViewCell {
 
     @IBOutlet weak var contactTextLabel: UILabel!
     @IBOutlet weak var contactDetailTextLabel: UILabel!
@@ -21,7 +21,7 @@ class NKContactPickerCell: UITableViewCell {
     weak var  delegate: NKContactPickerCellDelegate?
     var contact: CNContact?
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         
         super.awakeFromNib()
         // Initialization code
@@ -30,7 +30,7 @@ class NKContactPickerCell: UITableViewCell {
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     

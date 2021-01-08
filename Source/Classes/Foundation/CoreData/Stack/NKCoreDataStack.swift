@@ -102,16 +102,16 @@ public class NKCoreDataStack {
     }
     
     // MARK: - instance contexts
-    lazy var mainContext: NSManagedObjectContext = {
+    public lazy var mainContext: NSManagedObjectContext = {
         return self.storeContainer.viewContext
     }()
     
-    lazy var backgroundContext: NSManagedObjectContext = {
+    public lazy var backgroundContext: NSManagedObjectContext = {
         let newBack = self.storeContainer.newBackgroundContext()
         return newBack
     }()
     
-    lazy var childContext: NSManagedObjectContext = {
+    public lazy var childContext: NSManagedObjectContext = {
         let newChild = newChildContext()
         return newChild
     }()
@@ -165,23 +165,23 @@ public class NKCoreDataStack {
     
     // MARK: - Save
     
-    func saveMainContext(completion:NKCDCompletionHandler? = nil) {
+    public func saveMainContext(completion:NKCDCompletionHandler? = nil) {
         mainContext.saveSync(completion: completion)
     }
     
-    func saveChildContext(completion:NKCDCompletionHandler? = nil) {
+    public func saveChildContext(completion:NKCDCompletionHandler? = nil) {
         childContext.saveSync(completion: completion)
     }
     
-    func asyncSaveMainContext(completion:NKCDCompletionHandler? = nil) {
+    public func asyncSaveMainContext(completion:NKCDCompletionHandler? = nil) {
         mainContext.saveAsync(completion: completion)
     }
     
-    func asyncSaveChildContext(completion:NKCDCompletionHandler? = nil) {
+    public func asyncSaveChildContext(completion:NKCDCompletionHandler? = nil) {
         childContext.saveAsync(completion: completion)
     }
     
-    func enqueue(_ inContent: NSManagedObjectContext?,
+    public func enqueue(_ inContent: NSManagedObjectContext?,
                  completion: @escaping (_ context: NSManagedObjectContext) -> Void) {
         let context = inContent ?? self.backgroundContext
         persistentContainerQueue.addOperation {

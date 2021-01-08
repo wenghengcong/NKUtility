@@ -10,7 +10,7 @@ import Contacts
 
 public typealias ContactDataFetchCompletion = (_ needsReload: Bool) -> Void
 
-@objc protocol NKContactDataSource: class {
+@objc public protocol NKContactDataSource: class {
     func titleForHeaderInSection(section: Int) -> String?
     func sectionIndexTitles() -> [String]?
     func numberOfSections() -> Int

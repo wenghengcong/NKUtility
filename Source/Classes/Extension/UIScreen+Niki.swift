@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIScreen {
+public extension UIScreen {
     // MARK: properties
     /// 屏幕scale（避免与scale冲突）
     static let screenScale = UIScreen.scale()
@@ -31,14 +31,14 @@ extension UIScreen {
     /// 返回屏幕bounds
     ///
     /// - Returns: <#return value description#>
-    public static func bounds() -> CGRect {
+    static func bounds() -> CGRect {
         return UIScreen.main.bounds
     }
 
     /// 返回屏幕scale
     ///
     /// - Returns: <#return value description#>
-    public static func scale() -> CGFloat {
+    static func scale() -> CGFloat {
         return UIScreen.main.scale
     }
     

@@ -7,8 +7,7 @@
 
 import UIKit
 
-
-extension UIViewController {
+public extension UIViewController {
     
     public class var identifier : String {
         var name = NSStringFromClass(self)

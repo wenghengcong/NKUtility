@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol NKThemeProtocol {
+public protocol NKThemeProtocol {
     /// 主题名称
     var themeName: String {get}
     

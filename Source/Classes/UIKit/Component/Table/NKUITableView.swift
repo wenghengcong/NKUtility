@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NKUITableView: NKPlaceholderTableView {
+open class NKUITableView: NKPlaceholderTableView {
 
     /*
     // Only override draw() if you perform custom drawing.
@@ -26,7 +26,7 @@ class NKUITableView: NKPlaceholderTableView {
         setupBaseTableView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

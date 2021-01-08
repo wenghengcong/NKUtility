@@ -8,7 +8,7 @@
 import UIKit
 import Contacts
 
-@objc protocol ContactCellViewModel {
+@objc public protocol ContactCellViewModel {
     var numberString: String { get }
     var timeString: String { get }
     var attibutedNameString: NSAttributedString { get }
@@ -17,10 +17,10 @@ import Contacts
 }
 
 
-class ContactViewModel: ContactCellViewModel {
+open class ContactViewModel: ContactCellViewModel {
    
     internal let contact: CNContact
-    var isPrivusContact = false
+    open var isPrivusContact = false
     
     init(contactData: CNContact) {
         contact = contactData
@@ -34,7 +34,7 @@ class ContactViewModel: ContactCellViewModel {
         return contact.familyName
     }
     
-    var attibutedNameString : NSAttributedString {
+    open var attibutedNameString : NSAttributedString {
         let attrString = NSMutableAttributedString(string: contact.givenName,
                                                    attributes: [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17.0, weight: UIFont.Weight.semibold)])
         
@@ -43,11 +43,11 @@ class ContactViewModel: ContactCellViewModel {
         return attrString
     }
     
-    var numberString: String {
+    open var numberString: String {
         return contact.phoneNumbers.first?.value.stringValue ?? ""
     }
     
-    var image: UIImage {
+    open var image: UIImage {
         var image: UIImage = UIImage(named: "unknown_dp")!
         if contact.imageDataAvailable {
             if let imageData = contact.thumbnailImageData ,let theImage = UIImage(data: imageData) {
@@ -67,6 +67,6 @@ class ContactViewModel: ContactCellViewModel {
         return image
     }
     
-    var timeString: String = ""
+    open var timeString: String = ""
 
 }

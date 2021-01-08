@@ -7,8 +7,9 @@
 
 import UIKit
 
-extension Bundle {
+private class NKBundleToken {}
 
+public extension Bundle {
     /// 中文Bundle
     class var cnBundle: Bundle {
         return langBundle(AppLanguage.cn.rawValue)
@@ -42,4 +43,40 @@ extension Bundle {
         }
     }
 
+}
+
+public extension Bundle {
+    // This is copied method from SPM generated Bundle.module for CocoaPods support
+    static func nk_frameworkBundle() -> Bundle {
+        let bundleNames = [
+            // For Swift Package Manager
+            "NKUtility_NKUtility",
+            // For Carthage
+            "NKUtility",
+        ]
+        return frameworkBundle(bundleNames: bundleNames)
+    }
+    
+    // This is copied method from SPM generated Bundle.module for CocoaPods support
+    static func frameworkBundle(bundleNames: [String]) -> Bundle {
+        let candidates = [
+            // Bundle should be present here when the package is linked into an App.
+            Bundle.main.resourceURL,
+            // Bundle should be present here when the package is linked into a framework.
+            Bundle(for: NKBundleToken.self).resourceURL,
+            // For command-line tools.
+            Bundle.main.bundleURL,
+        ]
+
+        for bundleName in bundleNames {
+            for candidate in candidates {
+                let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
+                if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
+                    return bundle
+                }
+            }
+        }
+        // Return whatever bundle this code is in as a last resort.
+        return Bundle(for: NKBundleToken.self)
+    }
 }

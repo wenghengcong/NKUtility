@@ -8,7 +8,7 @@
 import UIKit
 import Foundation
 
-extension NSString {
+public extension NSString {
 
     // FIXME: 为什么无效？？？
     /// 返回文本高度
@@ -39,7 +39,7 @@ extension NSString {
     }
 }
 
-extension String {
+public extension String {
     /// 返回文本高度
     ///
     /// - Parameters:

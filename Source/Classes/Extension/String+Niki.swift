@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     
     /// 是否是空的
     var isNotEmpty: Bool {

@@ -9,12 +9,12 @@ import ContactsUI
 import L10n_swift
 
 //Declare all the static constants here
-struct NKContactConstants {
+public struct NKContactConstants {
     
-    struct FetchKeys {
+    public struct FetchKeys {
         
         /// fetch all keys
-        static let all:[CNKeyDescriptor] = [
+        public static let all:[CNKeyDescriptor] = [
             CNContactNamePrefixKey as CNKeyDescriptor,
             CNContactPreviousFamilyNameKey as CNKeyDescriptor,
             CNContactNameSuffixKey as CNKeyDescriptor,
@@ -48,7 +48,7 @@ struct NKContactConstants {
         
         
         /// fetch required key descriptors for CNContactContentViewController
-        static let contactController: [CNKeyDescriptor] = [
+        public static let contactController: [CNKeyDescriptor] = [
             CNContactIdentifierKey as CNKeyDescriptor,
             CNContactGivenNameKey as CNKeyDescriptor,
             CNContactFamilyNameKey as CNKeyDescriptor,
@@ -59,7 +59,7 @@ struct NKContactConstants {
         ]
         
         /// fetch brief keys
-        static let brief:[CNKeyDescriptor] = [
+        public static let brief:[CNKeyDescriptor] = [
             CNContactNamePrefixKey as CNKeyDescriptor,
             CNContactGivenNameKey as CNKeyDescriptor,
             CNContactFamilyNameKey as CNKeyDescriptor,
@@ -77,7 +77,7 @@ struct NKContactConstants {
     
     
     //MARK: String Constants
-    struct Strings {
+    public struct Strings {
         static let searchBarPlaceHloder = "Search".l10n(resource: "NKContactPicker")
         static let birthdayDateFormat = "MMM d"
         static let contactsTitle = "Contacts".l10n(resource: "NKContactPicker")
@@ -88,7 +88,7 @@ struct NKContactConstants {
     }
     
     //MARK: Color Constants
-    struct Colors {
+    public struct Colors {
         static let emerald = UIColor(red: (46/255), green: (204/255), blue: (113/255), alpha: 1.0)
         static let sunflower = UIColor(red: (241/255), green: (196/255), blue: (15/255), alpha: 1.0)
         static let pumpkin = UIColor(red: (211/255), green: (84/255), blue: (0/255), alpha: 1.0)
@@ -101,9 +101,8 @@ struct NKContactConstants {
     }
 }
 
-extension String {
-    
-    func containsAlphabets() -> Bool {
+public extension String {
+    public func containsAlphabets() -> Bool {
         //Checks if all the characters inside the string are alphabets
         let set = CharacterSet.letters
         return self.utf16.contains( where: {

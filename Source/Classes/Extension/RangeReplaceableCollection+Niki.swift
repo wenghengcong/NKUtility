@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RangeReplaceableCollection where Self: StringProtocol {
+public extension RangeReplaceableCollection where Self: StringProtocol {
     var digits: Self { filter(\.isWholeNumber) }
     
     var digitsAndPeriods: Self { filter(\.isDecimalOrPeriod) }

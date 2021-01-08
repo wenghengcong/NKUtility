@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-struct SFSymbolSize {
-    struct TableCell {
-        static var small: CGFloat = 25
-        static var normal: CGFloat = 30
+public struct SFSymbolSize {
+    public struct TableCell {
+        public static var small: CGFloat = 25
+        public static var normal: CGFloat = 30
     }
 }

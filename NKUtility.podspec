@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   
   s.ios.deployment_target = '10.0'
   
-  s.source_files = 'Source/Classes/**/*.swift'
+  s.source_files = 'Source/Classes/**/*.{swift,xib,storyboard}'
   s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict}' }
   s.swift_version = '5.0'
   

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol NKThemeGlobalColorProtocol {
+public protocol NKThemeGlobalColorProtocol {
     // MARK:  - 全局颜色 Global Color
     static var clearColor: UIColor { get }
     static var whiteColor: UIColor { get }

@@ -27,8 +27,8 @@ public typealias NKContactBoolCompletion = (_ sucess: Bool, _ error: Error?) -> 
 
 // TODO: 1.将大部分请求添加到 queue 中
 // TODO: 2.CNContainer 代表账户
-open class NKContactService {
-    static let shared = NKContactService()
+public class NKContactService {
+    public static let shared = NKContactService()
     
     let store = CNContactStore()
     var contacts: [CNContact] = []
@@ -658,7 +658,7 @@ open class NKContactService {
     /**
      添加变化监听
      */
-    func addStoreDidChangeNotification(key: String, completionHandler: NKContactDataCompletion?) {
+    public func addStoreDidChangeNotification(key: String, completionHandler: NKContactDataCompletion?) {
         NotificationCenter.default.addObserver(self, selector: #selector(__contactDidChange(_:)), name: NSNotification.Name.CNContactStoreDidChange, object: nil)
         if key.isNotEmpty && completionHandler != nil {
             contactChangeCompletion[key] = completionHandler!
@@ -667,20 +667,20 @@ open class NKContactService {
     
     /// 移除监听变化某个 key 对应 handler
     /// - Parameter key: <#key description#>
-    func removeStoreDidChangeHanlder(key: String) {
+    public func removeStoreDidChangeHanlder(key: String) {
         contactChangeCompletion.removeValue(forKey: key)
     }
     
     
     /// 移除监听
-    func removeStoreDidChangeNotification() {
+    public func removeStoreDidChangeNotification() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.CNContactStoreDidChange, object: nil)
         contactChangeCompletion.removeAll()
     }
     
     /// 通讯录变更
     /// - Parameter notification: 通知
-    @objc func __contactDidChange(_ notification: Notification) {
+    @objc public func __contactDidChange(_ notification: Notification) {
         let userInfo = notification.userInfo
         guard userInfo != nil else {
             return

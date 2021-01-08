@@ -7,9 +7,9 @@
 
 import UIKit
 
-class NKUINavigationController: UINavigationController {
+open class NKUINavigationController: UINavigationController {
 
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.

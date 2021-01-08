@@ -409,7 +409,7 @@ open class NKContactsPicker: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func clickInfo(cell: NKContactPickerCell, contact: CNContact?) {
+    public func clickInfo(cell: NKContactPickerCell, contact: CNContact?) {
         guard contact != nil else {
             return
         }

@@ -7,9 +7,9 @@
 
 import UIKit
 
-class NKUITableViewCell: SwipeTableViewCell {
+open class NKUITableViewCell: SwipeTableViewCell {
 
-    override func awakeFromNib() {
+    open override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         setupBaseCell()
@@ -20,7 +20,7 @@ class NKUITableViewCell: SwipeTableViewCell {
         setupBaseCell()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
@@ -29,7 +29,7 @@ class NKUITableViewCell: SwipeTableViewCell {
     }
     
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    open override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
