@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import NKUtility
 
 /// 为主题提供一些基本元素，比如颜色、字体、图片等等
 public struct FFThemeElement: NKThemeGlobalColorProtocol {
@@ -97,40 +96,40 @@ public struct FFThemeElement: NKThemeGlobalColorProtocol {
 }
 
 public extension UIColor {
-    public struct NKGray {
-        static var level1 = UIColor(rgb: (53, 60, 70))
-        static var level2 = UIColor(rgb: (73, 80, 90))
-        static var level3 = UIColor(rgb: (93, 100, 110))
-        static var level4 = UIColor(rgb: (113, 120, 130))
-        static var level5 = UIColor(rgb: (133, 140, 150))
-        static var level6 = UIColor(rgb: (153, 160, 170))
-        static var level7 = UIColor(rgb: (173, 180, 190))
-        static var level8 = UIColor(rgb: (196, 200, 208))
-        static var level9 = UIColor(rgb: (216, 220, 228))
+    struct NKGray {
+        public static var level1 = UIColor(rgb: (53, 60, 70))
+        public static var level2 = UIColor(rgb: (73, 80, 90))
+        public static var level3 = UIColor(rgb: (93, 100, 110))
+        public static var level4 = UIColor(rgb: (113, 120, 130))
+        public static var level5 = UIColor(rgb: (133, 140, 150))
+        public static var level6 = UIColor(rgb: (153, 160, 170))
+        public static var level7 = UIColor(rgb: (173, 180, 190))
+        public static var level8 = UIColor(rgb: (196, 200, 208))
+        public static var level9 = UIColor(rgb: (216, 220, 228))
     }
     
-    public struct NKDarkGray {
-        static var level1 = UIColor(rgb: (218, 220, 224))
-        static var level2 = UIColor(rgb: (198, 200, 204))
-        static var level3 = UIColor(rgb: (178, 180, 184))
-        static var level4 = UIColor(rgb: (158, 160, 164))
-        static var level5 = UIColor(rgb: (138, 140, 144))
-        static var level6 = UIColor(rgb: (118, 120, 124))
-        static var level7 = UIColor(rgb: (98, 100, 104))
-        static var level8 = UIColor(rgb: (78, 80, 84))
-        static var level9 = UIColor(rgb: (58, 60, 64))
+    struct NKDarkGray {
+        public static var level1 = UIColor(rgb: (218, 220, 224))
+        public static var level2 = UIColor(rgb: (198, 200, 204))
+        public static var level3 = UIColor(rgb: (178, 180, 184))
+        public static var level4 = UIColor(rgb: (158, 160, 164))
+        public static var level5 = UIColor(rgb: (138, 140, 144))
+        public static var level6 = UIColor(rgb: (118, 120, 124))
+        public static var level7 = UIColor(rgb: (98, 100, 104))
+        public static var level8 = UIColor(rgb: (78, 80, 84))
+        public static var level9 = UIColor(rgb: (58, 60, 64))
     }
     
-    public struct NKTheme {
-        static var Grapefruit = UIColor(rgb: (239, 83, 98))
-        static var Bittersweet = UIColor(rgb: (254, 109, 75))
-        static var Sunflower = UIColor(rgb: (255, 207, 71))
-        static var Grass = UIColor(rgb: (159, 214, 97))
-        static var Mint = UIColor(rgb: (63, 208, 173))
-        static var Aqua = UIColor(rgb: (49, 189, 243))
-        static var BlueJeans = UIColor(rgb: (90, 154, 239))
-        static var Lavender = UIColor(rgb: (172, 143, 239))
-        static var PinkRose = UIColor(rgb: (238, 133, 193))
-        static var Dark = UIColor(rgb: (33, 110, 251))
+    struct NKTheme {
+        public static var Grapefruit = UIColor(rgb: (239, 83, 98))
+        public static var Bittersweet = UIColor(rgb: (254, 109, 75))
+        public static var Sunflower = UIColor(rgb: (255, 207, 71))
+        public static var Grass = UIColor(rgb: (159, 214, 97))
+        public static var Mint = UIColor(rgb: (63, 208, 173))
+        public static var Aqua = UIColor(rgb: (49, 189, 243))
+        public static var BlueJeans = UIColor(rgb: (90, 154, 239))
+        public static var Lavender = UIColor(rgb: (172, 143, 239))
+        public static var PinkRose = UIColor(rgb: (238, 133, 193))
+        public static var Dark = UIColor(rgb: (33, 110, 251))
     }
 }

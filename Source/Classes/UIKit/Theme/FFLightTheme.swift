@@ -7,11 +7,10 @@
 
 import Foundation
 import UIKit
-import NKUtility
 
 /// 浅色主题：也为蓝色主题
 public struct FFLightTheme: NKThemeProtocol {
-    static let shared = FFLightTheme()
+    public static let shared = FFLightTheme()
 
     public var themeName: String {
         return "Light"

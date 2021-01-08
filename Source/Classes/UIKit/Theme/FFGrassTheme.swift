@@ -8,55 +8,55 @@
 import Foundation
 import UIKit
 
-struct FFGrassTheme: NKThemeProtocol {
-    static let shared = FFLightTheme()
+public struct FFGrassTheme: NKThemeProtocol {
+    public static let shared = FFLightTheme()
 
-    var themeName: String {
+    public var themeName: String {
         return "Grass"
     }
     
-    var themeBackgroundColor: UIColor {
+    public var themeBackgroundColor: UIColor {
         return FFThemeElement.backgroundColor
     }
     
-    var themeBackgroundColorLighten: UIColor {
+    public var themeBackgroundColorLighten: UIColor {
         return FFThemeElement.whiteColor
     }
     
-    var themeBackgroundColorHighlighted: UIColor {
+    public var themeBackgroundColorHighlighted: UIColor {
         return UIColor(rgb: (238, 239, 241))
     }
     
-    var themeTintColor: UIColor {
+    public var themeTintColor: UIColor {
         return UIColor.NKTheme.Grass
     }
     
-    var themeTitleTextColor: UIColor {
+    public var themeTitleTextColor: UIColor {
         return UIColor.NKGray.level1
     }
     
-    var themeMainTextColor: UIColor {
+    public var themeMainTextColor: UIColor {
         return UIColor.NKGray.level3
 
     }
     
-    var themeDescriptionTextColor: UIColor {
+    public var themeDescriptionTextColor: UIColor {
         return UIColor.NKGray.level6
     }
     
-    var themePlaceholderColor: UIColor {
+    public var themePlaceholderColor: UIColor {
         return UIColor.NKGray.level8
     }
     
-    var themeCodeColor: UIColor {
+    public var themeCodeColor: UIColor {
         return self.themeTintColor
     }
     
-    var themeSeparatorColor: UIColor {
+    public var themeSeparatorColor: UIColor {
         return UIColor(rgb: (222, 224, 226))
     }
     
-    var themeGridItemTintColor: UIColor {
+    public var themeGridItemTintColor: UIColor {
         return UIColor(rgb: (238, 239, 241))
 
     }
