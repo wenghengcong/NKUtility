@@ -46,17 +46,7 @@ public extension Bundle {
 }
 
 public extension Bundle {
-    // This is copied method from SPM generated Bundle.module for CocoaPods support
-    static func nk_frameworkBundle() -> Bundle {
-        let bundleNames = [
-            // For Swift Package Manager
-            "NKUtility_NKUtility",
-            // For Carthage
-            "NKUtility",
-        ]
-        return frameworkBundle(bundleNames: bundleNames)
-    }
-    
+
     // This is copied method from SPM generated Bundle.module for CocoaPods support
     static func frameworkBundle(bundleNames: [String]) -> Bundle {
         let candidates = [
@@ -78,5 +68,19 @@ public extension Bundle {
         }
         // Return whatever bundle this code is in as a last resort.
         return Bundle(for: NKBundleToken.self)
+    }
+}
+
+//MARK: - Only for NKUtility
+public extension Bundle {
+    // 访问 NKUtility 资源文件需要从该 bundel 读取（即 Resource 下文件）
+    static func nikiFrameworkBundle() -> Bundle {
+        let bundleNames = [
+            // For Swift Package Manager
+            "NKUtility_NKUtility",
+            // For Carthage
+            "NKUtility",
+        ]
+        return frameworkBundle(bundleNames: bundleNames)
     }
 }

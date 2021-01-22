@@ -9,6 +9,8 @@ import Foundation
 
 // MARK: - dispatch once
 /*
+ source:https://stackoverflow.com/a/39983813/235297
+
  example:
  DispatchQueue.once {
     setupUI()

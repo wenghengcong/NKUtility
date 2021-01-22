@@ -1,12 +1,13 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/NKUtility" "${PODS_CONFIGURATION_BUILD_DIR}/SwiftTheme"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/MicrosoftFluentUI" "${PODS_CONFIGURATION_BUILD_DIR}/NKUtility" "${PODS_CONFIGURATION_BUILD_DIR}/SwiftTheme"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/NKUtility/NKUtility.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SwiftTheme/SwiftTheme.framework/Headers"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/MicrosoftFluentUI/FluentUI.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/NKUtility/NKUtility.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SwiftTheme/SwiftTheme.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_LDFLAGS = $(inherited) -framework "AVFoundation" -framework "MapKit" -framework "NKUtility" -framework "QuartzCore" -framework "SwiftTheme" -framework "UIKit"
+OTHER_LDFLAGS = $(inherited) -framework "AVFoundation" -framework "FluentUI" -framework "MapKit" -framework "NKUtility" -framework "QuartzCore" -framework "SwiftTheme" -framework "UIKit"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
+SWIFT_INCLUDE_PATHS = $(inherited) $(PODS_ROOT)/**
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

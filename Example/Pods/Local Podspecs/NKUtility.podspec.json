@@ -22,7 +22,7 @@
   },
   "source_files": [
     "Source/*.{h,m,swift,xib,storyboard,md}",
-    "Source/Classes/**/*.{h,m,swift,xib,storyboard,md}"
+    "Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md}"
   ],
   "resource_bundles": {
     "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md}"
@@ -37,7 +37,13 @@
   "dependencies": {
     "SwiftTheme": [
 
+    ],
+    "MicrosoftFluentUI": [
+
     ]
+  },
+  "xcconfig": {
+    "SWIFT_INCLUDE_PATHS": "$(PODS_ROOT)/**"
   },
   "swift_version": "5.0"
 }

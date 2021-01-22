@@ -647,7 +647,7 @@ public class NKContactService {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {
                 // Fallback on earlier versions
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
     }

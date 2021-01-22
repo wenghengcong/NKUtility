@@ -32,12 +32,13 @@ Pod::Spec.new do |s|
   
   s.ios.deployment_target = '13.0'
   
-  s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md}'
+  s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md}'
   s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md}' }
   s.swift_version = '5.0'
   
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'MapKit', 'QuartzCore', 'AVFoundation'
   s.dependency 'SwiftTheme'
-  
+  s.dependency 'MicrosoftFluentUI'
+  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

@@ -14,6 +14,10 @@ public extension String {
         return !isEmpty
     }
     
+    var urlEscaped: String {
+        return self.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+    }
+    
     var digits: String {
          return components(separatedBy: CharacterSet.decimalDigits.inverted)
              .joined()
