@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import FluentUI
 
-struct NKHud {
+public struct NKHud {
     
     // Using a separate overload method for Objective-C instead of default parameters
     static public func show(in view: UIView) {
