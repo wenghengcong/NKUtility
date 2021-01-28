@@ -38,7 +38,8 @@ extension NKDevice {
         
         /// This is the value as `Double` of the screen size.
         /// Could be useful to make comparison.
-        var value: Double {
+        /// 屏幕对角线的长度
+        var diagonal: Double {
             switch self {
             case .sizeUnknown:
                 return -1
@@ -97,7 +98,7 @@ extension NKDevice {
         }
         
         /// Check if the screen is being mirrored.
-        public static var isScreenMirrored: Bool {
+        public static var isMirrored: Bool {
             if let _ = UIScreen.main.mirrored {
                 return true
             }
@@ -107,31 +108,38 @@ extension NKDevice {
         
         /// The bounding rectange of the physical screen measured in pixels.
         public static var nativeBounds: CGRect {
-            
-            return UIScreen.main.nativeBounds
+            return UIScreen.mainNativeBounds
         }
         
         /// The scale of the physical screen.
         public static var nativeScale: Float {
-            
-            return Float(UIScreen.main.nativeScale)
+            return Float(UIScreen.mainNativeScale)
         }
         
         /// The bounds of the current main screen.
         public static var bounds: CGRect {
-            
-            return UIScreen.main.bounds
+            return UIScreen.mainBounds
+        }
+        
+        public static var width: CGFloat {
+            return UIScreen.mainWidth
+        }
+        
+        public static var height: CGFloat {
+            return UIScreen.mainHeight
         }
         
         /// The scale of the current main screen.
         public static var scale: Float {
-            
-            return Float(UIScreen.main.scale)
+            return Float(UIScreen.mainScale)
+        }
+        
+        public static var isRetina: Bool {
+            return UIScreen.isRetina
         }
         
         /// The snapshot of the current view after all the updates are applied.
         public static var snapshotOfCurrentView: UIView {
-            
             return UIScreen.main.snapshotView(afterScreenUpdates: true)
         }
     }

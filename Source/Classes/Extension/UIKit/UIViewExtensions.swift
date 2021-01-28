@@ -13,11 +13,11 @@ public extension UIView {
     enum ShakeDirection {
         /// SwifterSwift: Shake left and right.
         case horizontal
-
+        
         /// SwifterSwift: Shake up and down.
         case vertical
     }
-
+    
     /// SwifterSwift: Angle units.
     ///
     /// - degrees: degrees.
@@ -25,11 +25,11 @@ public extension UIView {
     enum AngleUnit {
         /// SwifterSwift: degrees.
         case degrees
-
+        
         /// SwifterSwift: radians.
         case radians
     }
-
+    
     /// SwifterSwift: Shake animations types.
     ///
     /// - linear: linear animation.
@@ -39,13 +39,13 @@ public extension UIView {
     enum ShakeAnimationType {
         /// SwifterSwift: linear animation.
         case linear
-
+        
         /// SwifterSwift: easeIn animation.
         case easeIn
-
+        
         /// SwifterSwift: easeOut animation.
         case easeOut
-
+        
         /// SwifterSwift: easeInOut animation.
         case easeInOut
     }
@@ -70,7 +70,7 @@ public extension UIView {
             layer.borderColor = color.cgColor
         }
     }
-
+    
     /// SwifterSwift: Border width of view; also inspectable from Storyboard.
     @IBInspectable var borderWidth: CGFloat {
         get {
@@ -80,7 +80,7 @@ public extension UIView {
             layer.borderWidth = newValue
         }
     }
-
+    
     /// SwifterSwift: Corner radius of view; also inspectable from Storyboard.
     @IBInspectable var cornerRadius: CGFloat {
         get {
@@ -91,17 +91,8 @@ public extension UIView {
             layer.cornerRadius = abs(CGFloat(Int(newValue * 100)) / 100)
         }
     }
-
-    /// SwifterSwift: Height of view.
-    var height: CGFloat {
-        get {
-            return frame.size.height
-        }
-        set {
-            frame.size.height = newValue
-        }
-    }
-
+    
+    
     /// SwifterSwift: Check if view is in RTL format.
     var isRightToLeft: Bool {
         if #available(iOS 10.0, macCatalyst 13.0, tvOS 10.0, *) {
@@ -110,7 +101,7 @@ public extension UIView {
             return false
         }
     }
-
+    
     /// SwifterSwift: Take screenshot of view (if applicable).
     var screenshot: UIImage? {
         UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
@@ -121,7 +112,7 @@ public extension UIView {
         layer.render(in: context)
         return UIGraphicsGetImageFromCurrentImageContext()
     }
-
+    
     /// SwifterSwift: Shadow color of view; also inspectable from Storyboard.
     @IBInspectable var layerShadowColor: UIColor? {
         get {
@@ -132,7 +123,7 @@ public extension UIView {
             layer.shadowColor = newValue?.cgColor
         }
     }
-
+    
     /// SwifterSwift: Shadow offset of view; also inspectable from Storyboard.
     @IBInspectable var layerShadowOffset: CGSize {
         get {
@@ -142,7 +133,7 @@ public extension UIView {
             layer.shadowOffset = newValue
         }
     }
-
+    
     /// SwifterSwift: Shadow opacity of view; also inspectable from Storyboard.
     @IBInspectable var layerShadowOpacity: Float {
         get {
@@ -152,7 +143,7 @@ public extension UIView {
             layer.shadowOpacity = newValue
         }
     }
-
+    
     /// SwifterSwift: Shadow radius of view; also inspectable from Storyboard.
     @IBInspectable var layerShadowRadius: CGFloat {
         get {
@@ -162,7 +153,7 @@ public extension UIView {
             layer.shadowRadius = newValue
         }
     }
-
+    
     /// SwifterSwift: Masks to bounds of view; also inspectable from Storyboard.
     @IBInspectable var masksToBounds: Bool {
         get {
@@ -172,18 +163,7 @@ public extension UIView {
             layer.masksToBounds = newValue
         }
     }
-
-    /// SwifterSwift: Size of view.
-    var size: CGSize {
-        get {
-            return frame.size
-        }
-        set {
-            width = newValue.width
-            height = newValue.height
-        }
-    }
-
+    
     /// SwifterSwift: Get view's parent view controller
     var parentViewController: UIViewController? {
         weak var parentResponder: UIResponder? = self
@@ -194,36 +174,6 @@ public extension UIView {
             }
         }
         return nil
-    }
-
-    /// SwifterSwift: Width of view.
-    var width: CGFloat {
-        get {
-            return frame.size.width
-        }
-        set {
-            frame.size.width = newValue
-        }
-    }
-
-    /// SwifterSwift: x origin of view.
-    var x: CGFloat {
-        get {
-            return frame.origin.x
-        }
-        set {
-            frame.origin.x = newValue
-        }
-    }
-
-    /// SwifterSwift: y origin of view.
-    var y: CGFloat {
-        get {
-            return frame.origin.y
-        }
-        set {
-            frame.origin.y = newValue
-        }
     }
 }
 
@@ -244,7 +194,7 @@ public extension UIView {
         } while index < views.count
         return nil
     }
-
+    
     /// SwifterSwift: Set some or all corners radiuses of view.
     ///
     /// - Parameters:
@@ -255,12 +205,12 @@ public extension UIView {
             roundedRect: bounds,
             byRoundingCorners: corners,
             cornerRadii: CGSize(width: radius, height: radius))
-
+        
         let shape = CAShapeLayer()
         shape.path = maskPath.cgPath
         layer.mask = shape
     }
-
+    
     /// SwifterSwift: Add shadow to view.
     ///
     /// - Note: This method only works with non-clear background color, or if the view has a `shadowPath` set.
@@ -282,14 +232,14 @@ public extension UIView {
         layer.shadowOpacity = opacity
         layer.masksToBounds = false
     }
-
+    
     /// SwifterSwift: Add array of subviews to view.
     ///
     /// - Parameter subviews: array of subviews to add to self.
     func addSubviews(_ subviews: [UIView]) {
         subviews.forEach { addSubview($0) }
     }
-
+    
     /// SwifterSwift: Fade in view.
     ///
     /// - Parameters:
@@ -303,7 +253,7 @@ public extension UIView {
             self.alpha = 1
         }, completion: completion)
     }
-
+    
     /// SwifterSwift: Fade out view.
     ///
     /// - Parameters:
@@ -317,7 +267,7 @@ public extension UIView {
             self.alpha = 0
         }, completion: completion)
     }
-
+    
     /// SwifterSwift: Load view from nib.
     ///
     /// - Parameters:
@@ -327,7 +277,7 @@ public extension UIView {
     class func loadFromNib(named name: String, bundle: Bundle? = nil) -> UIView? {
         return UINib(nibName: name, bundle: bundle).instantiate(withOwner: nil, options: nil)[0] as? UIView
     }
-
+    
     /// SwifterSwift: Load view of a certain type from nib
     ///
     /// - Parameters:
@@ -341,17 +291,17 @@ public extension UIView {
         }
         return view
     }
-
+    
     /// SwifterSwift: Remove all subviews in view.
     func removeSubviews() {
         subviews.forEach { $0.removeFromSuperview() }
     }
-
+    
     /// SwifterSwift: Remove all gesture recognizers from view.
     func removeGestureRecognizers() {
         gestureRecognizers?.forEach(removeGestureRecognizer)
     }
-
+    
     /// SwifterSwift: Attaches gesture recognizers to the view. Attaching gesture recognizers to a view defines the scope of the represented gesture, causing it to receive touches hit-tested to that view and all of its subviews. The view establishes a strong reference to the gesture recognizers.
     ///
     /// - Parameter gestureRecognizers: The array of gesture recognizers to be added to the view.
@@ -360,7 +310,7 @@ public extension UIView {
             addGestureRecognizer(recognizer)
         }
     }
-
+    
     /// SwifterSwift: Detaches gesture recognizers from the receiving view. This method releases gestureRecognizers in addition to detaching them from the view.
     ///
     /// - Parameter gestureRecognizers: The array of gesture recognizers to be removed from the view.
@@ -369,7 +319,7 @@ public extension UIView {
             removeGestureRecognizer(recognizer)
         }
     }
-
+    
     /// SwifterSwift: Rotate view by angle on relative axis.
     ///
     /// - Parameters:
@@ -390,7 +340,7 @@ public extension UIView {
             self.transform = self.transform.rotated(by: angleWithType)
         }, completion: completion)
     }
-
+    
     /// SwifterSwift: Rotate view to angle on fixed axis.
     ///
     /// - Parameters:
@@ -411,7 +361,7 @@ public extension UIView {
             self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angleWithType))
         }, completion: completion)
     }
-
+    
     /// SwifterSwift: Scale view by offset.
     ///
     /// - Parameters:
@@ -433,7 +383,7 @@ public extension UIView {
             completion?(true)
         }
     }
-
+    
     /// SwifterSwift: Shake view.
     ///
     /// - Parameters:
@@ -470,7 +420,7 @@ public extension UIView {
         layer.add(animation, forKey: "shake")
         CATransaction.commit()
     }
-
+    
     /// SwifterSwift: Add Visual Format constraints.
     ///
     /// - Parameters:
@@ -485,12 +435,12 @@ public extension UIView {
             viewsDictionary[key] = view
         }
         addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: withFormat,
-            options: NSLayoutConstraint.FormatOptions(),
-            metrics: nil,
-            views: viewsDictionary))
+                        withVisualFormat: withFormat,
+                        options: NSLayoutConstraint.FormatOptions(),
+                        metrics: nil,
+                        views: viewsDictionary))
     }
-
+    
     /// SwifterSwift: Anchor all sides of the view into it's superview.
     @available(iOS 9, *)
     func fillToSuperview() {
@@ -504,7 +454,7 @@ public extension UIView {
             NSLayoutConstraint.activate([left, right, top, bottom])
         }
     }
-
+    
     /// SwifterSwift: Add anchors from any side of the current view into the specified anchors and returns the newly added constraints.
     ///
     /// - Parameters:
@@ -534,38 +484,38 @@ public extension UIView {
         heightConstant: CGFloat = 0) -> [NSLayoutConstraint] {
         // https://videos.letsbuildthatapp.com/
         translatesAutoresizingMaskIntoConstraints = false
-
+        
         var anchors = [NSLayoutConstraint]()
-
+        
         if let top = top {
             anchors.append(topAnchor.constraint(equalTo: top, constant: topConstant))
         }
-
+        
         if let left = left {
             anchors.append(leftAnchor.constraint(equalTo: left, constant: leftConstant))
         }
-
+        
         if let bottom = bottom {
             anchors.append(bottomAnchor.constraint(equalTo: bottom, constant: -bottomConstant))
         }
-
+        
         if let right = right {
             anchors.append(rightAnchor.constraint(equalTo: right, constant: -rightConstant))
         }
-
+        
         if widthConstant > 0 {
             anchors.append(widthAnchor.constraint(equalToConstant: widthConstant))
         }
-
+        
         if heightConstant > 0 {
             anchors.append(heightAnchor.constraint(equalToConstant: heightConstant))
         }
-
+        
         anchors.forEach { $0.isActive = true }
-
+        
         return anchors
     }
-
+    
     /// SwifterSwift: Anchor center X into current view's superview with a constant margin value.
     ///
     /// - Parameter constant: constant of the anchor constraint (default is 0).
@@ -577,7 +527,7 @@ public extension UIView {
             centerXAnchor.constraint(equalTo: anchor, constant: constant).isActive = true
         }
     }
-
+    
     /// SwifterSwift: Anchor center Y into current view's superview with a constant margin value.
     ///
     /// - Parameter withConstant: constant of the anchor constraint (default is 0).
@@ -589,7 +539,7 @@ public extension UIView {
             centerYAnchor.constraint(equalTo: anchor, constant: constant).isActive = true
         }
     }
-
+    
     /// SwifterSwift: Anchor center X and Y into current view's superview
     @available(iOS 9, *)
     func anchorCenterSuperview() {
@@ -597,7 +547,7 @@ public extension UIView {
         anchorCenterXToSuperview()
         anchorCenterYToSuperview()
     }
-
+    
     /// SwifterSwift: Search all superviews until a view with the condition is found.
     ///
     /// - Parameter predicate: predicate to evaluate on superviews.
@@ -607,7 +557,7 @@ public extension UIView {
         }
         return superview?.ancestorView(where: predicate)
     }
-
+    
     /// SwifterSwift: Search all superviews until a view with this class is found.
     ///
     /// - Parameter name: class of the view to search.
@@ -633,35 +583,145 @@ public extension UIView {
         }
         return constraint ?? superview?.findConstraint(attribute: attribute, for: view)
     }
-
+    
     /// SwifterSwift: First width constraint for this view
     var widthConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .width, for: self)
     }
-
+    
     /// SwifterSwift: First height constraint for this view
     var heightConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .height, for: self)
     }
-
+    
     /// SwifterSwift: First leading constraint for this view
     var leadingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .leading, for: self)
     }
-
+    
     /// SwifterSwift: First trailing constraint for this view
     var trailingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .trailing, for: self)
     }
-
+    
     /// SwifterSwift: First top constraint for this view
     var topConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .top, for: self)
     }
-
+    
     /// SwifterSwift: First bottom constraint for this view
     var bottomConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .bottom, for: self)
+    }
+}
+
+// MARK - 常用位置属性
+public extension UIView {
+    
+    // MARK: - 位置
+    var left: CGFloat {
+        get {
+            return frame.origin.x
+        }
+        set(newLeft) {
+            var frame = self.frame
+            frame.origin.x = newLeft
+            self.frame = frame
+        }
+    }
+    
+    var x: CGFloat {
+        get {
+            return frame.origin.x
+        }
+        set(newLeft) {
+            var frame = self.frame
+            frame.origin.x = newLeft
+            self.frame = frame
+        }
+    }
+    
+    var top: CGFloat {
+        get {
+            return frame.origin.y
+        }
+        
+        set(newTop) {
+            var frame = self.frame
+            frame.origin.y = newTop
+            self.frame = frame
+        }
+    }
+    
+    var y: CGFloat {
+        get {
+            return frame.origin.y
+        }
+        set(newTop) {
+            var frame = self.frame
+            frame.origin.y = newTop
+            self.frame = frame
+        }
+    }
+    
+    var width: CGFloat {
+        get {
+            return self.frame.size.width
+        }
+        
+        set(newWidth) {
+            var frame = self.frame
+            frame.size.width = newWidth
+            self.frame = frame
+        }
+    }
+    
+    var height: CGFloat {
+        get {
+            return self.frame.size.height
+        }
+        
+        set(newHeight) {
+            var frame = self.frame
+            frame.size.height = newHeight
+            self.frame = frame
+        }
+    }
+    
+    var right: CGFloat {
+        get {
+            return self.left + self.width
+        }
+    }
+    
+    var bottom: CGFloat {
+        get {
+            return self.top + self.height
+        }
+    }
+    
+    var centerX: CGFloat {
+        get {
+            return self.center.x
+        }
+        
+        set(newCenterX) {
+            var center = self.center
+            center.x = newCenterX
+            self.center = center
+        }
+    }
+    
+    var centerY: CGFloat {
+        get {
+            return self.center.y
+        }
+        
+        set(newCenterY) {
+            var center = self.center
+            center.y = newCenterY
+            self.center = center
+        }
     }
 }
 

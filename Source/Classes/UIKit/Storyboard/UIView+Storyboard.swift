@@ -1,15 +1,35 @@
 //
-//  UIViewController+SB.swift
-//  FireFly
+//  UIView+Storyboard.swift
+//  NKUtility
 //
-//  Created by Hunt on 2020/11/3.
+//  Created by Hunt on 2021/1/27.
 //
 
+import Foundation
 import UIKit
+
+extension UIStoryboard {
+    class func viewController(fromStoryboardName storyBoardName : String, storyBoardIdentifier : String) -> AnyObject {
+        let viewController:UIViewController = UIStoryboard(name: storyBoardName, bundle: nil).instantiateViewController(withIdentifier: storyBoardIdentifier)
+        return viewController
+    }
+}
+
+extension UITableViewCell {
+    public class var identifier : String {
+        var name = NSStringFromClass(self)
+        name = name.components(separatedBy: ".").last!
+        return name
+    }
+    
+    public class var height : CGFloat {
+        return CGFloat(54.0)
+    }
+}
 
 public extension UIViewController {
     
-    public class var identifier : String {
+    class var identifier : String {
         var name = NSStringFromClass(self)
         name = name.components(separatedBy: ".").last!
         return name

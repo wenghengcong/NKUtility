@@ -1,17 +1,17 @@
-/*********************************************
- *
- * This code is under the MIT License (MIT)
- *
- * Copyright (c) 2016 AliSoftware
- *
- *********************************************/
+//
+//  NMUIStoryboardSceneBased.swift
+//  NKUtility
+//
+//  Created by Hunt on 2021/1/27.
+//
+
+import Foundation
 
 #if canImport(UIKit)
 import UIKit
 
 // MARK: Protocol Definition
-
-/// Make your UIViewController subclasses conform to this protocol when:
+/// Make your UIViewController subclasses conform to this protocol when:
 ///  * they *are* Storyboard-based, and
 ///  * this ViewController is not the initialViewController of your Storyboard, but a different scene
 ///
@@ -26,7 +26,6 @@ public protocol NKUIStoryboardSceneBased: class {
 }
 
 // MARK: Default Implementation
-
 public extension NKUIStoryboardSceneBased {
   /// By default, use the `sceneIdentifier` with the same name as the class
   static var sceneIdentifier: String {
@@ -35,12 +34,10 @@ public extension NKUIStoryboardSceneBased {
 }
 
 // MARK: Support for instantiation from Storyboard
-
 public extension NKUIStoryboardSceneBased where Self: UIViewController {
   /**
    Create an instance of the ViewController from its associated Storyboard and the
    Scene with identifier `sceneIdentifier`
-
    - returns: instance of the conforming ViewController
    */
   static func instantiate() -> Self {
