@@ -433,14 +433,65 @@ extension NKDevice {
 
 #if os(iOS)
 extension NKDevice.Screen {
-    // MARK: Orientation
     
+    public static var hasNotch: Bool {
+        guard #available(iOS 11.0, *), let window = UIWindow.topWindow() else {
+            return false
+        }
+        if UIDevice.current.orientation.isPortrait {
+            return window.safeAreaInsets.top >= 44
+        } else {
+            return window.safeAreaInsets.left > 0 || window.safeAreaInsets.right > 0
+        }
+    }
+    
+    // MARK: Orientation
     public static func isPortrait() -> Bool {
         return UIDevice.current.orientation.isPortrait
     }
 
     public static func isLandscape() -> Bool {
         return UIDevice.current.orientation.isLandscape
+    }
+}
+
+// MARK: - scale
+/// guide https://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
+/// https://kapeli.com/cheat_sheets/iOS_Design.docset/Contents/Resources/Documents/index
+extension NKDevice.Screen {
+    /// 设计稿全部以iPhone 12 Pro Max尺寸设计
+    public static func scaleBase320(_ x: CGFloat) -> CGFloat {
+        let scale = width/320
+        let result = scale * x
+        return result
+    }
+    
+    /// 设计稿全部以iPhone XS Max， iPhone 11 Pro Max尺寸设计
+    public static func scaleBase375(_ x: CGFloat) -> CGFloat {
+        let scale = width/375
+        let result = scale * x
+        return result
+    }
+    
+    /// 设计稿全部以iPhone 5尺寸设计
+    public static func scaleBase390(_ x: CGFloat) -> CGFloat {
+        let scale = width/390
+        let result = scale * x
+        return result
+    }
+    
+    /// 设计稿全部以iPhone 6尺寸设计
+    public static func scaleBase414(_ x: CGFloat) -> CGFloat {
+        let scale = width/414
+        let result = scale * x
+        return result
+    }
+    
+    /// 设计稿全部以iPhone 6 Plus尺寸设计
+    public static func scaleBase428(_ x: CGFloat) -> CGFloat {
+        let scale = width/428
+        let result = scale * x
+        return result
     }
 }
 #endif
