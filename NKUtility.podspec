@@ -40,5 +40,5 @@ Pod::Spec.new do |s|
   s.frameworks = 'UIKit', 'MapKit', 'QuartzCore', 'AVFoundation'
   s.dependency 'SwiftTheme'
   s.dependency 'MicrosoftFluentUI'
-  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
+#  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

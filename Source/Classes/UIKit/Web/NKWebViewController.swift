@@ -560,15 +560,16 @@ extension  NKWebViewController: WKNavigationDelegate {
             break
         }
         
+        //  NKTODO: 增加支持打开外部 URL 的域名集合，提供一个属性对外暴露
         // 3. handle other url
-        if (navigationAction.targetFrame == nil) {
-            if UIApplication.shared.canOpenURL(url) {
-                print("Redirected to browser. No need to open it locally: \(url)")
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
-            }
-        }
+//        if (navigationAction.targetFrame == nil) {
+//            if UIApplication.shared.canOpenURL(url) {
+//                print("Redirected to browser. No need to open it locally: \(url)")
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                decisionHandler(.cancel)
+//                return
+//            }
+//        }
         
         print("Open it locally: \(url)")
         decisionHandler(.allow)
