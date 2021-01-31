@@ -1,4 +1,11 @@
-// UIViewExtensions.swift - Copyright 2020 SwifterSwift
+//
+//  UIView+Niki.swift
+//  NKUtility
+//
+//  Created by Hunt on 2021/1/30.
+//
+
+import Foundation
 
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
@@ -722,6 +729,37 @@ public extension UIView {
             center.y = newCenterY
             self.center = center
         }
+    }
+}
+
+public extension UIView {
+    
+    var safeTopAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return self.safeAreaLayoutGuide.topAnchor
+        }
+        return self.topAnchor
+    }
+    
+    var safeLeftAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *){
+            return self.safeAreaLayoutGuide.leftAnchor
+        }
+        return self.leftAnchor
+    }
+    
+    var safeRightAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *){
+            return self.safeAreaLayoutGuide.rightAnchor
+        }
+        return self.rightAnchor
+    }
+    
+    var safeBottomAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return self.safeAreaLayoutGuide.bottomAnchor
+        }
+        return self.bottomAnchor
     }
 }
 

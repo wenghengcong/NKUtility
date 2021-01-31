@@ -1,23 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "NKWCNextIcon.png",
       "idiom" : "universal",
-      "filename" : "SwiftWebVCBack.png",
       "scale" : "1x"
     },
     {
+      "filename" : "NKWCNextIcon@2x.png",
       "idiom" : "universal",
-      "filename" : "SwiftWebVCBack@2x.png",
       "scale" : "2x"
     },
     {
+      "filename" : "NKWCNextIcon@3x.png",
       "idiom" : "universal",
-      "filename" : "SwiftWebVCBack@3x.png",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

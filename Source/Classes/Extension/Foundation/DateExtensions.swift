@@ -494,6 +494,24 @@ public extension Date {
     var unixTimestamp: Double {
         return timeIntervalSince1970
     }
+    
+    /// 获取当前 毫秒级 时间戳 - 13位
+    var unixMilliTimestamp: Double {
+        let millisecond = round(unixTimestamp*1000)
+        return millisecond
+    }
+    
+    /// 获取当前 秒级 时间戳 - 10位
+    var unixTimeStampString: String {
+        let timeStamp = Int(unixTimestamp)
+        return "\(timeStamp)"
+    }
+    
+    /// 获取当前 毫秒级 时间戳 - 13位
+    var unixMilliTimestampString: String {
+        let millisecond = CLongLong(round(unixMilliTimestamp))
+        return "\(millisecond)"
+    }
 }
 
 // MARK: - Methods
@@ -922,6 +940,17 @@ public extension Date {
                 .random(in: range.lowerBound.timeIntervalSinceReferenceDate...range.upperBound
                     .timeIntervalSinceReferenceDate))
     }
+    
+    
+    /// 显示"可读时间"
+    /// https://developer.apple.com/documentation/foundation/relativedatetimeformatter
+    /// - Returns: 时间字符串
+    func timeAgoDisplay() -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+    
 
     /// SwifterSwift: Returns a random date within the specified range, using the given generator as a source for randomness.
     ///

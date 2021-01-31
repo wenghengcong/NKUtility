@@ -125,6 +125,12 @@ extension NKDevice {
             return UIScreen.mainWidth
         }
         
+        /// 顶部导航栏高度
+        public static var topBarHeight: CGFloat {
+            let topbarHeight = UIViewController.topViewController()?.topBarHeight ?? 0
+            return topbarHeight
+        }
+        
         public static var height: CGFloat {
             return UIScreen.mainHeight
         }

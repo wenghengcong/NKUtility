@@ -5,6 +5,7 @@
 //  Created by Hunt on 2021/1/15.
 //
 
+#if canImport(UIKit) && os(iOS)
 import UIKit
 
 public extension UIWindow {
@@ -40,13 +41,14 @@ public extension UIWindow {
     }
     
     /// switch current root view controller
+    ///
     /// - Parameters:
-    ///   - viewController: will move to vc
-    ///   - animated: animated
-    ///   - duration: time
-    ///   - options: animate opton
-    ///   - completion: completion
-    func switchRootViewController(_ viewController: UIViewController,
+    ///   - viewController: new view controller.
+    ///   - animated: set to true to animate view controller change (default is true).
+    ///   - duration: animation duration in seconds (default is 0.5).
+    ///   - options: animation options (default is .transitionFlipFromRight).
+    ///   - completion: optional completion handler called after view controller is changed.
+    func switchRootViewController(to viewController: UIViewController,
                                   animated: Bool = true,
                                   duration: TimeInterval = 0.5,
                                   options: AnimationOptions = .transitionFlipFromRight,
@@ -66,3 +68,6 @@ public extension UIWindow {
         })
     }
 }
+
+#endif
+

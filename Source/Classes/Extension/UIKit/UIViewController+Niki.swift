@@ -1,4 +1,9 @@
-// UIViewControllerExtensions.swift - Copyright 2020 SwifterSwift
+//
+//  UIViewController+Niki.swift
+//  NKUtility
+//
+//  Created by Hunt on 2021/1/15.
+//
 
 #if canImport(UIKit) && !os(watchOS)
 import UIKit
@@ -144,6 +149,63 @@ public extension UIViewController {
         present(popoverContent, animated: animated, completion: completion)
     }
     #endif
+}
+
+public extension UIViewController {
+    static func topViewController() -> UIViewController? {
+        return UIWindow.topViewController()
+    }
+    
+    func topViewController() -> UIViewController? {
+        if let navigationController = self as? UINavigationController {
+            return navigationController.topViewController?.topViewController()
+        }
+        else if let tabBarController = self as? UITabBarController {
+            if let selectedViewController = tabBarController.selectedViewController {
+                return selectedViewController.topViewController()
+            }
+            return tabBarController.topViewController()
+        }
+            
+        else if let presentedViewController = self.presentedViewController {
+            return presentedViewController.topViewController()
+        }
+        
+        else {
+            return self
+        }
+    }
+    
+    /// 顶部导航栏高度
+    var topBarHeight: CGFloat {
+        var top = self.navigationController?.navigationBar.frame.height ?? 0.0
+        if #available(iOS 13.0, *) {
+            top += UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        } else {
+            top += UIApplication.shared.statusBarFrame.height
+        }
+        return top
+    }
+    
+    /// 底部标签栏高度
+    var tabBarHeight: CGFloat {
+        var height: CGFloat = 0.0
+        if let tabBarVc = self.navigationController?.tabBarController {
+            height = tabBarVc.tabBar.height
+        } else if let defaultVc = self.tabBarController {
+            height = defaultVc.tabBar.height
+        }
+        return height
+    }
+    
+    /// 可见区域，除去导航栏和标签栏
+    var visibleHeight: CGFloat {
+        let topAndBot = topBarHeight + tabBarHeight
+        let visible = UIScreen.mainHeight-topAndBot
+        return visible
+    }
+    
+    
 }
 
 #endif

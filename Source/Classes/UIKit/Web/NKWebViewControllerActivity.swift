@@ -19,7 +19,8 @@ class  NKWebViewControllerActivity: UIActivity {
         let _type: String = typeArray[typeArray.count-1]
         return UIActivity.ActivityType(rawValue: _type)
     }
-        
+    
+    /// 注意图片命名
     override var activityImage : UIImage {
         if let type = activityType?.rawValue {
             let name = type + "Icon"

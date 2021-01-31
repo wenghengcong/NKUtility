@@ -13,7 +13,6 @@ public extension UIImage {
     convenience init?(bundledNamed: String, bundleNames: [String]) {
         let bundle = Bundle.frameworkBundle(bundleNames: bundleNames)
         self.init(named: bundledNamed, in: bundle, compatibleWith: nil)
-        
     }
     
     class func bundledImage(named: String, bundleNames: [String]) -> UIImage? {
@@ -31,7 +30,8 @@ public extension UIImage {
 public extension UIImage {
     
     convenience init?(nkBundleNamed: String) {
-        self.init(named: nkBundleNamed, in: Bundle.nikiFrameworkBundle(), compatibleWith: nil)
+        let bundle =  Bundle.nikiFrameworkBundle()
+        self.init(named: nkBundleNamed, in: bundle, compatibleWith: nil)
     }
     
     class func nkBundleImage(named: String) -> UIImage? {

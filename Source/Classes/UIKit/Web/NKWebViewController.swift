@@ -56,7 +56,7 @@ public class  NKWebViewController: UIViewController {
     fileprivate var progressView: UIProgressView!
     fileprivate var toolbarContainer: NKWebViewToolbar!
     fileprivate var toolbarHeightConstraint: NSLayoutConstraint!
-    fileprivate var toolbarHeight: CGFloat = 0
+    fileprivate var toolbarHeight: CGFloat = 44
     fileprivate var navControllerUsesBackSwipe: Bool = false
     
     lazy fileprivate var activityIndicator: UIActivityIndicatorView! = {
@@ -83,7 +83,8 @@ public class  NKWebViewController: UIViewController {
     
     
     lazy var backBarButtonItem: UIBarButtonItem =  {
-        var tempBackBarButtonItem = UIBarButtonItem(image: UIImage(nkBundleNamed: "NKWebViewControllerBack"),
+        let image = UIImage(nkBundleNamed: "NKWCBackIcon")
+        var tempBackBarButtonItem = UIBarButtonItem(image: image,
                                                     style: UIBarButtonItem.Style.plain,
                                                     target: self,
                                                     action: #selector(NKWebViewController.goBackTapped(_:)))
@@ -93,7 +94,8 @@ public class  NKWebViewController: UIViewController {
     }()
     
     lazy var forwardBarButtonItem: UIBarButtonItem =  {
-        var tempForwardBarButtonItem = UIBarButtonItem(image: UIImage(nkBundleNamed: "NKWebViewControllerNext"),
+        let image = UIImage(nkBundleNamed: "NKWCNextIcon")
+        var tempForwardBarButtonItem = UIBarButtonItem(image: image,
                                                        style: UIBarButtonItem.Style.plain,
                                                        target: self,
                                                        action: #selector(NKWebViewController.goForwardTapped(_:)))
@@ -190,7 +192,7 @@ public class  NKWebViewController: UIViewController {
             
             let items: NSArray = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
             
-            let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: 44.0))
+            let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: toolbarHeight))
             if !closing {
                 toolbar.items = items as? [UIBarButtonItem]
                 if presentingViewController == nil {
@@ -274,14 +276,6 @@ public class  NKWebViewController: UIViewController {
     
 }
 
-
-//MARK: -
-extension  NKWebViewController {
-    
-    
-}
-
-
 //MARK: - Back gesture
 extension  NKWebViewController {
     fileprivate func backForwardListChanged() {
@@ -299,23 +293,7 @@ extension  NKWebViewController {
     
     fileprivate func setupWebview() {
         view.insertSubview(webView, at: 0)
-
-        if #available(iOSApplicationExtension 11.0, *) {
-            webView.scrollView.contentInsetAdjustmentBehavior = .scrollableAxes
-            let constraints = [
-                webView.topAnchor.constraint(equalTo: view.topAnchor),
-                webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            ]
-            NSLayoutConstraint.activate(constraints)
-        } else {
-            let views = ["view": webView]
-            NSLayoutConstraint.activate(
-                NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[view]-0-|", options: [], metrics: nil, views: views) +
-                    NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[view]-0-|", options: [], metrics: nil, views: views)
-            )
-        }
+        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-topBarHeight-toolbarHeight)
     }
     
     fileprivate func progressChanged(_ newValue: NSNumber) {
@@ -323,9 +301,11 @@ extension  NKWebViewController {
             progressView = UIProgressView()
             progressView.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(progressView)
-            
-            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-0-[progressView]-0-|", options: [], metrics: nil, views: ["progressView": progressView]))
-            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[topGuide]-0-[progressView(2)]", options: [], metrics: nil, views: ["progressView": progressView, "topGuide": self.topLayoutGuide]))
+//            progressView.frame = CGRect(x: 0, y: 0, width: view.width, height: 2.0)
+            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-0-[progressView]-0-|", options: [], metrics: nil, views: ["progressView": progressView!]))
+            let safeInsetTop = self.view.safeAreaInsets.top;
+            let visualFormtString = String(format: "V:|-%d-[progressView(2)]", safeInsetTop)
+            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormtString, options: [], metrics: nil, views: ["progressView": progressView!]))
         }
         
         progressView.progress = newValue.floatValue
@@ -422,7 +402,7 @@ extension  NKWebViewController {
     }
     
     override public func viewWillAppear(_ animated: Bool) {
-        assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use NKModalWebViewController instead.")
+        assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
         
         updateToolbarItems()
         navBarTitle = UILabel()

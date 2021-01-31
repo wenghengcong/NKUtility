@@ -78,6 +78,7 @@ public extension Bundle {
         let bundleNames = [
             // For Swift Package Manager
             "NKUtility_NKUtility",
+            "NKUtility-NKUtility",
             // For Carthage
             "NKUtility",
         ]

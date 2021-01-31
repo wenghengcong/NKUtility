@@ -44,7 +44,7 @@ public class NKModalWebViewController: UINavigationController {
         webViewController.sharingEnabled = sharingEnabled
         webViewController.storedStatusColor = UINavigationBar.appearance().barStyle
         
-        let dismissButtonImageName = (dismissButtonStyle == .arrow) ? "NKWebViewControllerDismiss" : "NKWebViewControllerDismissAlt"
+        let dismissButtonImageName = (dismissButtonStyle == .arrow) ? "NKWCDismissIcon" : "NKWCDismissAltIcon"
         let doneButton = UIBarButtonItem(image: UIImage(nkBundleNamed: dismissButtonImageName),
                                          style: UIBarButtonItem.Style.plain,
                                          target: webViewController,
