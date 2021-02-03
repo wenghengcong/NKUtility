@@ -11,6 +11,12 @@ public extension Data {
         // http://stackoverflow.com/questions/38097710/swift-3-changes-for-getbytes-method
         return [UInt8](self)
     }
+    
+    
+    var prettyJSON: String {
+        let jsonString = (try? String(data: JSONSerialization.data(withJSONObject: JSONSerialization.jsonObject(with: self, options: []), options: .prettyPrinted), encoding: .utf8)!) ?? ""
+        return jsonString
+    }
 }
 
 // MARK: - Methods

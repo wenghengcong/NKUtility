@@ -61,4 +61,5 @@ public extension String {
     func removeCharacters(from: String) -> String {
         return removeCharacters(from: CharacterSet(charactersIn: from))
     }
+    
 }
