@@ -29,7 +29,7 @@ public struct FFLightTheme: NKThemeProtocol {
     }
     
     public var themeTintColor: UIColor {
-        return UIColor.Behance.blue
+        return UIColor.green
     }
     
     public var themeTitleTextColor: UIColor {

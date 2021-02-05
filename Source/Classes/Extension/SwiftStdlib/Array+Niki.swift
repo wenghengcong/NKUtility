@@ -28,6 +28,22 @@ public extension Array {
     }
 }
 
+// MARK: - Thread Safe
+
+public extension Array {
+    
+    /// append element thread safe by lock
+    /// from https://stackoverflow.com/a/62620203/4124634
+    /// - Parameters:
+    ///   - newElement: <#newElement description#>
+    ///   - lock: <#lock description#>
+    mutating func append(_ newElement: Element, _ lock: inout NSLock) {
+           lock.lock()
+           defer { lock.unlock() }
+           append(newElement)
+       }
+}
+
 // MARK: - Methods
 
 public extension Array {
