@@ -338,6 +338,26 @@ public extension String {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter.date(from: selfLowercased)
     }
+    
+    var ISODateTime: Date? {
+        let selfLowercased = trimmingCharacters(in: .whitespacesAndNewlines)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        var date = dateFormatter.date(from: selfLowercased)
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.ZZZZ"
+            date = dateFormatter.date(from: selfLowercased)
+        }
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.Z"
+            date = dateFormatter.date(from: selfLowercased)
+        }
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            date = dateFormatter.date(from: selfLowercased)
+        }
+        return date
+    }
     #endif
 
     /// SwifterSwift: Integer value from string (if applicable).

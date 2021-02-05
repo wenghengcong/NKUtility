@@ -495,6 +495,17 @@ extension  NKWebViewController: WKUIDelegate {
 //MARK: - WKNavigationDelegate
 extension  NKWebViewController: WKNavigationDelegate {
     
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                NKCookieStore.shared.addCookie(cookie)
+            }
+        }
+        delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
+        decisionHandler(.allow)
+        
+    }
+    
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         showLoading(true)
         delegate?.webViewController?(self, didStartLoading: webView.url)

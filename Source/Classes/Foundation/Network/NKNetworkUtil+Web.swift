@@ -12,10 +12,7 @@ extension NKNetworkUtil {
     // MARK: - 清除工具
     /// 清除Cookies
     class func clearCookies() {
-        let storage: HTTPCookieStorage = HTTPCookieStorage.shared
-        for cookie in storage.cookies! {
-            storage.deleteCookie(cookie)
-        }
+        NKCookieStore.shared.deleteCookies()
     }
     
     /// 清除缓存
