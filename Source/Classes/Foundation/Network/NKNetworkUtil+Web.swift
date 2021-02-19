@@ -8,7 +8,7 @@
 import Foundation
 import WebKit
 
-extension NKNetworkUtil {
+public extension NKNetworkUtil {
     // MARK: - 清除工具
     /// 清除Cookies
     class func clearCookies() {

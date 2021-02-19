@@ -54,6 +54,12 @@ public func LocalizedPlural(_ string: String, argument: CVarArg) -> String {
 
 
 public extension String {
+    
+    /// 国际化字符串
+    var localizedString: String {
+        return localized()
+    }
+    
     /**
      Swift 2 friendly localization syntax, replaces NSLocalizedString
      - Returns: The localized string.

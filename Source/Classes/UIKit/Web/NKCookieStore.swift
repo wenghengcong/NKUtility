@@ -38,6 +38,40 @@ public class NKCookieStore: NSObject {
 // MARK: - Control Cookies
 public extension NKCookieStore {
     
+    func cookies() -> [HTTPCookie]? {
+        if let cookies = HTTPCookieStorage.shared.cookies {
+            return cookies
+        }
+        return nil
+    }
+    
+    func cookiesMap() -> [String: String]? {
+        if let cookies = cookies() {
+            var map: [String: String] = [:]
+            for cookie in cookies {
+                map.updateValue(cookie.value, forKey: cookie.name)
+            }
+            return map
+        }
+        return nil
+    }
+    
+    /// 生成 header 中的cookie字符串
+    func cookiesString() -> String {
+        var cookieString = ""
+        if let cookies = cookiesMap() {
+            for cookie in cookies {
+                let name = cookie.key
+                let value = cookie.value
+                let newEntry = String(format: "%@=%@;", name, value)
+                cookieString.append(newEntry)
+            }
+            // 移除最后一个分号
+            cookieString.removeLast()
+        }
+        return cookieString
+    }
+    
     func cookieValue(domain: String, name: String) -> String {
         if let cookies = HTTPCookieStorage.shared.cookies {
             for cookie in cookies where cookie.domain == domain && cookie.name == name {

@@ -10,7 +10,7 @@ import UIKit
 
 /// 黑暗主题
 public struct FFDarkTheme: NKThemeProtocol {
-    public static let shared = FFLightTheme()
+    public static let shared = FFDarkTheme()
     public var themeName: String {
         return "Dark"
     }

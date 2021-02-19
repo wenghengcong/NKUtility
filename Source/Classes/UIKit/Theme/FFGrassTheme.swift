@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public struct FFGrassTheme: NKThemeProtocol {
-    public static let shared = FFLightTheme()
+    public static let shared = FFGrassTheme()
 
     public var themeName: String {
         return "Grass"
