@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+#if canImport(FluentUI)
 import FluentUI
 
 public struct NKHud {
@@ -86,4 +87,6 @@ public struct NKHud {
         }
     }
 }
+
+#endif
 

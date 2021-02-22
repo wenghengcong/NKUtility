@@ -18,6 +18,23 @@ public extension UIViewController {
     }
 }
 
+// MARK: - Navigation bar
+public extension UIViewController {
+    
+    /// Hide the navigation bar on the this view controller
+    /// - Parameter animated: <#animated description#>
+    func hideNavigationBar(animated: Bool){
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    
+    /// Show the navigation bar on other view controllers
+    /// - Parameter animated: <#animated description#>
+    func showNavigationBar(animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+}
+
 // MARK: - Methods
 
 public extension UIViewController {

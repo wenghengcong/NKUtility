@@ -482,7 +482,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone 6尺寸设计
     public static func scaleBase414(_ x: CGFloat) -> CGFloat {
-        let scale = width/414
+        let scale = width/414.0
         let result = scale * x
         return result
     }

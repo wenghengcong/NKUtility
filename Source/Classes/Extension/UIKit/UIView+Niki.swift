@@ -730,6 +730,29 @@ public extension UIView {
             self.center = center
         }
     }
+    
+    var origin: CGPoint {
+        get {
+            return self.frame.origin
+        }
+        
+        set(newOrigin){
+            var frame = self.frame
+            frame.origin = newOrigin
+            self.frame = frame
+        }
+    }
+    
+    var size: CGSize {
+        get {
+            return self.frame.size
+        }
+        set(newSize){
+            var frame = self.frame
+            frame.size = newSize
+            self.frame = frame
+        }
+    }
 }
 
 public extension UIView {

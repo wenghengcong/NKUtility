@@ -24,3 +24,7 @@ https://github.com/evrencoskun/TableView
 
 # 骨架屏
 https://github.com/Juanpe/SkeletonView
+
+
+# 静态表格
+https://github.com/xmartlabs/Eureka 
