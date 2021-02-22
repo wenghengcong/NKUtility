@@ -458,10 +458,18 @@ extension NKDevice.Screen {
 // MARK: - scale
 /// guide https://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
 /// https://kapeli.com/cheat_sheets/iOS_Design.docset/Contents/Resources/Documents/index
+/// https://ios-resolution.com/
 extension NKDevice.Screen {
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
     public static func scaleBase320(_ x: CGFloat) -> CGFloat {
         let scale = width/320
+        let result = scale * x
+        return result
+    }
+    
+    /// 设计稿全部以iPhone 12 Pro Max尺寸设计
+    public static func scaleBase360(_ x: CGFloat) -> CGFloat {
+        let scale = width/360.0
         let result = scale * x
         return result
     }

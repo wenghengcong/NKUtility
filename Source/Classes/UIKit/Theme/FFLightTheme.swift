@@ -29,7 +29,7 @@ public struct FFLightTheme: NKThemeProtocol {
     }
     
     public var themeTintColor: UIColor {
-        return UIColor.green
+        return UIColor(hex: "#34C759")
     }
     
     public var themeTitleTextColor: UIColor {
