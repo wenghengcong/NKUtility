@@ -103,6 +103,14 @@ open class ESTabBar: UITabBar {
             self.reload()
         }
     }
+    
+    /// 背景颜色
+    open var backdropColor = NKThemeProvider.currentTheme.tabBarBackgroundColor {
+        didSet {
+            barTintColor = backdropColor
+        }
+    }
+    
     /// tabBar自定义item的容器view
     internal var containers = [ESTabBarItemContainer]()
     /// 缓存当前tabBarController用来判断是否存在"More"Tab

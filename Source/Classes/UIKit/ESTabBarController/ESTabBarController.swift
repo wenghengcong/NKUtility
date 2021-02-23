@@ -92,6 +92,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
         let tabBar = { () -> ESTabBar in 
             let tabBar = ESTabBar()
             tabBar.delegate = self
+            tabBar.backdropColor = NKThemeProvider.currentTheme.tabBarBackgroundColor
             tabBar.customDelegate = self
             tabBar.tabBarController = self
             return tabBar

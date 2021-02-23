@@ -70,7 +70,7 @@ public class NKThemeProvider {
     }
     
     // MARK: - Switch Night
-    public func switchNight(isToNight: Bool) {
+    public func switchNight(isToNight: Bool = true) {
         switchTo(index: isToNight ? nightIndex : lastThemeIndex())
     }
     

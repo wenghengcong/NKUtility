@@ -51,7 +51,7 @@ open class ESTabBarItemContentView: UIView {
     open var highlightEnabled = true
     
     /// 文字颜色
-    open var textColor = NKThemeProvider.currentTheme.tabBarItemText
+    open var textColor = NKThemeProvider.currentTheme.tabBarItemTextColor
     {
         didSet {
             if !selected { titleLabel.textColor = textColor }
@@ -59,7 +59,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时文字颜色
-    open var highlightTextColor = NKThemeProvider.currentTheme.tabBarItemHighlightText
+    open var highlightTextColor = NKThemeProvider.currentTheme.tabBarItemTextColorHighlight
     {
         didSet {
             if selected { titleLabel.textColor = highlightTextColor }
@@ -67,7 +67,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// icon颜色
-    open var iconColor = NKThemeProvider.currentTheme.tabBarItemIcon
+    open var iconColor = NKThemeProvider.currentTheme.tabBarItemIconColor
     {
         didSet {
             if !selected { imageView.tintColor = iconColor }
@@ -75,7 +75,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时icon颜色
-    open var highlightIconColor = NKThemeProvider.currentTheme.tabBarItemHighlightIcon
+    open var highlightIconColor = NKThemeProvider.currentTheme.tabBarItemIconColorHighlight
     {
         didSet {
             if selected { imageView.tintColor = highlightIconColor }
@@ -83,7 +83,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 背景颜色
-    open var backdropColor = NKThemeProvider.currentTheme.tabBarItemBackground
+    open var backdropColor = NKThemeProvider.currentTheme.tabBarItemBackgroundColor
     {
         didSet {
             if !selected { backgroundColor = backdropColor }
@@ -91,7 +91,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时背景颜色
-    open var highlightBackdropColor = NKThemeProvider.currentTheme.tabBarItemHightBackground
+    open var highlightBackdropColor = NKThemeProvider.currentTheme.tabBarItemBackgroundColorHighlight
     {
         didSet {
             if selected { backgroundColor = highlightBackdropColor }
