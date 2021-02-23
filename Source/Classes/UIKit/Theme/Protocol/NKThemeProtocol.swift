@@ -44,4 +44,12 @@ public protocol NKThemeProtocol {
     
     /// App 首页每个单元格的颜色
     var themeGridItemTintColor: UIColor {get}
+    
+    // MARK: - Tabbar
+    var tabBarItemBackground: UIColor {get}
+    var tabBarItemHightBackground: UIColor {get}
+    var tabBarItemText: UIColor {get}
+    var tabBarItemIcon: UIColor {get}
+    var tabBarItemHighlightText: UIColor {get}
+    var tabBarItemHighlightIcon: UIColor {get}
 }

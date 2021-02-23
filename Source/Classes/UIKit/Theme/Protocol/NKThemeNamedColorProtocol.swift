@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-public protocol NKThemeGlobalColorProtocol {
+/// 全局使用的颜色协议：用于在 NKThemeConfigProtocol 继承，NKThemeConfigProtocol 继承类需要实现这些颜色
+public protocol NKThemeNamedColorProtocol {
     // MARK:  - 全局颜色 Global Color
     static var clearColor: UIColor { get }
     static var whiteColor: UIColor { get }

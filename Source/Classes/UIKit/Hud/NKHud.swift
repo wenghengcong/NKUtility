@@ -5,9 +5,9 @@
 //  Created by Hunt on 2021/1/22.
 //
 
+#if canImport(FluentUI)
 import Foundation
 import UIKit
-#if canImport(FluentUI)
 import FluentUI
 
 public struct NKHud {

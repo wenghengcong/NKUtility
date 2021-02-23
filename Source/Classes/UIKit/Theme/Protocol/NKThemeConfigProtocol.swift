@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-protocol NKThemeConfigProtocol: NKThemeGlobalColorProtocol {
+/// 真正的主题配置表，包含所有的内容，假如要实现该类，继承并指定配置
+protocol NKThemeConfigProtocol: NKThemeNamedColorProtocol {
     // MARK:  - UIControl
     var controlHighlightedAlpha: CGFloat { get set }
     var controlDisabledAlpha: CGFloat { get set }

@@ -51,50 +51,50 @@ open class ESTabBarItemContentView: UIView {
     open var highlightEnabled = true
     
     /// 文字颜色
-    open var textColor = FFTheme.TabBar.barItemNormalTextAndIconColor
+    open var textColor = NKThemeProvider.currentTheme.tabBarItemText
     {
         didSet {
-            if !selected { titleLabel.theme_textColor = textColor }
+            if !selected { titleLabel.textColor = textColor }
         }
     }
     
     /// 高亮时文字颜色
-    open var highlightTextColor = FFTheme.TabBar.barItemHighlightTextAndIconColor
+    open var highlightTextColor = NKThemeProvider.currentTheme.tabBarItemHighlightText
     {
         didSet {
-            if selected { titleLabel.theme_textColor = highlightIconColor }
+            if selected { titleLabel.textColor = highlightTextColor }
         }
     }
     
     /// icon颜色
-    open var iconColor = FFTheme.TabBar.barItemNormalTextAndIconColor
+    open var iconColor = NKThemeProvider.currentTheme.tabBarItemIcon
     {
         didSet {
-            if !selected { imageView.theme_tintColor = iconColor }
+            if !selected { imageView.tintColor = iconColor }
         }
     }
     
     /// 高亮时icon颜色
-    open var highlightIconColor =  FFTheme.TabBar.barItemHighlightTextAndIconColor
+    open var highlightIconColor = NKThemeProvider.currentTheme.tabBarItemHighlightIcon
     {
         didSet {
-            if selected { imageView.theme_tintColor = highlightIconColor }
+            if selected { imageView.tintColor = highlightIconColor }
         }
     }
     
     /// 背景颜色
-    open var backdropColor = FFTheme.TabBar.barItemBackgroundColor
+    open var backdropColor = NKThemeProvider.currentTheme.tabBarItemBackground
     {
         didSet {
-            if !selected { theme_backgroundColor = backdropColor }
+            if !selected { backgroundColor = backdropColor }
         }
     }
     
     /// 高亮时背景颜色
-    open var highlightBackdropColor = FFTheme.TabBar.barItemBackgroundColor
+    open var highlightBackdropColor = NKThemeProvider.currentTheme.tabBarItemHightBackground
     {
         didSet {
-            if selected { theme_backgroundColor = highlightBackdropColor }
+            if selected { backgroundColor = highlightBackdropColor }
         }
     }
     
@@ -197,9 +197,9 @@ open class ESTabBarItemContentView: UIView {
         addSubview(imageView)
         addSubview(titleLabel)
         
-        titleLabel.theme_textColor = textColor
-        imageView.theme_tintColor = iconColor
-        theme_backgroundColor = backdropColor
+        titleLabel.textColor = textColor
+        imageView.tintColor = iconColor
+        backgroundColor = backdropColor
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -208,9 +208,9 @@ open class ESTabBarItemContentView: UIView {
 
     open func updateDisplay() {
         imageView.image = (selected ? (selectedImage ?? image) : image)?.withRenderingMode(renderingMode)
-        imageView.theme_tintColor = selected ? highlightIconColor : iconColor
-        titleLabel.theme_textColor = selected ? highlightTextColor : textColor
-        theme_backgroundColor = selected ? highlightBackdropColor : backdropColor
+        imageView.tintColor = selected ? highlightIconColor : iconColor
+        titleLabel.textColor = selected ? highlightTextColor : textColor
+        backgroundColor = selected ? highlightBackdropColor : backdropColor
     }
     
     open func updateLayout() {
