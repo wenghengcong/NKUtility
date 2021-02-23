@@ -86,18 +86,29 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
         }
     }
     
+    /// 背景颜色
+    open var barBackgroundColor = NKThemeProvider.currentTheme.barBackgroundColor
+    {
+        didSet {
+            // set tabbar back
+            self.tabBar.barTintColor = barBackgroundColor
+            self.tabBar.isTranslucent = false
+        }
+    }
+    
     /// Customize set tabBar use KVC.
     open override func viewDidLoad() {
         super.viewDidLoad()
         let tabBar = { () -> ESTabBar in 
             let tabBar = ESTabBar()
             tabBar.delegate = self
-            tabBar.backdropColor = NKThemeProvider.currentTheme.tabBarBackgroundColor
             tabBar.customDelegate = self
             tabBar.tabBarController = self
             return tabBar
         }()
         self.setValue(tabBar, forKey: "tabBar")
+        barBackgroundColor = NKThemeProvider.currentTheme.barBackgroundColor
+        tabBar.itemCustomPositioning = .automatic
     }
 
     // MARK: - UITabBar delegate

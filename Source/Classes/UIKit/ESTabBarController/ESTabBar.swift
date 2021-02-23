@@ -104,12 +104,6 @@ open class ESTabBar: UITabBar {
         }
     }
     
-    /// 背景颜色
-    open var backdropColor = NKThemeProvider.currentTheme.tabBarBackgroundColor {
-        didSet {
-            barTintColor = backdropColor
-        }
-    }
     
     /// tabBar自定义item的容器view
     internal var containers = [ESTabBarItemContainer]()

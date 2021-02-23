@@ -41,8 +41,11 @@ public protocol NKThemeProtocol {
     /// 文字中的代码颜色
     var codeColor: UIColor {get}
     
+    // MARK: - Cell
+    var tableCellBackgroundColor: UIColor {get}
+
     // MARK: - Tabbar
-    var tabBarBackgroundColor: UIColor {get}
+    var barBackgroundColor: UIColor {get}
     
     var tabBarItemBackgroundColor: UIColor {get}
     var tabBarItemBackgroundColorHighlight: UIColor {get}
@@ -55,6 +58,115 @@ public protocol NKThemeProtocol {
     /// 分隔线颜色，例如 tableViewSeparator
     var separatorColor: UIColor {get}
     
+    ///  边框颜色
+    var borderColor: UIColor {get}
+
     /// App 首页每个单元格的颜色
     var gridItemTintColor: UIColor {get}
+    
+  
+}
+
+protocol PropertyReflectable { }
+
+extension PropertyReflectable {
+    subscript(key: String) -> Any? {
+        let m = Mirror(reflecting: self)
+        for child in m.children {
+            if child.label == key { return child.value }
+        }
+        return nil
+    }
+}
+
+@objcMembers
+open class NKThemeImpProtocol: NSObject, NKThemeProtocol, PropertyReflectable {
+    open var name: String {
+        return "Light"
+    }
+    
+    open var tintColor: UIColor {
+        return UIColor(hex: "#34C759")
+    }
+    
+    // MARK: - 背景
+    open var backgroundColor: UIColor {
+        return .white
+    }
+    
+    open var backgroundColorLighten: UIColor {
+        return .white
+    }
+    
+    open var backgroundColorHighlighted: UIColor {
+        return UIColor(rgb: (238, 239, 241))
+    }
+    
+    // MARK: - Text
+    open var titleTextColor: UIColor {
+        return .black
+    }
+    
+    open var mainTextColor: UIColor {
+        return .lightGray
+    }
+    
+    open var descriptionTextColor: UIColor {
+        return .lightGray
+    }
+    
+    open var placeholderColor: UIColor {
+        return .lightGray
+    }
+    
+    open var codeColor: UIColor {
+        return self.tintColor
+    }
+    
+    // MARK: - Cell
+    open var tableCellBackgroundColor: UIColor {
+        return .white
+    }
+    
+    // MARK: - Tabbar
+    open var barBackgroundColor: UIColor {
+        return .clear
+    }
+    
+    open var tabBarItemBackgroundColor: UIColor {
+        return .clear
+    }
+    
+    open var tabBarItemBackgroundColorHighlight: UIColor {
+        return .clear
+    }
+    
+    open var tabBarItemTextColor: UIColor {
+        return titleTextColor
+    }
+    
+    open var tabBarItemIconColor: UIColor {
+        return titleTextColor
+    }
+    
+    open var tabBarItemTextColorHighlight: UIColor {
+        return tintColor
+    }
+    
+    open var tabBarItemIconColorHighlight: UIColor {
+        return tintColor
+    }
+    
+    // MARK: - 其他
+    open var separatorColor: UIColor {
+        return UIColor(rgb: (46, 50, 54))
+    }
+    
+    open var borderColor: UIColor {
+        return UIColor(rgb: (46, 50, 54))
+    }
+    
+    open var gridItemTintColor: UIColor {
+        return UIColor(rgb: (238, 239, 241))
+    }
 }

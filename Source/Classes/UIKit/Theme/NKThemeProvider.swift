@@ -15,12 +15,12 @@ public class NKThemeProvider {
     
     public static let shared = NKThemeProvider()
     
-    public var themes: [NKThemeProtocol] = []
+    public var themes: [NKThemeImpProtocol] = []
     public var currentIndex = 0
     public var lightIndex = 0
     public var nightIndex = 1
     
-    public func launch(themes:[NKThemeProtocol], lightIndex: Int, nightIndex: Int) {
+    public func launch(themes:[NKThemeImpProtocol], lightIndex: Int, nightIndex: Int) {
         assert(lightIndex < themes.count && nightIndex < themes.count, "检查传入主题数目与 index")
         self.themes = themes
         self.lightIndex = lightIndex
@@ -65,7 +65,7 @@ public class NKThemeProvider {
     
     public func switchToNext() {
         var next = ThemeManager.currentThemeIndex + 1
-        if next > themes.count { next = 0 } // cycle and without Night
+        if next >= themes.count { next = 0 } // cycle and without Night
         switchTo(index: next)
     }
     
@@ -90,5 +90,29 @@ public class NKThemeProvider {
     
     public func saveLastTheme() {
         defaults.set(ThemeManager.currentThemeIndex, forKey: lastThemeIndexKey)
+    }
+}
+
+public extension NKThemeProvider {
+    public static func getColorPicker(name property: String)  -> ThemeColorPicker {
+        var colors: [String] = []
+        for theme in shared.themes {
+            if let color = theme.value(forKey: property) as? UIColor {
+                colors.append(color.hexString)
+            }
+        }
+        let colorpickier: ThemeColorPicker = ThemeColorPicker(colors: colors)
+        return colorpickier
+    }
+    
+    public static func getCGColorPicker(name property: String)  -> ThemeCGColorPicker {
+        var colors: [String] = []
+        for theme in shared.themes {
+            if let color = theme.value(forKey: property) as? UIColor {
+                colors.append(color.hexString)
+            }
+        }
+        let colorpickier: ThemeCGColorPicker = ThemeCGColorPicker(colors: colors)
+        return colorpickier
     }
 }
