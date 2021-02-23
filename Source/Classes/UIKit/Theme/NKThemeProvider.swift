@@ -101,7 +101,7 @@ public extension NKThemeProvider {
                 colors.append(color.hexString)
             }
         }
-        let colorpickier: ThemeColorPicker = ThemeColorPicker(colors: colors)
+        let colorpickier: ThemeColorPicker = ThemeColorPicker.pickerWithColors(colors)
         return colorpickier
     }
     
@@ -112,7 +112,38 @@ public extension NKThemeProvider {
                 colors.append(color.hexString)
             }
         }
-        let colorpickier: ThemeCGColorPicker = ThemeCGColorPicker(colors: colors)
+        let colorpickier: ThemeCGColorPicker = ThemeCGColorPicker.pickerWithColors(colors)
         return colorpickier
+    }
+}
+
+// MARK: - for tabbar
+public extension NKThemeProvider {
+    public static var barBackgroundColor: ThemeColorPicker {
+        return getColorPicker(name: "barBackgroundColor")
+    }
+
+    public static var tabBarItemBackgroundColor: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemBackgroundColor")
+    }
+    
+    public static var tabBarItemBackgroundColorHighlight: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemBackgroundColorHighlight")
+    }
+    
+    public static var tabBarItemTextColor: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemTextColor")
+    }
+    
+    public static var tabBarItemIconColor: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemIconColor")
+    }
+    
+    public static var tabBarItemTextColorHighlight: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemTextColorHighlight")
+    }
+    
+    public static var tabBarItemIconColorHighlight: ThemeColorPicker {
+        return getColorPicker(name: "tabBarItemIconColorHighlight")
     }
 }

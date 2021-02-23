@@ -1,0 +1,16 @@
+
+
+> ThemeColorPicker.swift
+    public convenience init(colors: [String]) {
+        self.init(v: { ThemeManager.colorElement(for: colors) })
+    }
+
+> ThemeCGColorPicker
+    public convenience init(colors: [String]) {
+        self.init(v: { ThemeManager.colorElement(for: colors)?.cgColor })
+    }
+    
+> ThemeAttributedStringPicker
+    public convenience init(_ attributedStrings: [NSAttributedString]) {
+        self.init(v: { ThemeManager.element(for: attributedStrings) })
+    }

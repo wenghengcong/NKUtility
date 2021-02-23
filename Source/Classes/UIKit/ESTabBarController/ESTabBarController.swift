@@ -87,11 +87,11 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     }
     
     /// 背景颜色
-    open var barBackgroundColor = NKThemeProvider.currentTheme.barBackgroundColor
+    open var barBackgroundColor = NKThemeProvider.barBackgroundColor
     {
         didSet {
             // set tabbar back
-            self.tabBar.barTintColor = barBackgroundColor
+            self.tabBar.theme_barTintColor = barBackgroundColor
             self.tabBar.isTranslucent = false
         }
     }
@@ -107,7 +107,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
             return tabBar
         }()
         self.setValue(tabBar, forKey: "tabBar")
-        barBackgroundColor = NKThemeProvider.currentTheme.barBackgroundColor
+        barBackgroundColor = NKThemeProvider.barBackgroundColor
         tabBar.itemCustomPositioning = .automatic
     }
 
