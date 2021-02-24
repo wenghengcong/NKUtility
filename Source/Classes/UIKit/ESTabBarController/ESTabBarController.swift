@@ -87,7 +87,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     }
     
     /// 背景颜色
-    open var barBackgroundColor = NKThemeProvider.barBackgroundColor
+    open var barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
     {
         didSet {
             // set tabbar back
@@ -107,7 +107,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
             return tabBar
         }()
         self.setValue(tabBar, forKey: "tabBar")
-        barBackgroundColor = NKThemeProvider.barBackgroundColor
+        barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
         tabBar.itemCustomPositioning = .automatic
     }
 

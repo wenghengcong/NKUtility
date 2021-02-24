@@ -51,7 +51,7 @@ open class ESTabBarItemContentView: UIView {
     open var highlightEnabled = true
     
     /// 文字颜色
-    open var textColor = NKThemeProvider.tabBarItemTextColor
+    open var textColor = NKThemeProvider.tabBarItemTextColorPicker
     {
         didSet {
             if !selected { titleLabel.theme_textColor = textColor }
@@ -59,7 +59,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时文字颜色
-    open var highlightTextColor = NKThemeProvider.tabBarItemTextColorHighlight
+    open var highlightTextColor = NKThemeProvider.tabBarItemTextColorHighlightPicker
     {
         didSet {
             if selected { titleLabel.theme_textColor = highlightTextColor }
@@ -67,7 +67,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// icon颜色
-    open var iconColor = NKThemeProvider.tabBarItemIconColor
+    open var iconColor = NKThemeProvider.tabBarItemIconColorPicker
     {
         didSet {
             if !selected { imageView.theme_tintColor = iconColor }
@@ -75,7 +75,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时icon颜色
-    open var highlightIconColor = NKThemeProvider.tabBarItemIconColorHighlight
+    open var highlightIconColor = NKThemeProvider.tabBarItemIconColorHighlightPicker
     {
         didSet {
             if selected { imageView.theme_tintColor = highlightIconColor }
@@ -83,7 +83,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 背景颜色
-    open var backdropColor = NKThemeProvider.tabBarItemBackgroundColor
+    open var backdropColor = NKThemeProvider.tabBarItemBackgroundColorPicker
     {
         didSet {
             if !selected { theme_backgroundColor = backdropColor }
@@ -91,7 +91,7 @@ open class ESTabBarItemContentView: UIView {
     }
     
     /// 高亮时背景颜色
-    open var highlightBackdropColor = NKThemeProvider.tabBarItemBackgroundColorHighlight
+    open var highlightBackdropColor = NKThemeProvider.tabBarItemBackgroundColorHighlightPicker
     {
         didSet {
             if selected { theme_backgroundColor = highlightBackdropColor }
