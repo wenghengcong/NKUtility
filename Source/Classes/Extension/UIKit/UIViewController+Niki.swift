@@ -16,9 +16,12 @@ public extension UIViewController {
         // http://stackoverflow.com/questions/2777438/how-to-tell-if-uiviewcontrollers-view-is-visible
         return isViewLoaded && view.window != nil
     }
-    
+}
+
+// MARK: - Dark Mode
+public extension UIViewController {
     /// 暗黑模式
-    var isDarkMode: Bool {
+    public var isDarkMode: Bool {
         if #available(iOS 13.0, *) {
             return self.traitCollection.userInterfaceStyle == .dark
         } else {
@@ -26,6 +29,28 @@ public extension UIViewController {
         }
     }
     
+    /// 检查当前是否是暗黑模式下
+    /// - Parameters:
+    ///   - lightHandler: <#lightHandler description#>
+    ///   - darkHandler: <#darkHandler description#>
+    public func detectDarkMode(lightHandler: ((UIUserInterfaceStyle) -> Void)? = nil,
+                               darkHandler: ((UIUserInterfaceStyle) -> Void)? = nil) {
+        let style = traitCollection.userInterfaceStyle
+        switch style {
+        case .light, .unspecified:
+            print("light mode now")
+            if let handler = lightHandler {
+                handler(style)
+            }
+        case .dark:
+            print("dark mode now")
+            if let handler = darkHandler {
+                handler(style)
+            }
+        @unknown default:
+            fatalError()
+        }
+    }
 }
 
 // MARK: - Navigation bar
