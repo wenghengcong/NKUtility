@@ -16,6 +16,11 @@ public class NKThemeProvider {
     public static let shared = NKThemeProvider()
     
     public var themes: [NKThemeImpProtocol] = []
+    
+    /// 切换主题前的主题 index
+    public var lastIndex = 0
+    
+    /// 当前的主题 index
     public var currentIndex = 0
     public var lightIndex = 0
     public var nightIndex = 1
@@ -29,24 +34,24 @@ public class NKThemeProvider {
     }
     
     public static var currentTheme: NKThemeProtocol {
-        return shared.current
+        return shared.currentTheme
     }
     
     public static var lastTheme: NKThemeProtocol {
-        return shared.last ?? shared.current
+        return shared.lastTheme ?? shared.currentTheme
     }
     
     // MARK: -
-    public var current: NKThemeProtocol {
+    public var currentTheme: NKThemeProtocol {
         assert(currentIndex < themes.count, "index 出错")
         let theme = themes[currentIndex]
         return theme
     }
     
-    public var last: NKThemeProtocol?
+    public var lastTheme: NKThemeProtocol?
     
-    public var color: NKThemeProtocol {
-        return current
+    public var colorTheme: NKThemeProtocol {
+        return currentTheme
     }
     
     // MARK: - Switch Theme
@@ -56,10 +61,11 @@ public class NKThemeProvider {
         guard currentIndex != index else {
             return
         }
+        lastIndex = currentIndex    // 保存切换前的主题 index
+        lastTheme = themes[lastIndex]
+
         ThemeManager.setTheme(index: index)
-        currentIndex = index
-        let theme = themes[index]
-        last = theme
+        currentIndex = index        // 更新当前 index
         saveLastTheme()
     }
     
@@ -73,7 +79,7 @@ public class NKThemeProvider {
     public func switchNight(isToNight: Bool = true) {
         switchTo(index: isToNight ? nightIndex : lastThemeIndex())
     }
-    
+        
     public func isNight() -> Bool {
         return currentIndex == nightIndex
     }
@@ -89,7 +95,7 @@ public class NKThemeProvider {
     }
     
     public func saveLastTheme() {
-        defaults.set(ThemeManager.currentThemeIndex, forKey: lastThemeIndexKey)
+        defaults.set(lastIndex, forKey: lastThemeIndexKey)
     }
 }
 
