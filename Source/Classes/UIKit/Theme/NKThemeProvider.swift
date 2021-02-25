@@ -17,6 +17,28 @@ public class NKThemeProvider {
     
     public var themes: [NKThemeImpProtocol] = []
     
+    public var isFollowingSystem: Bool {
+        set {
+            isFollowingSystem = newValue
+            UserDefaults.standard.setValue(isFollowingSystem, forKey: NKUserDefaultKey.UI.darkModelFollowingSystem)
+            UserDefaults.standard.synchronize()
+        }
+        get {
+            let followingSystem: Bool = (UserDefaults.standard.value(forKey: NKUserDefaultKey.UI.darkModelFollowingSystem) as? Bool) ?? true
+            return followingSystem
+        }
+    }
+    
+    public func checkFollowingSystem() {
+        let isInSystemDark = UIViewController().isDarkMode
+        let appFollowing = isFollowingSystem
+        if appFollowing && isInSystemDark {
+            NKThemeProvider.shared.switchNight()
+        } else {
+            NKThemeProvider.shared.switchNight(isToNight: false)
+        }
+    }
+    
     /// 切换主题前的主题 index
     public var lastIndex = 0
     
@@ -31,6 +53,7 @@ public class NKThemeProvider {
         self.lightIndex = lightIndex
         self.nightIndex = nightIndex
         restoreLastTheme()
+        checkFollowingSystem()
     }
     
     public static var currentTheme: NKThemeProtocol {

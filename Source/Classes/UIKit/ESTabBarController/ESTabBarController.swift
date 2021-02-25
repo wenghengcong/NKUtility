@@ -110,6 +110,16 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
         barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
         tabBar.itemCustomPositioning = .automatic
     }
+    
+    // MARK: - Theme
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 13.0, *) {
+            NKThemeProvider.shared.checkFollowingSystem()
+        } else {
+            // Fallback on earlier versions
+        }
+    }
 
     // MARK: - UITabBar delegate
     open override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
