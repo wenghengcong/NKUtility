@@ -196,12 +196,18 @@ public class  NKWebViewController: UIViewController {
             if !closing {
                 toolbar.items = items as? [UIBarButtonItem]
                 if presentingViewController == nil {
-                    toolbar.barTintColor = navigationController!.navigationBar.barTintColor
+                    if let barTintColor = navigationController?.navigationBar.barTintColor {
+                        toolbar.barTintColor = barTintColor
+                    }
                 }
                 else {
-                    toolbar.barStyle = navigationController!.navigationBar.barStyle
+                    if let barStyle = navigationController?.navigationBar.barStyle {
+                        toolbar.barStyle = barStyle
+                    }
                 }
-                toolbar.tintColor = navigationController!.navigationBar.tintColor
+                if let barTintColor = navigationController?.navigationBar.barTintColor {
+                    toolbar.barTintColor = barTintColor
+                }
             }
             navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
             

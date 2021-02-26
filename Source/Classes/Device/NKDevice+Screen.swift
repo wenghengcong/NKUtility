@@ -7,6 +7,10 @@
 
 import UIKit
 
+/// all iphone scree guide
+/// https://screensiz.es/
+/// https://www.dimensions.com/collection/apple-iphones
+/// https://ios-resolution.com/
 extension NKDevice {
     // The device screen size.
     #if os(iOS) || os(watchOS)
@@ -447,11 +451,19 @@ extension NKDevice.Screen {
     
     // MARK: Orientation
     public static func isPortrait() -> Bool {
-        return UIDevice.current.orientation.isPortrait
+        if UIDevice.current.orientation.isValidInterfaceOrientation {
+            return UIDevice.current.orientation.isPortrait
+        } else {
+            return UIApplication.shared.statusBarOrientation.isPortrait
+        }
     }
 
     public static func isLandscape() -> Bool {
-        return UIDevice.current.orientation.isLandscape
+        if UIDevice.current.orientation.isValidInterfaceOrientation {
+            return UIDevice.current.orientation.isLandscape
+        } else {
+            return UIApplication.shared.statusBarOrientation.isLandscape
+        }
     }
 }
 
@@ -462,44 +474,60 @@ extension NKDevice.Screen {
 extension NKDevice.Screen {
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
     public static func scaleBase320(_ x: CGFloat) -> CGFloat {
-        let scale = width/320
+        var scale = width/320
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
     }
     
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
     public static func scaleBase360(_ x: CGFloat) -> CGFloat {
-        let scale = width/360.0
+        var scale = width/360.0
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
     }
     
     /// 设计稿全部以iPhone XS Max， iPhone 11 Pro Max尺寸设计
     public static func scaleBase375(_ x: CGFloat) -> CGFloat {
-        let scale = width/375
+        var scale = width/375
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
     }
     
     /// 设计稿全部以iPhone 5尺寸设计
     public static func scaleBase390(_ x: CGFloat) -> CGFloat {
-        let scale = width/390
+        var scale = width/390
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
     }
     
     /// 设计稿全部以iPhone 6尺寸设计
     public static func scaleBase414(_ x: CGFloat) -> CGFloat {
-        let scale = width/414.0
+        var scale = width/414.0
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
     }
     
     /// 设计稿全部以iPhone 6 Plus尺寸设计
     public static func scaleBase428(_ x: CGFloat) -> CGFloat {
-        let scale = width/428
+        var scale = width/428
+        scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return result
+    }
+    
+    public static func scaleChangeInIPAD(_ x: CGFloat) -> CGFloat {
+        var oriScale = x
+        if NKDevice.isIPad() {
+            if x > 1.5 {
+                oriScale = 1.5
+            }
+        }
+        return oriScale
     }
 }
 #endif

@@ -257,8 +257,6 @@ public extension UIViewController {
         let visible = UIScreen.mainHeight-topAndBot
         return visible
     }
-    
-    
 }
 
 #endif

@@ -24,13 +24,23 @@ public extension UIScreen {
     static let mainBounds  = main.bounds
 
     /// 屏幕Size
-    static let mainSize  = mainBounds.size
+    static let mainSize = mainBounds.size
 
     /// 屏幕width
-    static let mainWidth  = mainSize.width
+    static var mainWidth: CGFloat {
+        if NKDevice.Screen.isLandscape() {
+            return mainSize.height
+        }
+        return mainSize.width
+    }
 
     /// 屏幕height
-    static let mainHeight  = mainSize.height
+    static var mainHeight: CGFloat {
+        if NKDevice.Screen.isLandscape() {
+            return mainSize.width
+        }
+        return mainSize.height
+    }
     
     static let mainMaxLength  = max(mainWidth, mainHeight)
     
