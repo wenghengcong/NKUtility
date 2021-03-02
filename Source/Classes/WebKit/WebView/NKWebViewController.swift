@@ -37,7 +37,8 @@ public class  NKWebViewController: UIViewController {
     open var closing: Bool! = false
     open var request: URLRequest!
     open var navBarTitle: UILabel!
-    open var sharingEnabled = true
+    open var sharingEnabled = true 
+    open var toolBarHidden = false
     
     /** The style of progress indication visualization. Can be one of four values: .ActivityIndicator, .ProgressView, .Both, .None*/
     open var progressIndicatorStyle: NKWebViewControllerProgressIndicatorStyle = .both
@@ -54,6 +55,7 @@ public class  NKWebViewController: UIViewController {
     
     // MARK: Private Properties
     fileprivate var progressView: UIProgressView!
+    fileprivate var ipadToolbar = UIToolbar()
     fileprivate var toolbarContainer: NKWebViewToolbar!
     fileprivate var toolbarHeightConstraint: NSLayoutConstraint!
     fileprivate var toolbarHeight: CGFloat = 44
@@ -130,10 +132,22 @@ public class  NKWebViewController: UIViewController {
     
     
     lazy var webView: WKWebView = {
-        var tempWebView = WKWebView(frame: UIScreen.main.bounds)
+        var tempWebView = WKWebView()
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let views: [String: Any] = [
+          "webView": tempWebView]
+        var allConstraints: [NSLayoutConstraint] = []
+        let horConstraints = NSLayoutConstraint.constraints(
+          withVisualFormat: "H:|-[webView]-]", metrics: nil, views: views)
+        allConstraints += horConstraints
+
+        let verticalConstraints = NSLayoutConstraint.constraints(
+          withVisualFormat: "V:|-[webView]-]", metrics: nil, views: views)
+        allConstraints += verticalConstraints
+        NSLayoutConstraint.activate(allConstraints)
         return tempWebView;
     }()
     
@@ -179,34 +193,35 @@ public class  NKWebViewController: UIViewController {
     
     func updateToolbarItems() {
         backForwardListChanged()
-
+        if toolBarHidden {
+            return
+        }
         let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
         let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-        
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
-            
+      
+        if (NKDevice.isIPad()) {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
             
             let items: NSArray = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
             
-            let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: toolbarHeight))
+            ipadToolbar.frame =  CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: toolbarHeight)
             if !closing {
-                toolbar.items = items as? [UIBarButtonItem]
+                ipadToolbar.items = items as? [UIBarButtonItem]
                 if presentingViewController == nil {
                     if let barTintColor = navigationController?.navigationBar.barTintColor {
-                        toolbar.barTintColor = barTintColor
+                        ipadToolbar.barTintColor = barTintColor
                     }
                 }
                 else {
                     if let barStyle = navigationController?.navigationBar.barStyle {
-                        toolbar.barStyle = barStyle
+                        ipadToolbar.barStyle = barStyle
                     }
                 }
                 if let barTintColor = navigationController?.navigationBar.barTintColor {
-                    toolbar.barTintColor = barTintColor
+                    ipadToolbar.barTintColor = barTintColor
                 }
             }
             navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
@@ -297,9 +312,22 @@ extension  NKWebViewController {
 //MARK: - UI-progress/error
 extension  NKWebViewController {
     
+    fileprivate func updateToolbarHidden() {
+        let bottomHeight = toolBarHidden ? 0 : toolbarHeight+topBarHeight
+        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-bottomHeight)
+        if (NKDevice.isIPad()) {
+            ipadToolbar.isHidden = toolBarHidden
+        } else {
+            navigationController?.setToolbarHidden(toolBarHidden, animated: true)
+        }
+     
+    }
+    
     fileprivate func setupWebview() {
         view.insertSubview(webView, at: 0)
-        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-topBarHeight-toolbarHeight)
+        let bottomHeight = toolBarHidden ? 0 : toolbarHeight+topBarHeight
+        
+        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-bottomHeight)
     }
     
     fileprivate func progressChanged(_ newValue: NSNumber) {
@@ -409,7 +437,6 @@ extension  NKWebViewController {
     
     override public func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
-        
         updateToolbarItems()
         navBarTitle = UILabel()
         navBarTitle.backgroundColor = UIColor.clear
@@ -438,6 +465,8 @@ extension  NKWebViewController {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        updateToolbarHidden()
+
         if let navVC = self.navigationController {
             if let gestureRecognizer = navVC.interactivePopGestureRecognizer {
                 navControllerUsesBackSwipe = gestureRecognizer.isEnabled
@@ -449,7 +478,7 @@ extension  NKWebViewController {
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        
+        navigationController?.setToolbarHidden(false, animated: true)
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
             self.navigationController?.setToolbarHidden(true, animated: true)
         }

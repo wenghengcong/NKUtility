@@ -5,8 +5,23 @@
 //  Created by Hunt on 2020/11/9.
 //
 
-import UIKit
+
+#if canImport(Foundation)
 import Foundation
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+
 
 public extension NSString {
 
