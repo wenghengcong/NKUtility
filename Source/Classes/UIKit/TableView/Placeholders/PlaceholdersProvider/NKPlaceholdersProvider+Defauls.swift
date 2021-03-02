@@ -105,7 +105,7 @@ extension NKPlaceholdersProvider {
 extension NKPlaceholdersProvider {
     
     static func image(named name: String) -> UIImage? {
-        let image = UIImage(named: name) ?? UIImage(named: name, in: Bundle(for: self), compatibleWith: nil)
+        let image = UIImage(named: name) ?? UIImage(named: name, in: Bundle.nikiFrameworkBundle(), compatibleWith: nil)
         
         return image
     }
