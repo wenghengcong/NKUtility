@@ -142,7 +142,7 @@ open class PillButtonBar: UIScrollView {
         }
     }
 
-    @objc public convenience init(pillButtonStyle: PillButtonStyle = .outline) {
+    @objc public convenience init(pillButtonStyle: PillButtonStyle = .primary) {
         self.init(pillButtonStyle: pillButtonStyle,
                   pillButtonBackgroundColor: nil,
                   selectedPillButtonBackgroundColor: nil,
@@ -150,7 +150,7 @@ open class PillButtonBar: UIScrollView {
                   selectedPillButtonTextColor: nil)
     }
 
-    @objc public convenience init(pillButtonStyle: PillButtonStyle = .outline,
+    @objc public convenience init(pillButtonStyle: PillButtonStyle = .primary,
                                   pillButtonBackgroundColor: UIColor? = nil) {
         self.init(pillButtonStyle: pillButtonStyle,
                   pillButtonBackgroundColor: pillButtonBackgroundColor,
@@ -159,7 +159,7 @@ open class PillButtonBar: UIScrollView {
                   selectedPillButtonTextColor: nil)
     }
 
-    @objc public init(pillButtonStyle: PillButtonStyle = .outline,
+    @objc public init(pillButtonStyle: PillButtonStyle = .primary,
                       pillButtonBackgroundColor: UIColor? = nil,
                       selectedPillButtonBackgroundColor: UIColor? = nil,
                       pillButtonTextColor: UIColor? = nil,
@@ -422,9 +422,8 @@ open class PillButtonBar: UIScrollView {
 
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
-        if #available(iOS 13, *) {
-            addInteraction(UILargeContentViewerInteraction())
-        }
+
+        addInteraction(UILargeContentViewerInteraction())
     }
 
     private func setupStackView() {
@@ -518,8 +517,7 @@ extension PillButtonBar: UIPointerInteractionDelegate {
 
     @available(iOS 13.4, *)
     public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        let index = region.identifier as! Int
-        guard let superview = window, index < buttons.count else {
+        guard let superview = window, let index = region.identifier as? Int, index < buttons.count else {
             return nil
         }
 
@@ -534,18 +532,22 @@ extension PillButtonBar: UIPointerInteractionDelegate {
 
     @available(iOS 13.4, *)
     public func pointerInteraction(_ interaction: UIPointerInteraction, willEnter region: UIPointerRegion, animator: UIPointerInteractionAnimating) {
-        let index = region.identifier as! Int
+        guard let index = region.identifier as? Int else {
+            return
+        }
         if let window = window, customPillButtonBackgroundColor == nil, index < buttons.count {
             let pillButton = buttons[index]
             if !pillButton.isSelected {
-                pillButton.customBackgroundColor = pillButton.style.hoverBackgroundColor(for: window)
+                pillButton.customBackgroundColor = PillButton.hoverBackgroundColor(for: window, for: pillButton.style)
             }
         }
     }
 
     @available(iOS 13.4, *)
     public func pointerInteraction(_ interaction: UIPointerInteraction, willExit region: UIPointerRegion, animator: UIPointerInteractionAnimating) {
-        let index = region.identifier as! Int
+        guard let index = region.identifier as? Int else {
+            return
+        }
         if customPillButtonBackgroundColor == nil && index < buttons.count {
             let pillButton = buttons[index]
             pillButton.customBackgroundColor = nil

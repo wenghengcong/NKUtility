@@ -7,6 +7,7 @@
 //
 
 import WebKit
+import SnapKit
 
 public enum NKWebViewControllerProgressIndicatorStyle {
     case activityIndicator
@@ -136,18 +137,6 @@ public class  NKWebViewController: UIViewController {
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let views: [String: Any] = [
-          "webView": tempWebView]
-        var allConstraints: [NSLayoutConstraint] = []
-        let horConstraints = NSLayoutConstraint.constraints(
-          withVisualFormat: "H:|-[webView]-]", metrics: nil, views: views)
-        allConstraints += horConstraints
-
-        let verticalConstraints = NSLayoutConstraint.constraints(
-          withVisualFormat: "V:|-[webView]-]", metrics: nil, views: views)
-        allConstraints += verticalConstraints
-        NSLayoutConstraint.activate(allConstraints)
         return tempWebView;
     }()
     
@@ -192,10 +181,10 @@ public class  NKWebViewController: UIViewController {
     // Toolbar
     
     func updateToolbarItems() {
-        backForwardListChanged()
         if toolBarHidden {
             return
         }
+        backForwardListChanged()
         let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
@@ -313,35 +302,43 @@ extension  NKWebViewController {
 extension  NKWebViewController {
     
     fileprivate func updateToolbarHidden() {
-        let bottomHeight = toolBarHidden ? 0 : toolbarHeight+topBarHeight
-        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-bottomHeight)
         if (NKDevice.isIPad()) {
             ipadToolbar.isHidden = toolBarHidden
         } else {
-            navigationController?.setToolbarHidden(toolBarHidden, animated: true)
+            navigationController?.setToolbarHidden(toolBarHidden, animated: false)
         }
-     
-    }
-    
-    fileprivate func setupWebview() {
-        view.insertSubview(webView, at: 0)
-        let bottomHeight = toolBarHidden ? 0 : toolbarHeight+topBarHeight
+       
+        let allBarHeight = toolBarHidden ? topBarHeight : topBarHeight+tabBarHeight
+        let webHeight = NKSCREEN_HEIGHT-allBarHeight
         
-        webView.frame = CGRect(x: 0, y: 0, width: view.width, height: view.height-bottomHeight)
+        webView.snp.remakeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.top.equalTo(0)
+            make.height.equalTo(webHeight)
+        }
     }
     
-    fileprivate func progressChanged(_ newValue: NSNumber) {
+    fileprivate func setupProgressView() {
         if progressView == nil {
             progressView = UIProgressView()
             progressView.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(progressView)
-//            progressView.frame = CGRect(x: 0, y: 0, width: view.width, height: 2.0)
-            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-0-[progressView]-0-|", options: [], metrics: nil, views: ["progressView": progressView!]))
+            
             let safeInsetTop = self.view.safeAreaInsets.top;
-            let visualFormtString = String(format: "V:|-%d-[progressView(2)]", safeInsetTop)
-            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormtString, options: [], metrics: nil, views: ["progressView": progressView!]))
+            progressView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.height.equalTo(2)
+                make.top.equalTo(safeInsetTop)
+            }
         }
-        
+    }
+    
+    fileprivate func setupWebview() {
+        view.insertSubview(webView, at: 0)
+        webView.frame = view.bounds
+    }
+    
+    fileprivate func progressChanged(_ newValue: NSNumber) {
         progressView.progress = newValue.floatValue
         if progressView.progress == 1 {
             progressView.progress = 0
@@ -429,12 +426,14 @@ extension  NKWebViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         // 设置edgesForExtendedLayout可以使得 webview 从导航栏bottom 开始布局
-        edgesForExtendedLayout = []
+//        edgesForExtendedLayout = []
+        view.autoresizingMask = .flexibleHeight
         setupWebview()
+        setupProgressView()
         addObserver()
         loadRequest(request)
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
         updateToolbarItems()
@@ -466,7 +465,6 @@ extension  NKWebViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateToolbarHidden()
-
         if let navVC = self.navigationController {
             if let gestureRecognizer = navVC.interactivePopGestureRecognizer {
                 navControllerUsesBackSwipe = gestureRecognizer.isEnabled

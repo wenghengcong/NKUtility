@@ -171,10 +171,7 @@ open class TableViewCellFileAccessoryView: UIView {
 
     private lazy var actionsStackView: UIStackView = {
         let stackView = createHorizontalStackView()
-
-        if #available(iOS 13, *) {
-            stackView.addInteraction(UILargeContentViewerInteraction())
-        }
+        stackView.addInteraction(UILargeContentViewerInteraction())
 
         return stackView
     }()
@@ -226,7 +223,7 @@ open class TableViewCellFileAccessoryView: UIView {
 
     private func updateSharedStatus() {
         let imageName = isShared ? "ic_fluent_people_24_regular" : "ic_fluent_person_24_regular"
-        sharedStatusImageView.image = UIImage.staticImageNamed(imageName)!.image(withPrimaryColor: Colors.gray500)
+        sharedStatusImageView.image = UIImage.staticImageNamed(imageName)?.image(withPrimaryColor: Colors.gray500)
         sharedStatusLabel.text = isShared ? "Common.Shared".localized : "Common.OnlyMe".localized
     }
 
@@ -500,11 +497,9 @@ private class FileAccessoryViewActionView: UIButton {
             heightAnchor.constraint(greaterThanOrEqualToConstant: FileAccessoryViewActionView.size.height)
         ])
 
-        if #available(iOS 13, *) {
-            showsLargeContentViewer = true
-            scalesLargeContentImage = true
-            largeContentTitle = action.title
-        }
+        showsLargeContentViewer = true
+        scalesLargeContentImage = true
+        largeContentTitle = action.title
 
         if #available(iOS 13.4, *) {
             // Workaround check for beta iOS versions missing the Pointer Interactions API

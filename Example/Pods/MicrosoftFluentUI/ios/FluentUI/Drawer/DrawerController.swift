@@ -488,9 +488,7 @@ open class DrawerController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
-        if #available(iOS 13.0, *) {
-            view.layer.cornerCurve = .continuous
-        }
+        view.layer.cornerCurve = .continuous
         view.isAccessibilityElement = false
 
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -702,6 +700,7 @@ open class DrawerController: UIViewController {
             }
         }
     }
+
     private var resizingGestureRecognizer: UIPanGestureRecognizer? {
         didSet {
             if let oldRecognizer = oldValue {
@@ -950,14 +949,14 @@ open class DrawerController: UIViewController {
 
 extension DrawerController: UIViewControllerTransitioningDelegate {
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if presentationStyle(for: source) == .slideover {
+        if presentationStyle(for: source) == .slideover && UIView.areAnimationsEnabled {
             return DrawerTransitionAnimator(presenting: true, presentationDirection: presentationDirection(for: source.view), containerOffset: shadowOffset)
         }
         return nil
     }
 
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if let controller = dismissed.presentationController as? DrawerPresentationController {
+        if let controller = dismissed.presentationController as? DrawerPresentationController, UIView.areAnimationsEnabled {
             return DrawerTransitionAnimator(presenting: false, presentationDirection: controller.presentationDirection, containerOffset: shadowOffset)
         }
         return nil
@@ -975,9 +974,9 @@ extension DrawerController: UIViewControllerTransitioningDelegate {
         switch presentationStyle(for: source) {
         case .slideover:
             let direction = presentationDirection(for: source.view)
-            if #available(iOS 13.0, *) {
-                useNavigationBarBackgroundColor = (direction.isVertical && source.traitCollection.userInterfaceLevel == .elevated)
-            }
+
+            useNavigationBarBackgroundColor = (direction.isVertical && source.traitCollection.userInterfaceLevel == .elevated)
+
             let drawerPresentationController = DrawerPresentationController(presentedViewController: presented,
                                                 presentingViewController: presenting,
                                                 source: source,

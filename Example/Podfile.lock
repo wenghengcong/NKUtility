@@ -9,54 +9,57 @@ PODS:
   - iOSSnapshotTestCase/Core (6.2.0)
   - iOSSnapshotTestCase/SwiftSupport (6.2.0):
     - iOSSnapshotTestCase/Core
-  - MicrosoftFluentUI (0.1.25):
-    - MicrosoftFluentUI/AvatarView_mac (= 0.1.25)
-    - MicrosoftFluentUI/Button_mac (= 0.1.25)
-    - MicrosoftFluentUI/Calendar_ios (= 0.1.25)
-    - MicrosoftFluentUI/Card_ios (= 0.1.25)
-    - MicrosoftFluentUI/Controls_ios (= 0.1.25)
-    - MicrosoftFluentUI/Core_ios (= 0.1.25)
-    - MicrosoftFluentUI/Core_mac (= 0.1.25)
-    - MicrosoftFluentUI/DatePicker_mac (= 0.1.25)
-    - MicrosoftFluentUI/Drawer_ios (= 0.1.25)
-    - MicrosoftFluentUI/HUD_ios (= 0.1.25)
-    - MicrosoftFluentUI/Link_mac (= 0.1.25)
-    - MicrosoftFluentUI/Notification_ios (= 0.1.25)
-    - MicrosoftFluentUI/PillButtonBar_ios (= 0.1.25)
-    - MicrosoftFluentUI/PopupMenu_ios (= 0.1.25)
-    - MicrosoftFluentUI/Presenters_ios (= 0.1.25)
-    - MicrosoftFluentUI/Separator_mac (= 0.1.25)
-    - MicrosoftFluentUI/Shimmer_ios (= 0.1.25)
-    - MicrosoftFluentUI/TabBar_ios (= 0.1.25)
-    - MicrosoftFluentUI/Tooltip_ios (= 0.1.25)
-    - MicrosoftFluentUI/Utilities_ios (= 0.1.25)
-  - MicrosoftFluentUI/Calendar_ios (0.1.25):
+  - MicrosoftFluentUI (0.2.1):
+    - MicrosoftFluentUI/AvatarView_mac (= 0.2.1)
+    - MicrosoftFluentUI/Button_mac (= 0.2.1)
+    - MicrosoftFluentUI/Calendar_ios (= 0.2.1)
+    - MicrosoftFluentUI/Card_ios (= 0.2.1)
+    - MicrosoftFluentUI/CommandBar_ios (= 0.2.1)
+    - MicrosoftFluentUI/Controls_ios (= 0.2.1)
+    - MicrosoftFluentUI/Core_ios (= 0.2.1)
+    - MicrosoftFluentUI/Core_mac (= 0.2.1)
+    - MicrosoftFluentUI/DatePicker_mac (= 0.2.1)
+    - MicrosoftFluentUI/Drawer_ios (= 0.2.1)
+    - MicrosoftFluentUI/HUD_ios (= 0.2.1)
+    - MicrosoftFluentUI/Link_mac (= 0.2.1)
+    - MicrosoftFluentUI/Notification_ios (= 0.2.1)
+    - MicrosoftFluentUI/PillButtonBar_ios (= 0.2.1)
+    - MicrosoftFluentUI/PopupMenu_ios (= 0.2.1)
+    - MicrosoftFluentUI/Presenters_ios (= 0.2.1)
+    - MicrosoftFluentUI/Separator_mac (= 0.2.1)
+    - MicrosoftFluentUI/Shimmer_ios (= 0.2.1)
+    - MicrosoftFluentUI/TabBar_ios (= 0.2.1)
+    - MicrosoftFluentUI/Tooltip_ios (= 0.2.1)
+    - MicrosoftFluentUI/Utilities_ios (= 0.2.1)
+  - MicrosoftFluentUI/Calendar_ios (0.2.1):
     - MicrosoftFluentUI/Presenters_ios
-  - MicrosoftFluentUI/Card_ios (0.1.25):
+  - MicrosoftFluentUI/Card_ios (0.2.1):
     - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/Controls_ios (0.1.25):
+  - MicrosoftFluentUI/CommandBar_ios (0.2.1):
     - MicrosoftFluentUI/Core_ios
-  - MicrosoftFluentUI/Core_ios (0.1.25)
-  - MicrosoftFluentUI/Drawer_ios (0.1.25):
-    - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/HUD_ios (0.1.25):
-    - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/Notification_ios (0.1.25):
-    - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/PillButtonBar_ios (0.1.25):
+  - MicrosoftFluentUI/Controls_ios (0.2.1):
     - MicrosoftFluentUI/Core_ios
-  - MicrosoftFluentUI/PopupMenu_ios (0.1.25):
+  - MicrosoftFluentUI/Core_ios (0.2.1)
+  - MicrosoftFluentUI/Drawer_ios (0.2.1):
+    - MicrosoftFluentUI/Controls_ios
+  - MicrosoftFluentUI/HUD_ios (0.2.1):
+    - MicrosoftFluentUI/Controls_ios
+  - MicrosoftFluentUI/Notification_ios (0.2.1):
+    - MicrosoftFluentUI/Controls_ios
+  - MicrosoftFluentUI/PillButtonBar_ios (0.2.1):
+    - MicrosoftFluentUI/Core_ios
+  - MicrosoftFluentUI/PopupMenu_ios (0.2.1):
     - MicrosoftFluentUI/Drawer_ios
-  - MicrosoftFluentUI/Presenters_ios (0.1.25):
+  - MicrosoftFluentUI/Presenters_ios (0.2.1):
     - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/Shimmer_ios (0.1.25):
+  - MicrosoftFluentUI/Shimmer_ios (0.2.1):
     - MicrosoftFluentUI/Core_ios
     - MicrosoftFluentUI/Utilities_ios
-  - MicrosoftFluentUI/TabBar_ios (0.1.25):
+  - MicrosoftFluentUI/TabBar_ios (0.2.1):
     - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/Tooltip_ios (0.1.25):
+  - MicrosoftFluentUI/Tooltip_ios (0.2.1):
     - MicrosoftFluentUI/Controls_ios
-  - MicrosoftFluentUI/Utilities_ios (0.1.25)
+  - MicrosoftFluentUI/Utilities_ios (0.2.1)
   - Nimble (9.0.0)
   - Nimble-Snapshots (9.1.0):
     - Nimble-Snapshots/Core (= 9.1.0)
@@ -65,9 +68,11 @@ PODS:
     - Nimble
   - NKUtility (0.1.1):
     - MicrosoftFluentUI
+    - SnapKit
     - SwiftTheme
-  - Quick (3.0.0)
-  - SwiftTheme (0.5.5)
+  - Quick (3.1.2)
+  - SnapKit (5.0.1)
+  - SwiftTheme (0.6.0)
 
 DEPENDENCIES:
   - FBSnapshotTestCase
@@ -84,6 +89,7 @@ SPEC REPOS:
     - Nimble
     - Nimble-Snapshots
     - Quick
+    - SnapKit
     - SwiftTheme
 
 EXTERNAL SOURCES:
@@ -93,13 +99,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
-  MicrosoftFluentUI: 9fc0e7af0b061c6a0d0bd1b674b93657cd6db5e1
+  MicrosoftFluentUI: 1baae9f2262ed17ce56bc482290b06dcfcf11259
   Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
   Nimble-Snapshots: 6605431525245f967ca9d558bb12a49da3d040e3
-  NKUtility: ea7bc72f6bbe9d7c57fb3f1cf2d84a1381f3b2cb
-  Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
-  SwiftTheme: 585ead917c78ea3fc508437b0a141d29c034bdb0
+  NKUtility: e9c2cec67007d5cb3a308947426b1f6c68692939
+  Quick: 60f0ea3b8e0cfc0df3259a5c06a238ad8b3c46e0
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SwiftTheme: 50c3b3d38bdee43212af1f4ec0fb95dec550b2be
 
 PODFILE CHECKSUM: 5d2815ced0e64712c4cd2c9dab30dd44b8bec3d9
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.10.1

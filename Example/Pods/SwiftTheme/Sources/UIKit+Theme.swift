@@ -72,6 +72,10 @@ import UIKit
         get { return getThemePicker(self, "updateTextAttributes:") as? ThemeStringAttributesPicker }
         set { setThemePicker(self, "updateTextAttributes:", newValue) }
     }
+    var theme_attributedText: ThemeAttributedStringPicker? {
+        get { return getThemePicker(self, "setAttributedText:") as? ThemeAttributedStringPicker }
+        set { setThemePicker(self, "setAttributedText:", newValue) }
+    }
 }
 @objc public extension UINavigationBar
 {
@@ -423,7 +427,7 @@ private func getThemePicker(
     _ object : NSObject,
     _ selector : String
 ) -> ThemePicker? {
-    return object.themePickers[selector]
+    return ThemePicker.getThemePicker(object, selector)
 }
 
 private func setThemePicker(
@@ -431,8 +435,7 @@ private func setThemePicker(
     _ selector : String,
     _ picker : ThemePicker?
 ) {
-    object.themePickers[selector] = picker
-    object.performThemePicker(selector: selector, picker: picker)
+    return ThemePicker.setThemePicker(object, selector, picker)
 }
 
 private func makeStatePicker(
@@ -441,13 +444,5 @@ private func makeStatePicker(
     _ picker : ThemePicker?,
     _ state : UIControl.State
 ) -> ThemePicker? {
-    
-    var picker = picker
-    
-    if let statePicker = object.themePickers[selector] as? ThemeStatePicker {
-        picker = statePicker.setPicker(picker, forState: state)
-    } else {
-        picker = ThemeStatePicker(picker: picker, withState: state)
-    }
-    return picker
+    return ThemePicker.makeStatePicker(object, selector, picker, state)
 }
