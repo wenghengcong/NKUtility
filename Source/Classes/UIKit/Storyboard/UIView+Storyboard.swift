@@ -22,9 +22,9 @@ extension UITableViewCell {
         return name
     }
     
-    public class var height : CGFloat {
-        return CGFloat(54.0)
-    }
+//    public class var height : CGFloat {
+//        return CGFloat(54.0)
+//    }
 }
 
 public extension UIViewController {

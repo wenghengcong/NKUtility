@@ -19,7 +19,6 @@ public class NKThemeProvider {
     
     public var isFollowingSystem: Bool {
         set {
-            isFollowingSystem = newValue
             UserDefaults.standard.setValue(isFollowingSystem, forKey: NKUserDefaultKey.UI.darkModelFollowingSystem)
             UserDefaults.standard.synchronize()
         }
@@ -33,7 +32,9 @@ public class NKThemeProvider {
         let isInSystemDark = UIViewController().isDarkMode
         let appFollowing = isFollowingSystem
         if appFollowing && isInSystemDark {
-            NKThemeProvider.shared.switchNight()
+            if currentIndex != nightIndex {
+                NKThemeProvider.shared.switchNight()
+            }
         } else {
             NKThemeProvider.shared.switchNight(isToNight: false)
         }

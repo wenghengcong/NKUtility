@@ -10,6 +10,26 @@ import UIKit
 
 public extension UIWindow {
     
+    static func safeAreaInsetTop() -> CGFloat {
+        var height: CGFloat = 0.0
+        if #available(iOS 11.0, *) {
+            if let window = UIWindow.topWindow() {
+                height += window.safeAreaInsets.top
+            }
+        }
+        return height
+    }
+    
+    static func safeAreaInsetBottom() -> CGFloat {
+        var height: CGFloat = 0.0
+        if #available(iOS 11.0, *) {
+            if let window = UIWindow.topWindow() {
+                height += window.safeAreaInsets.bottom
+            }
+        }
+        return height
+    }
+    
     static func topWindow() -> UIWindow? {
         var topWindow: UIWindow?
         if #available(iOS 13, *){

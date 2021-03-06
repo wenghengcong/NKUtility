@@ -43,6 +43,16 @@ public protocol NKThemeProtocol {
     
     // MARK: - Cell
     var tableCellBackgroundColor: UIColor {set get}
+    
+    
+    // MARK: - 按钮
+    /// 按钮背景色
+    var buttonBackgroundColor: UIColor {set get}
+    /// 按钮标题颜色
+    var buttonTitleColor: UIColor {set get}
+    /// 按钮边框色
+    var buttonBorderColor: UIColor {set get}
+
 
     // MARK: - Nav Bar/ Tabbar
     var statusBarStyle: UIStatusBarStyle {set get}
@@ -71,6 +81,7 @@ public protocol NKThemeProtocol {
 
 @objcMembers
 open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
+    
     open var name: String {
         set {
             name = newValue
@@ -165,6 +176,35 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     // MARK: - Cell
     open var tableCellBackgroundColor: UIColor {
+        set {
+            tableCellBackgroundColor = newValue
+        }
+        get {
+            return .white
+        }
+    }
+    
+    // MARK: - 按钮
+    /// 按钮背景色
+    open var buttonBackgroundColor: UIColor {
+        set {
+            tableCellBackgroundColor = newValue
+        }
+        get {
+            return tintColor
+        }
+    }
+    /// 按钮标题颜色
+    open var buttonTitleColor: UIColor {
+        set {
+            tableCellBackgroundColor = newValue
+        }
+        get {
+            return .white
+        }
+    }
+    /// 按钮边框色
+    open var buttonBorderColor: UIColor {
         set {
             tableCellBackgroundColor = newValue
         }

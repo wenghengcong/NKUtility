@@ -229,10 +229,21 @@ public extension UIViewController {
         }
     }
     
+    var safeAreaInsetTop: CGFloat {
+        return UIWindow.safeAreaInsetTop()
+    }
+    
+    var safeAreaInsetBottom: CGFloat {
+        return UIWindow.safeAreaInsetBottom()
+    }
+    
+    
     /// 顶部导航栏高度
     var topBarHeight: CGFloat {
+        // 44
         var top = self.navigationController?.navigationBar.frame.height ?? 0.0
         if #available(iOS 13.0, *) {
+            // 41
             top += UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         } else {
             top += UIApplication.shared.statusBarFrame.height
@@ -243,6 +254,8 @@ public extension UIViewController {
     /// 底部标签栏高度
     var tabBarHeight: CGFloat {
         var height: CGFloat = 0.0
+        
+        var hasTabBar = !hidesBottomBarWhenPushed
         if let tabBarVc = self.navigationController?.tabBarController {
             height = tabBarVc.tabBar.height
         } else if let defaultVc = self.tabBarController {
