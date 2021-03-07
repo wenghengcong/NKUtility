@@ -14,13 +14,13 @@ import UIKit
 ///  * this ViewController is the initialViewController of your Storyboard
 ///
 /// to be able to instantiate them from the Storyboard in a type-safe manner
-public protocol NMUIStoryboardBased: class {
+public protocol NKUIStoryboardBased: class {
   /// The UIStoryboard to use when we want to instantiate this ViewController
   static var sceneStoryboard: UIStoryboard { get }
 }
 
 // MARK: Default Implementation
-public extension NMUIStoryboardBased {
+public extension NKUIStoryboardBased {
   /// By default, use the storybaord with the same name as the class
   static var sceneStoryboard: UIStoryboard {
     return UIStoryboard(name: String(describing: self), bundle: Bundle(for: self))
@@ -28,7 +28,7 @@ public extension NMUIStoryboardBased {
 }
 
 // MARK: Support for instantiation from Storyboard
-public extension NMUIStoryboardBased where Self: UIViewController {
+public extension NKUIStoryboardBased where Self: UIViewController {
   /**
    Create an instance of the ViewController from its associated Storyboard's initialViewController
    - returns: instance of the conforming ViewController

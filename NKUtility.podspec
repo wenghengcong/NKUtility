@@ -43,5 +43,6 @@ Pod::Spec.new do |s|
   s.dependency 'SwiftTheme'
   s.dependency 'MicrosoftFluentUI'
   s.dependency 'SnapKit'
+  s.dependency 'Kingfisher'
 #  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

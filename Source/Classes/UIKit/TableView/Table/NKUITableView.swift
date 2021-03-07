@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class NKUITableView: NKPlaceholderTableView {
+open class NKUITableView: UITableView {
 
     /*
     // Only override draw() if you perform custom drawing.
@@ -31,7 +31,14 @@ open class NKUITableView: NKPlaceholderTableView {
     }
     
     func setupBaseTableView() {
+        register()
+        
         separatorColor = UIColor.clear
         separatorStyle = .none
+        theme_backgroundColor = .viewBackgroundColor
+    }
+    
+    func register() {
+        NKCommonCellProvider.shared.register(tableView: self)
     }
 }

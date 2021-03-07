@@ -7,7 +7,9 @@
 
 import UIKit
 
-open class NKUITableViewCell: SwipeTableViewCell {
+open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
+
+    open weak var commonDelegate: NKCommonCellProtocol?
 
     open override func awakeFromNib() {
         super.awakeFromNib()
