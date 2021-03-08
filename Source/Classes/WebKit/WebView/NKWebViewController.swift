@@ -214,7 +214,6 @@ public class  NKWebViewController: UIViewController {
                 }
             }
             navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
-            
         }
         else {
             let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
@@ -307,8 +306,11 @@ extension  NKWebViewController {
         } else {
             navigationController?.setToolbarHidden(toolBarHidden, animated: false)
         }
-       
-        let allBarHeight = toolBarHidden ? topBarHeight : topBarHeight+tabBarHeight
+        
+        var allBarHeight = toolBarHidden ? topBarHeight : topBarHeight+tabBarHeight
+        if NKDevice.isIPad() {  // ipad 只有 top，没有 tab
+            allBarHeight = topBarHeight
+        }
         let webHeight = NKSCREEN_HEIGHT-allBarHeight
         
         webView.snp.remakeConstraints { (make) in
@@ -477,7 +479,8 @@ extension  NKWebViewController {
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         navigationController?.setToolbarHidden(false, animated: true)
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
+        if NKDevice.isIPad() || NKDevice.isIPhone() {
+            // 都要隐藏 toolbar
             self.navigationController?.setToolbarHidden(true, animated: true)
         }
     }

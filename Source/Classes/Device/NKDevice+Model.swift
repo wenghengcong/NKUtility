@@ -23,4 +23,33 @@ extension NKDevice {
         }
         return false
     }
+    
+    public static func isIPhone() -> Bool {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return true
+        }
+        return false
+    }
+    
+    public static func isCarPlay() -> Bool {
+        if UIDevice.current.userInterfaceIdiom == .carPlay {
+            return true
+        }
+        return false
+    }
+    
+    @available(iOS 14.0, *)
+    public static func isMac() -> Bool {
+        if UIDevice.current.userInterfaceIdiom == .mac {
+            return true
+        }
+        return false
+    }
+    
+    public static func isTv() -> Bool {
+        if UIDevice.current.userInterfaceIdiom == .tv {
+            return true
+        }
+        return false
+    }
 }
