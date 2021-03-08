@@ -64,7 +64,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="ltQ-k7-fps"/>
             <connections>
-                <outlet property="backView" destination="dvZ-vn-9Ef" id="ThQ-Rj-ED9"/>
+                <outlet property="backView" destination="t5g-8U-mRd" id="vxN-51-Cjw"/>
                 <outlet property="checkMarkImageView" destination="p0K-uN-7Kg" id="Lzg-kQ-na2"/>
                 <outlet property="iconImageView" destination="Qlv-dq-mcp" id="mCf-4c-kcJ"/>
                 <outlet property="titleLabel" destination="sRQ-b9-aoe" id="ecS-Co-Jwn"/>

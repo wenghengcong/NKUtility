@@ -1,36 +1,42 @@
 //
-//  LKLabelCell.swift
+//  LKCheckmarkCell.swift
 //  Lark
 //
-//  Created by Hunt on 2021/3/8.
+//  Created by Hunt on 2021/3/7.
 //
 
 import UIKit
+import SwiftTheme
 
-open class NKLabelCell: NKUITableViewCell {
+open class NKCheckmarkCell: NKStaticCell {
     
-    public static var cellHeight: CGFloat = NKDesignByW375(44.0)
-
     @IBOutlet weak var backView: UIView!
     
     @IBOutlet weak var iconImageView: UIImageView!
     
     @IBOutlet weak var titleLabel: UILabel!
     
+    @IBOutlet weak var checkMarkImageView: UIImageView!
     
-    public var data: NKCommonCellData? {
+    open var check: Bool = false {
+        didSet {
+            data?.on = check
+            checkMarkImageView.isHidden = !check
+        }
+    }
+    
+    public override var data: NKCommonCellData? {
         didSet {
             fillData()
         }
     }
     
-    func fillData() {
-        setup(icon: data!.icon, title: data!.title)
+    open override func fillData() {
+        setup(icon: data!.icon, title: data!.title, check: data!.on)
         
-        setNeedsDisplay()
     }
     
-    func setup(icon: String?, title: String) {
+    func setup(icon: String?, title: String, check: Bool?) {
         if let iconString = icon {
             if let image = UIImage(named: iconString) {
                 iconImageView.image = image
@@ -42,6 +48,10 @@ open class NKLabelCell: NKUITableViewCell {
         }
         
         titleLabel.text = title
+        
+        if let on = check {
+            checkMarkImageView.isHidden = !on
+        }
         setNeedsDisplay()
     }
     
@@ -51,21 +61,20 @@ open class NKLabelCell: NKUITableViewCell {
         setupSubviews()
     }
     
-    func setupSubviews() {
+    override func setupSubviews() {
+        super.setupSubviews()
         backView.theme_backgroundColor = .tableCellBackgroundColor
         titleLabel.theme_textColor = .titleColor
-        contentView.theme_backgroundColor = .tableCellBackgroundColor
-        theme_tintColor = .titleColor
-    }
-
-    open override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
+    open override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
+        let left = NKDesignByW375(15.0)
+
         if iconImageView.image == nil {
             iconImageView.isHidden = true
             iconImageView.snp.updateConstraints { (make) in
@@ -77,7 +86,7 @@ open class NKLabelCell: NKUITableViewCell {
             iconImageView.isHidden = false
             iconImageView.snp.remakeConstraints { (make) in
                 make.width.height.equalTo(NKDesignByW375(30))
-                make.left.equalTo(15)
+                make.left.equalTo(left)
                 make.centerY.equalTo(0)
             }
         }

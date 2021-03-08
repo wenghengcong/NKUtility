@@ -8,7 +8,6 @@
 import Foundation
 import SwiftTheme
 
-private let lastThemeIndexKey = "lastedThemeIndex"
 private let defaults = UserDefaults.standard
 
 public class NKThemeProvider {
@@ -19,11 +18,11 @@ public class NKThemeProvider {
     
     public var isFollowingSystem: Bool {
         set {
-            UserDefaults.standard.setValue(isFollowingSystem, forKey: NKUserDefaultKey.UI.darkModelFollowingSystem)
+            UserDefaults.standard.setValue(newValue, forKey: NKUserDefaultKey.UI.nkThemeFollowingSystem)
             UserDefaults.standard.synchronize()
         }
         get {
-            let followingSystem: Bool = (UserDefaults.standard.value(forKey: NKUserDefaultKey.UI.darkModelFollowingSystem) as? Bool) ?? true
+            let followingSystem: Bool = defaults.bool(forKey: NKUserDefaultKey.UI.nkThemeFollowingSystem)
             return followingSystem
         }
     }
@@ -31,12 +30,16 @@ public class NKThemeProvider {
     public func checkFollowingSystem() {
         let isInSystemDark = UIViewController().isDarkMode
         let appFollowing = isFollowingSystem
-        if appFollowing && isInSystemDark {
-            if currentIndex != nightIndex {
-                NKThemeProvider.shared.switchNight()
+        if appFollowing {
+            if isInSystemDark {
+                if currentIndex != nightIndex {
+                    NKThemeProvider.shared.switchNight()
+                }
+            } else {
+                restoreCurrentTheme()
             }
         } else {
-            NKThemeProvider.shared.switchNight(isToNight: false)
+            restoreCurrentTheme()
         }
     }
     
@@ -53,7 +56,6 @@ public class NKThemeProvider {
         self.themes = themes
         self.lightIndex = lightIndex
         self.nightIndex = nightIndex
-        restoreLastTheme()
         checkFollowingSystem()
     }
     
@@ -80,6 +82,16 @@ public class NKThemeProvider {
     
     // MARK: - Switch Theme
     
+    public func switchTo(name: String) {
+        var to = lightIndex
+        for (index, theme) in themes.enumerated() {
+            if theme.name == name {
+                to = index
+            }
+        }
+        switchTo(index: to)
+    }
+    
     public func switchTo(index: Int) {
         assert(index < themes.count, "index 出错")
         guard currentIndex != index else {
@@ -87,10 +99,11 @@ public class NKThemeProvider {
         }
         lastIndex = currentIndex    // 保存切换前的主题 index
         lastTheme = themes[lastIndex]
+        saveLastTheme()
 
         ThemeManager.setTheme(index: index)
         currentIndex = index        // 更新当前 index
-        saveLastTheme()
+        saveCurrentTheme()
     }
     
     public func switchToNext() {
@@ -109,17 +122,32 @@ public class NKThemeProvider {
     }
     
     // MARK: - Save & Restore
-    public func lastThemeIndex() -> Int {
-        let last = defaults.integer(forKey: lastThemeIndexKey)
-        return last
-    }
-    
     public func restoreLastTheme() {
         switchTo(index: lastThemeIndex())
     }
     
+    public func lastThemeIndex() -> Int {
+        let last = defaults.integer(forKey: NKUserDefaultKey.UI.nkThemeLastIndex)
+        return last
+    }
+    
     public func saveLastTheme() {
-        defaults.set(lastIndex, forKey: lastThemeIndexKey)
+        defaults.set(lastIndex, forKey: NKUserDefaultKey.UI.nkThemeLastIndex)
+        defaults.synchronize()
+    }
+    
+    public func restoreCurrentTheme() {
+        switchTo(index: currentThemeIndex())
+    }
+    
+    public func currentThemeIndex() -> Int {
+        let last = defaults.integer(forKey: NKUserDefaultKey.UI.nkThemeCurrentIndex)
+        return last
+    }
+    
+    public func saveCurrentTheme() {
+        defaults.set(currentIndex, forKey: NKUserDefaultKey.UI.nkThemeCurrentIndex)
+        defaults.synchronize()
     }
 }
 

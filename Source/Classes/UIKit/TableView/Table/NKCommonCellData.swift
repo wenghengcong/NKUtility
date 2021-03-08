@@ -14,7 +14,9 @@ public enum NKCommonCellCellType {
     case label
 }
 
-public struct NKCommonSectionData {
+public class NKCommonSectionData {
+    
+    public var tag: Int?
     public var header: String?
     public var footer: String?
     public var cells: [NKCommonCellData] = []
@@ -32,10 +34,13 @@ public struct NKCommonSectionData {
     }
 }
 
-public struct NKCommonCellData {
+public class NKCommonCellData {
     public var type: NKCommonCellCellType = .label
+    public var identifier: String = "nk_default_cell_identifier"
+
     public var icon: String?
     public var title: String
+    public var indexPath: IndexPath?
     public var desc: String?
     
     // switch 是否开关

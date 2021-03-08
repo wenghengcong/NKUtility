@@ -9,11 +9,7 @@ import UIKit
 import Kingfisher
 import NKUtility
 
-
-
-open class NKSwitchCell: NKUITableViewCell {
-
-    public static var cellHeight: CGFloat = NKDesignByW375(44.0)
+open class NKSwitchCell: NKStaticCell {
     
     @IBOutlet weak var backView: UIView!
     
@@ -23,13 +19,13 @@ open class NKSwitchCell: NKUITableViewCell {
     
     @IBOutlet weak var switchControl: UISwitch!
         
-    public var data: NKCommonCellData? {
+    public override var data: NKCommonCellData? {
         didSet {
             fillData()
         }
     }
     
-    func fillData() {
+    public override func fillData() {
         setup(icon: data!.icon, title: data!.title, on: data!.on)
     }
     
@@ -49,6 +45,7 @@ open class NKSwitchCell: NKUITableViewCell {
         if let switchOn = on {
             switchControl.isOn = switchOn
         }
+        setNeedsDisplay()
     }
 
     open override func awakeFromNib() {
@@ -58,11 +55,10 @@ open class NKSwitchCell: NKUITableViewCell {
         addControl()
     }
     
-    func setupSubviews() {
+    override func setupSubviews() {
+        super.setupSubviews()
         backView.theme_backgroundColor = .tableCellBackgroundColor
         titleLabel.theme_textColor = .titleColor
-        contentView.theme_backgroundColor = .tableCellBackgroundColor
-        theme_tintColor = .titleColor
     }
     
     func addControl() {
@@ -82,6 +78,8 @@ open class NKSwitchCell: NKUITableViewCell {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+        let left = NKDesignByW375(15.0)
+
         if iconImageView.image == nil {
             iconImageView.isHidden = true
             iconImageView.snp.updateConstraints { (make) in
@@ -93,7 +91,7 @@ open class NKSwitchCell: NKUITableViewCell {
             iconImageView.isHidden = false
             iconImageView.snp.remakeConstraints { (make) in
                 make.width.height.equalTo(NKDesignByW375(30))
-                make.left.equalTo(15)
+                make.left.equalTo(left)
                 make.centerY.equalTo(0)
             }
         }
