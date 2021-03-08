@@ -28,6 +28,7 @@ open class NKStaticCell: NKUITableViewCell {
     }
     
     func setupSubviews() {
+        theme_backgroundColor = .tableCellBackgroundColor
         contentView.theme_backgroundColor = .tableCellBackgroundColor
         theme_tintColor = .titleColor
         
