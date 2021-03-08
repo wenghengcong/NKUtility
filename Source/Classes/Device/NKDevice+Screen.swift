@@ -522,10 +522,9 @@ extension NKDevice.Screen {
     
     public static func scaleChangeInIPAD(_ x: CGFloat) -> CGFloat {
         var oriScale = x
+        let maxScale: CGFloat = 1.2
         if NKDevice.isIPad() {
-            if x > 1.5 {
-                oriScale = 1.5
-            }
+            oriScale = min(x, maxScale)
         }
         return oriScale
     }

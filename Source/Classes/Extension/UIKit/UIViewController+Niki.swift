@@ -22,8 +22,8 @@ public extension UIViewController {
 public extension UIViewController {
     /// 暗黑模式
     public var isDarkMode: Bool {
-        if #available(iOS 13.0, *) {
-            let isDark = self.traitCollection.userInterfaceStyle == .dark
+        if #available(iOS 12.0, *) {
+            let isDark = (UIScreen.main.traitCollection.userInterfaceStyle == .dark)
             return isDark
         } else {
             return false
