@@ -31,15 +31,19 @@ public class NKThemeProvider {
         let isInSystemDark = UIViewController().isDarkMode
         let appFollowing = isFollowingSystem
         if appFollowing {
+            // 跟随系统
             if isInSystemDark {
+                // 跟随系统，如果当前处于暗黑模式，那么就切换到暗黑模式
                 if currentIndex != nightIndex {
-                    NKThemeProvider.shared.switchNight()
+                    switchNight()
                 }
             } else {
-                restoreCurrentTheme()
+                // 跟随系统，当前处于淡色模式，切换到非暗黑模式
+                switchNight(isToNight: false)
             }
         } else {
-            restoreCurrentTheme()
+            // 不跟随系统的话，保留当前
+            
         }
     }
     
@@ -56,7 +60,23 @@ public class NKThemeProvider {
         self.themes = themes
         self.lightIndex = lightIndex
         self.nightIndex = nightIndex
-        checkFollowingSystem()
+        let isInSystemDark = UIViewController().isDarkMode
+        let appFollowing = isFollowingSystem
+        if appFollowing {
+            // 跟随系统
+            if isInSystemDark {
+                // 跟随系统，如果当前处于暗黑模式，那么就切换到暗黑模式
+                if currentIndex != nightIndex {
+                    switchNight()
+                }
+            } else {
+                // 跟随系统，当前处于淡色模式，切换到非暗黑模式
+                switchNight(isToNight: false)
+            }
+        } else {
+            // 不跟随系统的话，保留当前
+            restoreCurrentTheme()
+        }
     }
     
     public static var currentTheme: NKThemeProtocol {
@@ -106,15 +126,26 @@ public class NKThemeProvider {
         saveCurrentTheme()
     }
     
-    public func switchToNext() {
-        var next = ThemeManager.currentThemeIndex + 1
-        if next >= themes.count { next = 0 } // cycle and without Night
+    public func switchToNext(withoutNight: Bool = false) {
+        var next = nextIndex(withoutNight: withoutNight)
         switchTo(index: next)
+    }
+    
+    fileprivate func nextIndex(withoutNight: Bool) -> Int {
+        var next = ThemeManager.currentThemeIndex + 1
+        if next >= themes.count { next = 0 }
+        if withoutNight {
+            while next == nightIndex {
+                next += 1
+                if next >= themes.count { next = 0 }
+            }
+        }
+        return next
     }
     
     // MARK: - Switch Night
     public func switchNight(isToNight: Bool = true) {
-        switchTo(index: isToNight ? nightIndex : lastThemeIndex())
+        switchTo(index: isToNight ? nightIndex : nextIndex(withoutNight: true))
     }
         
     public func isNight() -> Bool {
