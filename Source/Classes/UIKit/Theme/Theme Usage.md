@@ -1,5 +1,10 @@
 #  状态栏
 
+# 暗黑模式颜色设计
+参考 https://sarunw.com/posts/dark-color-cheat-sheet/
+
+
+
 ## 全局配置
 如果要启用全局的配置
 UIApplication.shared.theme_setStatusBarStyle(picker, animated: true)
@@ -81,4 +86,6 @@ NotificationCenter.default.addObserver(
     object: nil
 )
 ```
+
+
 

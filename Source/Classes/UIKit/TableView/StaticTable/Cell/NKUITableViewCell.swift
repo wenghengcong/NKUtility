@@ -28,8 +28,23 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     func setupBaseCell() {
         selectedBackgroundView = nil
+        
+//        layoutMargins = UIEdgeInsets.zero
+//        separatorInset = UIEdgeInsets.zero
+//        preservesSuperviewLayoutMargins = false
+        
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        separatorInset.right = .greatestFiniteMagnitude
+        
+        subviews.forEach { (view) in
+            if type(of: view).description() == "_UITableViewCellSeparatorView" {
+                view.isHidden = true
+               }
+           }
+    }
     
     open override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

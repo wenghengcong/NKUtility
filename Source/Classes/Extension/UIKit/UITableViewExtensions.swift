@@ -16,6 +16,12 @@ public extension UITableView {
     var lastSection: Int? {
         return numberOfSections > 0 ? numberOfSections - 1 : nil
     }
+    
+    /// 是否隐藏分割线
+    /// - Parameter hide: <#hide description#>
+    func separator(hide: Bool) {
+      separatorInset.left = hide ? bounds.size.width : 0
+    }
 }
 
 // MARK: - Methods

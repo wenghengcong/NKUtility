@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftTheme
 
 open class NKUITableView: UITableView {
 
@@ -33,8 +34,8 @@ open class NKUITableView: UITableView {
     func setupBaseTableView() {
         register()
         
-        separatorColor = UIColor.clear
-        separatorStyle = .none
+//        theme_separatorColor = ThemeColorPicker.pickerWithUIColors([UIColor.clear, UIColor.clear])
+//        separatorStyle = .none
         theme_backgroundColor = .viewBackgroundColor
     }
     
