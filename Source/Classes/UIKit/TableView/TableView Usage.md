@@ -37,3 +37,62 @@ https://github.com/Juanpe/SkeletonView
 
 # 静态表格
 https://github.com/xmartlabs/Eureka 
+
+
+# 分割线
+* 分割线问题一：多余的分割线
+在动态 cell 中，会有多余的分割线，只要将 tableview.tableFooterView 设置为空即可
+```
+self.tableView.tableFooterView = UIView()
+```
+
+或者
+```
+tableView.sectionFooterHeight = 0.f;
+tableView.sectionHeaderHeight = 0.f;
+
+```
+
+
+* 问题二：隐藏分割线
+```
+tableView.separatorStyle = .none
+```
+
+或者直接调整分割线的属性
+```
+separatorInset.right = .greatestFiniteMagnitude
+
+subviews.forEach { (view) in
+    if type(of: view).description() == "_UITableViewCellSeparatorView" {
+        view.isHidden = true
+       }
+   }
+
+```
+
+
+* 问题三：调整分割线位置
+```
+tableView.separatorInset
+```
+
+
+
+* 问题四：调整分割线无效
+https://stackoverflow.com/questions/25770119/ios-8-uitableview-separator-inset-0-not-working
+参考：https://stackoverflow.com/a/25877725/4124634
+
+最佳实践
+```
+import UIKit
+
+extension UITableViewCell {
+
+  override public var layoutMargins: UIEdgeInsets {
+    get { return UIEdgeInsets.zero }
+    set { }
+  }
+
+}
+```

@@ -37,13 +37,6 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-//        separatorInset.right = .greatestFiniteMagnitude
-//
-//        subviews.forEach { (view) in
-//            if type(of: view).description() == "_UITableViewCellSeparatorView" {
-//                view.isHidden = true
-//               }
-//           }
     }
     
     open override func setSelected(_ selected: Bool, animated: Bool) {
