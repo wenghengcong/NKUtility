@@ -33,8 +33,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '13.0'
   
   s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md,css,html,js}'
-#  s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}' }
-  s.resources =  'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}'
+  s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}' }
+#  s.resources =  'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}'
 
   s.swift_version = '5.0'
   

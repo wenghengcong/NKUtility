@@ -11,6 +11,19 @@ import UIKit
 // MARK: - Properties
 
 public extension URL {
+    
+    var rootDomain: String? {
+        guard let hostName = self.host else {
+            return nil
+        }
+        let components = hostName.components(separatedBy: ".")
+        if components.count > 2 {
+            return components.suffix(2).joined(separator: ".")
+        } else {
+            return hostName
+        }
+    }
+    
     /// SwifterSwift: Dictionary of the URL's query parameters
     var queryParameters: [String: String]? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),

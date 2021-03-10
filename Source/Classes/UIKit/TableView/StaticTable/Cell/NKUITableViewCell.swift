@@ -28,7 +28,7 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     func setupBaseCell() {
         selectedBackgroundView = nil
-        
+        selectionStyle = .none
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
@@ -37,11 +37,5 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-    }
-    
-    open override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }

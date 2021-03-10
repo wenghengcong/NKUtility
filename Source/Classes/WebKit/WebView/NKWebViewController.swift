@@ -27,7 +27,7 @@ public enum NKWebViewControllerProgressIndicatorStyle {
 }
 
 
-public class  NKWebViewController: UIViewController {
+open class  NKWebViewController: UIViewController {
     
     /** Boolean flag which indicates whether JavaScript alerts are allowed. Default is `true`. */
     open var allowJavaScriptAlerts = true
@@ -40,6 +40,9 @@ public class  NKWebViewController: UIViewController {
     open var navBarTitle: UILabel!
     open var sharingEnabled = true 
     open var toolBarHidden = false
+    
+    /// 需要使用 Safari 打开的域名
+    open var openWithSafariDomains: [String] = []
     
     /** The style of progress indication visualization. Can be one of four values: .ActivityIndicator, .ProgressView, .Both, .None*/
     open var progressIndicatorStyle: NKWebViewControllerProgressIndicatorStyle = .both
@@ -54,6 +57,13 @@ public class  NKWebViewController: UIViewController {
         }
     }
     
+    /// 得到 webview response 的处理结果
+    open var responseBackHandler: ((WKWebView)->Void)?
+    
+    /// 打开链接时自定义跳转，如果 return true，将不执行其他动作
+    open var customDecideNavigation: ((URL)->Bool)?
+
+    
     // MARK: Private Properties
     fileprivate var progressView: UIProgressView!
     fileprivate var ipadToolbar = UIToolbar()
@@ -64,14 +74,14 @@ public class  NKWebViewController: UIViewController {
     
     lazy fileprivate var activityIndicator: UIActivityIndicatorView! = {
         var activityIndicator = UIActivityIndicatorView()
-        activityIndicator.backgroundColor = UIColor.white
+        activityIndicator.backgroundColor = .clear
         #if swift(>=4.2)
         activityIndicator.style = UIActivityIndicatorView.Style.large
         #else
         activityIndicator.activityIndicatorViewStyle = .whiteLarge
         #endif
         //设置指示器控件的颜色
-//        activityIndicator.color = UIColor.blue
+        activityIndicator.color = UIColor.systemGray
         
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -132,10 +142,11 @@ public class  NKWebViewController: UIViewController {
     }()
     
     
-    lazy var webView: WKWebView = {
+    lazy open var webView: WKWebView = {
         var tempWebView = WKWebView()
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
+        tempWebView.backgroundColor = .white
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
         return tempWebView;
     }()
@@ -425,18 +436,19 @@ extension  NKWebViewController {
     ////////////////////////////////////////////////
     // View Lifecycle
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         // 设置edgesForExtendedLayout可以使得 webview 从导航栏bottom 开始布局
 //        edgesForExtendedLayout = []
         view.autoresizingMask = .flexibleHeight
+        view.backgroundColor = .white
         setupWebview()
         setupProgressView()
         addObserver()
         loadRequest(request)
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
         updateToolbarItems()
         navBarTitle = UILabel()
@@ -464,7 +476,7 @@ extension  NKWebViewController {
         }
     }
     
-    public override func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateToolbarHidden()
         if let navVC = self.navigationController {
@@ -476,7 +488,7 @@ extension  NKWebViewController {
         }
     }
     
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         navigationController?.setToolbarHidden(false, animated: true)
         if NKDevice.isIPad() || NKDevice.isIPhone() {
@@ -485,7 +497,7 @@ extension  NKWebViewController {
         }
     }
     
-    override public func viewDidDisappear(_ animated: Bool) {
+    override open func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         if navControllerUsesBackSwipe {
             self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
@@ -531,46 +543,7 @@ extension  NKWebViewController: WKUIDelegate {
 //MARK: - WKNavigationDelegate
 extension  NKWebViewController: WKNavigationDelegate {
     
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            for cookie in cookies {
-                NKCookieStore.shared.addCookie(cookie)
-            }
-        }
-        delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
-        decisionHandler(.allow)
-        
-    }
-    
-    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        showLoading(true)
-        delegate?.webViewController?(self, didStartLoading: webView.url)
-        updateToolbarItems()
-    }
-    
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        showLoading(false)
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
-        webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
-            self.navBarTitle.text = response as! String?
-            self.navBarTitle.sizeToFit()
-            self.updateToolbarItems()
-        })
-        
-    }
-    
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        showLoading(false)
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
-        updateToolbarItems()
-    }
-    
-    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        showLoading(false)
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
-        updateToolbarItems()
-    }
-    
+    // 1、4 在发送请求之前，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             return
@@ -609,17 +582,105 @@ extension  NKWebViewController: WKNavigationDelegate {
         
         //  NKTODO: 增加支持打开外部 URL 的域名集合，提供一个属性对外暴露
         // 3. handle other url
-//        if (navigationAction.targetFrame == nil) {
-//            if UIApplication.shared.canOpenURL(url) {
-//                print("Redirected to browser. No need to open it locally: \(url)")
-//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//                decisionHandler(.cancel)
-//                return
-//            }
-//        }
+        if customDecideNavigation != nil {
+            let isReturn = customDecideNavigation!(url)
+            if isReturn {
+                decisionHandler(.cancel)
+                return
+            }
+        }
+        
+        if let rootDomain = url.rootDomain {
+            var contain = false
+            for domain  in openWithSafariDomains {
+                if domain.contains(rootDomain) {
+                    contain = true
+                    break
+                }
+            }
+            if (contain && navigationAction.targetFrame == nil) {
+                if UIApplication.shared.canOpenURL(url) {
+                    print("Redirected to browser. No need to open it locally: \(url)")
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    decisionHandler(.cancel)
+                    return
+                }
+            }
+        }
         
         print("Open it locally: \(url)")
         decisionHandler(.allow)
+    }
+    
+    
+    // 2 页面开始加载时调用
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        showLoading(true)
+        if responseBackHandler != nil {
+            webView.isHidden = true
+        }
+        delegate?.webViewController?(self, didStartLoading: webView.url)
+        updateToolbarItems()
+    }
+    
+    
+    // 3、5 在收到响应后，决定是否跳转
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if responseBackHandler != nil {
+            responseBackHandler!(webView)
+        }
+        
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                NKCookieStore.shared.addCookie(cookie)
+            }
+        }
+        delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
+        decisionHandler(.allow)
+    }
+    
+
+    // 6 页面加载完成之后调用
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        showLoading(false)
+        if responseBackHandler != nil {
+            webView.isHidden = false
+        }
+        delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
+        webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
+            if error == nil {
+                self.navBarTitle.text = response as! String?
+                self.navBarTitle.sizeToFit()
+                self.updateToolbarItems()
+            }
+        })
+        
+        webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
+            if error == nil {
+                print(response)
+                self.navBarTitle.text = response as! String?
+                self.navBarTitle.sizeToFit()
+                self.updateToolbarItems()
+            }
+        }
+    }
+    
+    /// 当内容开始返回时调用
+    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        
+    }
+    
+    // 页面加载失败时调用
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        showLoading(false)
+        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
+        updateToolbarItems()
+    }
+    
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        showLoading(false)
+        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
+        updateToolbarItems()
     }
     
     func openCustomApp(urlScheme: String, additional_info:String){
