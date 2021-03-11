@@ -44,6 +44,22 @@ open class  NKWebViewController: UIViewController {
     /// 需要使用 Safari 打开的域名
     open var openWithSafariDomains: [String] = []
     
+    
+    /// 允许跳转的 url，优先级最高
+    open var enableNavigationUrls: [String] = []
+    
+    //MARK: 导航类型是 link
+    /// 网页内的链接是否可点击
+    open var enableNavigationLink: Bool = true
+   
+    //MARK: 导航类型是 other
+    /// 网页内的其他跳转是否允许
+    open var enableNavigationOther: Bool = true
+    /// 网页内的不允许其他跳转的域名，优先级更高
+    open var disableNavigationOtherDomains: [String] = []
+    /// 网页内的允许其他跳转的域名
+    open var enableNavigationOtherDomains: [String] = []
+    
     /** The style of progress indication visualization. Can be one of four values: .ActivityIndicator, .ProgressView, .Both, .None*/
     open var progressIndicatorStyle: NKWebViewControllerProgressIndicatorStyle = .both
     
@@ -62,7 +78,7 @@ open class  NKWebViewController: UIViewController {
     
     /// 打开链接时自定义跳转，如果 return true，将不执行其他动作
     open var customDecideNavigation: ((URL)->Bool)?
-
+    
     
     // MARK: Private Properties
     fileprivate var progressView: UIProgressView!
@@ -89,7 +105,7 @@ open class  NKWebViewController: UIViewController {
         
         let xConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
         let yConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: 0)
-
+        
         NSLayoutConstraint.activate([xConstraint, yConstraint])
         return activityIndicator
     }()
@@ -200,7 +216,7 @@ open class  NKWebViewController: UIViewController {
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
         let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-      
+        
         if (NKDevice.isIPad()) {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
@@ -370,7 +386,7 @@ extension  NKWebViewController {
         alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alertView, animated: true, completion: nil)
     }
-
+    
     
     fileprivate func showLoading(_ animate: Bool) {
         UIApplication.shared.setIndicator(visible: animate)
@@ -435,11 +451,11 @@ extension  NKWebViewController {
 extension  NKWebViewController {
     ////////////////////////////////////////////////
     // View Lifecycle
-
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         // 设置edgesForExtendedLayout可以使得 webview 从导航栏bottom 开始布局
-//        edgesForExtendedLayout = []
+        //        edgesForExtendedLayout = []
         view.autoresizingMask = .flexibleHeight
         view.backgroundColor = .white
         setupWebview()
@@ -447,7 +463,7 @@ extension  NKWebViewController {
         addObserver()
         loadRequest(request)
     }
-
+    
     override open func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
         updateToolbarItems()
@@ -508,7 +524,7 @@ extension  NKWebViewController {
         super.didReceiveMemoryWarning()
         webView.stopLoading()
     }
-
+    
 }
 
 //MARK: - WKUIDelegate
@@ -590,18 +606,98 @@ extension  NKWebViewController: WKNavigationDelegate {
             }
         }
         
+        var containOpenWithSafariUrl = false
         if let rootDomain = url.rootDomain {
-            var contain = false
-            for domain  in openWithSafariDomains {
+            for domain in openWithSafariDomains {
                 if domain.contains(rootDomain) {
-                    contain = true
+                    containOpenWithSafariUrl = true
                     break
                 }
             }
-            if (contain && navigationAction.targetFrame == nil) {
-                if UIApplication.shared.canOpenURL(url) {
-                    print("Redirected to browser. No need to open it locally: \(url)")
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+        
+        // 使用 Safari 打开网页
+        if (enableNavigationLink && containOpenWithSafariUrl) {
+            if UIApplication.shared.canOpenURL(url) {
+                print("Redirected to browser. No need to open it locally: \(url)")
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                decisionHandler(.cancel)
+                return
+            }
+        }
+        
+        if enableNavigationUrls.count > 0 {
+            var pass = false
+            
+            let components = url.absoluteString.components(separatedBy: "?")
+            if let urlString = components.first {
+                for enableUrl in enableNavigationUrls {
+                    if urlString.contains(enableUrl) {
+                        pass = true
+                        break
+                    }
+                }
+                if pass {
+                    print("Enable navigation urls Open : \(url)")
+                    decisionHandler(.allow)
+                    return
+                }
+            }
+        }
+        
+        if navigationAction.navigationType == .linkActivated {
+            // 对网页内链接跳转进行屏蔽
+            if(!enableNavigationLink) {
+                print("Disable open link : \(url)")
+                decisionHandler(.cancel)
+                return
+            }
+        } else if navigationAction.navigationType == .other {
+            // 对网页内其他跳转进行屏蔽，刚加载网页时 targetRequstUrl 为空。所以要规避掉
+            if let targetRequstUrl = navigationAction.targetFrame?.request.url,
+               targetRequstUrl.absoluteString.isNotEmpty {
+                if enableNavigationOther {
+                    if disableNavigationOtherDomains.count > 0 {
+                        // 1. 是否包含了不允许跳转的
+                        var containDisableOtherDomain = false
+                        if let rootDomain = url.rootDomain {
+                            // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+                            for domain in disableNavigationOtherDomains {
+                                if domain.contains(rootDomain) {
+                                    containDisableOtherDomain = true
+                                    break
+                                }
+                            }
+                        }
+                        
+                        if containDisableOtherDomain {
+                            print("In disable domains open other: \(url)")
+                            decisionHandler(.cancel)
+                            return
+                        }
+                    }
+                 
+                    if enableNavigationOtherDomains.count > 0 {
+                        // 2. 当前域名是否包含在允许跳转的
+                        var containNavigationOtherDomain = false
+                        if let rootDomain = url.rootDomain {
+                            // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+                            for domain in enableNavigationOtherDomains {
+                                if domain.contains(rootDomain) {
+                                    containNavigationOtherDomain = true
+                                    break
+                                }
+                            }
+                        }
+                        
+                        if(!containNavigationOtherDomain) {
+                            print("Not in enable domains open other : \(url)")
+                            decisionHandler(.cancel)
+                            return
+                        }
+                    }
+                } else {
+                    print("Disable open other : \(url)")
                     decisionHandler(.cancel)
                     return
                 }
@@ -639,7 +735,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         decisionHandler(.allow)
     }
     
-
+    
     // 6 页面加载完成之后调用
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
