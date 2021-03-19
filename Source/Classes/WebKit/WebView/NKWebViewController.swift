@@ -24,10 +24,16 @@ public enum NKWebViewControllerProgressIndicatorStyle {
     @objc optional func webViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void)
     @objc optional func webViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationResponse navigationResponse: WKNavigationResponse, decisionHandler: (WKNavigationResponsePolicy) -> Void)
     @objc optional func webViewController(_ webViewController: NKWebViewController, didReceiveAuthenticationChallenge challenge: URLAuthenticationChallenge, completionHandler: (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
+    
+    /// 监听 JS 的回调
+    /// - Parameters:
+    ///   - userContentController: <#userContentController description#>
+    ///   - message: <#message description#>
+    @objc optional func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
 }
 
 
-open class  NKWebViewController: UIViewController {
+open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     
     /** Boolean flag which indicates whether JavaScript alerts are allowed. Default is `true`. */
     open var allowJavaScriptAlerts = true
@@ -36,8 +42,13 @@ open class  NKWebViewController: UIViewController {
     open var buttonColor: UIColor? = nil
     open var titleColor: UIColor? = nil
     open var closing: Bool! = false
-    open var request: URLRequest!
-    open var navBarTitle: UILabel!
+    open var request: URLRequest?
+    open var navBarTitle: UILabel! = UILabel()
+    open var userDefinedTitle: String? {
+        didSet {
+            navBarTitle.text = userDefinedTitle
+        }
+    }
     open var sharingEnabled = true 
     open var toolBarHidden = false
     
@@ -51,7 +62,7 @@ open class  NKWebViewController: UIViewController {
     //MARK: 导航类型是 link
     /// 网页内的链接是否可点击
     open var enableNavigationLink: Bool = true
-   
+    
     //MARK: 导航类型是 other
     /// 网页内的其他跳转是否允许
     open var enableNavigationOther: Bool = true
@@ -87,6 +98,7 @@ open class  NKWebViewController: UIViewController {
     fileprivate var toolbarHeightConstraint: NSLayoutConstraint!
     fileprivate var toolbarHeight: CGFloat = 44
     fileprivate var navControllerUsesBackSwipe: Bool = false
+    fileprivate let refreshControl = UIRefreshControl()
     
     lazy fileprivate var activityIndicator: UIActivityIndicatorView! = {
         var activityIndicator = UIActivityIndicatorView()
@@ -159,13 +171,42 @@ open class  NKWebViewController: UIViewController {
     
     
     lazy open var webView: WKWebView = {
-        var tempWebView = WKWebView()
+        var tempWebView = WKWebView(frame: .zero, configuration: webConfig)
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         tempWebView.backgroundColor = .white
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
+        // after done with setup the `webView`:
+        refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
+        tempWebView.scrollView.addSubview(refreshControl)
         return tempWebView;
     }()
+    
+    var webConfig:WKWebViewConfiguration {
+        get {
+            let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
+            let userController:WKUserContentController = WKUserContentController()
+            let javascript = """
+                window.onload = function() {
+                    document.addEventListener("click", function(evt) {
+                        var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
+                        window.webkit.messageHandlers.jsMessenger.postMessage(tagClicked.outerHTML.toString());
+                    });
+                }
+                """
+            let userScript:WKUserScript =  WKUserScript(source: javascript, injectionTime:.atDocumentStart, forMainFrameOnly: true)
+            
+            userController.add(self, name: "jsMessenger")
+            userController.addUserScript(userScript)
+            webCfg.userContentController = userController
+            return webCfg
+        }
+    }
+    
+    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("detect webview click ")
+        delegate?.userContentController?(userContentController, didReceive: message)
+    }
     
     ////////////////////////////////////////////////
     public convenience init(urlString: String, sharingEnabled: Bool = true) {
@@ -186,13 +227,16 @@ open class  NKWebViewController: UIViewController {
         self.request = aRequest
     }
     
-    func loadRequest(_ request: URLRequest) {
-        if let url = request.url,
+    func loadRequest(_ request: URLRequest?) {
+        guard request != nil else {
+            return
+        }
+        if let url = request!.url,
            url.absoluteString.contains("file:"),
            #available(iOS 9.0, *) {
             webView.loadFileURL(url, allowingReadAccessTo: url)
         } else {
-            webView.load(request)
+            webView.load(request!)
         }
     }
     
@@ -261,17 +305,28 @@ open class  NKWebViewController: UIViewController {
     
     ////////////////////////////////////////////////
     // Target Actions
-    
-    @objc func goBackTapped(_ sender: UIBarButtonItem) {
+    open func goBack() {
         webView.goBack()
     }
     
+    open func goForward() {
+        webView.goBack()
+    }
+    
+    open func reload() {
+        webView.reload()
+    }
+    
+    @objc func goBackTapped(_ sender: UIBarButtonItem) {
+        goBack()
+    }
+    
     @objc func goForwardTapped(_ sender: UIBarButtonItem) {
-        webView.goForward()
+        goForward()
     }
     
     @objc func reloadTapped(_ sender: UIBarButtonItem) {
-        webView.reload()
+        reload()
     }
     
     @objc func stopTapped(_ sender: UIBarButtonItem) {
@@ -281,7 +336,7 @@ open class  NKWebViewController: UIViewController {
     
     @objc func actionButtonTapped(_ sender: AnyObject) {
         
-        if let url: URL = ((webView.url != nil) ? webView.url : request.url) {
+        if let url: URL = ((webView.url != nil) ? webView.url : request?.url) {
             let activities: NSArray = [NKWebViewControllerActivitySafari(),  NKWebViewControllerActivityChrome()]
             
             if url.absoluteString.hasPrefix("file:///") {
@@ -467,7 +522,6 @@ extension  NKWebViewController {
     override open func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
         updateToolbarItems()
-        navBarTitle = UILabel()
         navBarTitle.backgroundColor = UIColor.clear
         if presentingViewController == nil {
             if let titleAttributes = navigationController!.navigationBar.titleTextAttributes {
@@ -481,7 +535,6 @@ extension  NKWebViewController {
         navBarTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 17.0)
         navBarTitle.textAlignment = .center
         navigationItem.titleView = navBarTitle;
-        
         super.viewWillAppear(true)
         
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
@@ -654,52 +707,54 @@ extension  NKWebViewController: WKNavigationDelegate {
             }
         } else if navigationAction.navigationType == .other {
             // 对网页内其他跳转进行屏蔽，刚加载网页时 targetRequstUrl 为空。所以要规避掉
-            if let targetRequstUrl = navigationAction.targetFrame?.request.url,
-               targetRequstUrl.absoluteString.isNotEmpty {
-                if enableNavigationOther {
-                    if disableNavigationOtherDomains.count > 0 {
-                        // 1. 是否包含了不允许跳转的
-                        var containDisableOtherDomain = false
-                        if let rootDomain = url.rootDomain {
-                            // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
-                            for domain in disableNavigationOtherDomains {
-                                if domain.contains(rootDomain) {
-                                    containDisableOtherDomain = true
-                                    break
+            if #available(iOS 14.0, *) {
+                if let targetRequstUrl = navigationAction.targetFrame?.request.url,
+                   targetRequstUrl.absoluteString.isNotEmpty {
+                    if enableNavigationOther {
+                        if disableNavigationOtherDomains.count > 0 {
+                            // 1. 是否包含了不允许跳转的
+                            var containDisableOtherDomain = false
+                            if let rootDomain = url.rootDomain {
+                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+                                for domain in disableNavigationOtherDomains {
+                                    if domain.contains(rootDomain) {
+                                        containDisableOtherDomain = true
+                                        break
+                                    }
                                 }
+                            }
+                            
+                            if containDisableOtherDomain {
+                                print("In disable domains open other: \(url)")
+                                decisionHandler(.cancel)
+                                return
                             }
                         }
                         
-                        if containDisableOtherDomain {
-                            print("In disable domains open other: \(url)")
-                            decisionHandler(.cancel)
-                            return
-                        }
-                    }
-                 
-                    if enableNavigationOtherDomains.count > 0 {
-                        // 2. 当前域名是否包含在允许跳转的
-                        var containNavigationOtherDomain = false
-                        if let rootDomain = url.rootDomain {
-                            // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
-                            for domain in enableNavigationOtherDomains {
-                                if domain.contains(rootDomain) {
-                                    containNavigationOtherDomain = true
-                                    break
+                        if enableNavigationOtherDomains.count > 0 {
+                            // 2. 当前域名是否包含在允许跳转的
+                            var containNavigationOtherDomain = false
+                            if let rootDomain = url.rootDomain {
+                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+                                for domain in enableNavigationOtherDomains {
+                                    if domain.contains(rootDomain) {
+                                        containNavigationOtherDomain = true
+                                        break
+                                    }
                                 }
                             }
+                            
+                            if(!containNavigationOtherDomain) {
+                                print("Not in enable domains open other : \(url)")
+                                decisionHandler(.cancel)
+                                return
+                            }
                         }
-                        
-                        if(!containNavigationOtherDomain) {
-                            print("Not in enable domains open other : \(url)")
-                            decisionHandler(.cancel)
-                            return
-                        }
+                    } else {
+                        print("Disable open other : \(url)")
+                        decisionHandler(.cancel)
+                        return
                     }
-                } else {
-                    print("Disable open other : \(url)")
-                    decisionHandler(.cancel)
-                    return
                 }
             }
         }
@@ -725,7 +780,6 @@ extension  NKWebViewController: WKNavigationDelegate {
         if responseBackHandler != nil {
             responseBackHandler!(webView)
         }
-        
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
             for cookie in cookies {
                 NKCookieStore.shared.addCookie(cookie)
@@ -739,24 +793,28 @@ extension  NKWebViewController: WKNavigationDelegate {
     // 6 页面加载完成之后调用
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
+        refreshControl.endRefreshing()
+        
         if responseBackHandler != nil {
             webView.isHidden = false
         }
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
-        webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
-            if error == nil {
-                self.navBarTitle.text = response as! String?
-                self.navBarTitle.sizeToFit()
-                self.updateToolbarItems()
-            }
-        })
-        
-        webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
-            if error == nil {
-                print(response)
-                self.navBarTitle.text = response as! String?
-                self.navBarTitle.sizeToFit()
-                self.updateToolbarItems()
+        if userDefinedTitle == nil {
+            webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
+                if error == nil {
+                    self.navBarTitle.text = response as! String?
+                    self.navBarTitle.sizeToFit()
+                    self.updateToolbarItems()
+                }
+            })
+            
+            webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
+                if error == nil {
+                    print(response)
+                    self.navBarTitle.text = response as! String?
+                    self.navBarTitle.sizeToFit()
+                    self.updateToolbarItems()
+                }
             }
         }
     }
@@ -769,12 +827,16 @@ extension  NKWebViewController: WKNavigationDelegate {
     // 页面加载失败时调用
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         showLoading(false)
+        refreshControl.endRefreshing()
+        
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
         updateToolbarItems()
     }
     
     public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         showLoading(false)
+        refreshControl.endRefreshing()
+        
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
         updateToolbarItems()
     }
