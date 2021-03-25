@@ -26,6 +26,11 @@ public extension Array {
 
         return plistDict
     }
+    
+    var isNotEmpty: Bool {
+        let result = !self.isEmpty
+        return result
+    }
 }
 
 // MARK: - Thread Safe
