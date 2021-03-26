@@ -100,7 +100,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     fileprivate var navControllerUsesBackSwipe: Bool = false
     fileprivate let refreshControl = UIRefreshControl()
     
-    lazy fileprivate var activityIndicator: UIActivityIndicatorView! = {
+    lazy fileprivate var activityIndicator: UIActivityIndicatorView? = {
         var activityIndicator = UIActivityIndicatorView()
         activityIndicator.backgroundColor = .clear
         #if swift(>=4.2)
@@ -447,11 +447,11 @@ extension  NKWebViewController {
         UIApplication.shared.setIndicator(visible: animate)
         if animate {
             if (progressIndicatorStyle == .activityIndicator) || (progressIndicatorStyle == .both) {
-                activityIndicator.startAnimating()
+                activityIndicator?.startAnimating()
             }
         } else if activityIndicator != nil {
             if (progressIndicatorStyle == .activityIndicator) || (progressIndicatorStyle == .both) {
-                activityIndicator.stopAnimating()
+                activityIndicator?.stopAnimating()
             }
         }
     }

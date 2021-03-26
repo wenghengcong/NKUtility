@@ -477,7 +477,7 @@ extension NKDevice.Screen {
         var scale = width/320
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
@@ -485,7 +485,7 @@ extension NKDevice.Screen {
         var scale = width/360.0
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     /// 设计稿全部以iPhone XS Max， iPhone 11 Pro Max尺寸设计
@@ -493,7 +493,7 @@ extension NKDevice.Screen {
         var scale = width/375
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     /// 设计稿全部以iPhone 5尺寸设计
@@ -501,7 +501,7 @@ extension NKDevice.Screen {
         var scale = width/390
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     /// 设计稿全部以iPhone 6尺寸设计
@@ -509,7 +509,7 @@ extension NKDevice.Screen {
         var scale = width/414.0
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     /// 设计稿全部以iPhone 6 Plus尺寸设计
@@ -517,7 +517,7 @@ extension NKDevice.Screen {
         var scale = width/428
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
-        return result
+        return floor(result)
     }
     
     public static func scaleChangeInIPAD(_ x: CGFloat) -> CGFloat {
