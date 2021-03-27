@@ -449,6 +449,10 @@ extension NKDevice.Screen {
         }
     }
     
+    public static var isNotch: Bool {
+        return hasNotch
+    }
+    
     // MARK: Orientation
     public static func isPortrait() -> Bool {
         if UIDevice.current.orientation.isValidInterfaceOrientation {

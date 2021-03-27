@@ -65,6 +65,7 @@ open class NKCheckmarkCell: NKStaticCell {
         super.setupSubviews()
         backView.theme_backgroundColor = .tableCellBackgroundColor
         titleLabel.theme_textColor = .titleColor
+        checkMarkImageView.image = UIImage(nkBundleNamed: "nk_cell_checkmark")
     }
     
     open override func setSelected(_ selected: Bool, animated: Bool) {

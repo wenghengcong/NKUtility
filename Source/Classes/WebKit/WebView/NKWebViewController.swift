@@ -240,12 +240,22 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
     
-    deinit {
-        showLoading(false)
-        removeObserver()
+    func clearWebView() {
+        guard view != nil else {
+            return
+        }
+        guard webView != nil else {
+            return
+        }
         webView.stopLoading()
         webView.uiDelegate = nil;
         webView.navigationDelegate = nil;
+    }
+    
+    deinit {
+        showLoading(false)
+        removeObserver()
+        clearWebView()
     }
     
     ////////////////////////////////////////////////
@@ -444,6 +454,12 @@ extension  NKWebViewController {
     
     
     fileprivate func showLoading(_ animate: Bool) {
+        guard view != nil else {
+            return
+        }
+        guard activityIndicator != nil else {
+            return
+        }
         UIApplication.shared.setIndicator(visible: animate)
         if animate {
             if (progressIndicatorStyle == .activityIndicator) || (progressIndicatorStyle == .both) {
@@ -467,6 +483,9 @@ extension  NKWebViewController {
     }
     
     fileprivate func removeObserver() {
+        guard view != nil else {
+            return
+        }
         webView.removeObserver(self, forKeyPath: "estimatedProgress")
         webView.removeObserver(self, forKeyPath: "URL")
         webView.removeObserver(self, forKeyPath: "title")

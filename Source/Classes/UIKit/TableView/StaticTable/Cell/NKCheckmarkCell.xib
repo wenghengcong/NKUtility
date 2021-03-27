@@ -34,7 +34,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cell_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="p0K-uN-7Kg">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nk_cell_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="p0K-uN-7Kg">
                                 <rect key="frame" x="280" y="7" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="g3o-1f-DUU"/>
@@ -73,7 +73,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="cell_checkmark" width="30" height="30"/>
+        <image name="nk_cell_checkmark" width="30" height="30"/>
         <systemColor name="systemGray4Color">
             <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
