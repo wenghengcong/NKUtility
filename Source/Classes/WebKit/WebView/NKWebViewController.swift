@@ -86,6 +86,8 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     
     /// 得到 webview response 的处理结果
     open var responseBackHandler: ((WKWebView)->Void)?
+    /// 在处理 webview response完成前是否隐藏 webview
+    open var responseBackHandlerHiddenWebView: Bool = false
     
     /// 打开链接时自定义跳转，如果 return true，将不执行其他动作
     open var customDecideNavigation: ((URL)->Bool)?
@@ -669,114 +671,114 @@ extension  NKWebViewController: WKNavigationDelegate {
         }
         
         //  NKTODO: 增加支持打开外部 URL 的域名集合，提供一个属性对外暴露
-        // 3. handle other url
-        if customDecideNavigation != nil {
-            let isReturn = customDecideNavigation!(url)
-            if isReturn {
-                decisionHandler(.cancel)
-                return
-            }
-        }
+//        // 3. handle other url
+//        if customDecideNavigation != nil {
+//            let isReturn = customDecideNavigation!(url)
+//            if isReturn {
+//                decisionHandler(.cancel)
+//                return
+//            }
+//        }
+//
+//        var containOpenWithSafariUrl = false
+//        if let rootDomain = url.rootDomain {
+//            for domain in openWithSafariDomains {
+//                if domain.contains(rootDomain) {
+//                    containOpenWithSafariUrl = true
+//                    break
+//                }
+//            }
+//        }
+//
+//        // 使用 Safari 打开网页
+//        if (enableNavigationLink && containOpenWithSafariUrl) {
+//            if UIApplication.shared.canOpenURL(url) {
+//                print("Redirected to browser. No need to open it locally: \(url)")
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                decisionHandler(.cancel)
+//                return
+//            }
+//        }
+//
+//        if enableNavigationUrls.count > 0 {
+//            var pass = false
+//
+//            let components = url.absoluteString.components(separatedBy: "?")
+//            if let urlString = components.first {
+//                for enableUrl in enableNavigationUrls {
+//                    if urlString.contains(enableUrl) {
+//                        pass = true
+//                        break
+//                    }
+//                }
+//                if pass {
+//                    print("Enable navigation urls Open : \(url)")
+//                    decisionHandler(.allow)
+//                    return
+//                }
+//            }
+//        }
         
-        var containOpenWithSafariUrl = false
-        if let rootDomain = url.rootDomain {
-            for domain in openWithSafariDomains {
-                if domain.contains(rootDomain) {
-                    containOpenWithSafariUrl = true
-                    break
-                }
-            }
-        }
-        
-        // 使用 Safari 打开网页
-        if (enableNavigationLink && containOpenWithSafariUrl) {
-            if UIApplication.shared.canOpenURL(url) {
-                print("Redirected to browser. No need to open it locally: \(url)")
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
-            }
-        }
-        
-        if enableNavigationUrls.count > 0 {
-            var pass = false
-            
-            let components = url.absoluteString.components(separatedBy: "?")
-            if let urlString = components.first {
-                for enableUrl in enableNavigationUrls {
-                    if urlString.contains(enableUrl) {
-                        pass = true
-                        break
-                    }
-                }
-                if pass {
-                    print("Enable navigation urls Open : \(url)")
-                    decisionHandler(.allow)
-                    return
-                }
-            }
-        }
-        
-        if navigationAction.navigationType == .linkActivated {
-            // 对网页内链接跳转进行屏蔽
-            if(!enableNavigationLink) {
-                print("Disable open link : \(url)")
-                decisionHandler(.cancel)
-                return
-            }
-        } else if navigationAction.navigationType == .other {
-            // 对网页内其他跳转进行屏蔽，刚加载网页时 targetRequstUrl 为空。所以要规避掉
-            if #available(iOS 14.0, *) {
-                if let targetRequstUrl = navigationAction.targetFrame?.request.url,
-                   targetRequstUrl.absoluteString.isNotEmpty {
-                    if enableNavigationOther {
-                        if disableNavigationOtherDomains.count > 0 {
-                            // 1. 是否包含了不允许跳转的
-                            var containDisableOtherDomain = false
-                            if let rootDomain = url.rootDomain {
-                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
-                                for domain in disableNavigationOtherDomains {
-                                    if domain.contains(rootDomain) {
-                                        containDisableOtherDomain = true
-                                        break
-                                    }
-                                }
-                            }
-                            
-                            if containDisableOtherDomain {
-                                print("In disable domains open other: \(url)")
-                                decisionHandler(.cancel)
-                                return
-                            }
-                        }
-                        
-                        if enableNavigationOtherDomains.count > 0 {
-                            // 2. 当前域名是否包含在允许跳转的
-                            var containNavigationOtherDomain = false
-                            if let rootDomain = url.rootDomain {
-                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
-                                for domain in enableNavigationOtherDomains {
-                                    if domain.contains(rootDomain) {
-                                        containNavigationOtherDomain = true
-                                        break
-                                    }
-                                }
-                            }
-                            
-                            if(!containNavigationOtherDomain) {
-                                print("Not in enable domains open other : \(url)")
-                                decisionHandler(.cancel)
-                                return
-                            }
-                        }
-                    } else {
-                        print("Disable open other : \(url)")
-                        decisionHandler(.cancel)
-                        return
-                    }
-                }
-            }
-        }
+//        if navigationAction.navigationType == .linkActivated {
+//            // 对网页内链接跳转进行屏蔽
+//            if(!enableNavigationLink) {
+//                print("Disable open link : \(url)")
+//                decisionHandler(.cancel)
+//                return
+//            }
+//        } else if navigationAction.navigationType == .other {
+//            // 对网页内其他跳转进行屏蔽，刚加载网页时 targetRequstUrl 为空。所以要规避掉
+//            if #available(iOS 14.0, *) {
+//                if let targetRequstUrl = navigationAction.targetFrame?.request.url,
+//                   targetRequstUrl.absoluteString.isNotEmpty {
+//                    if enableNavigationOther {
+//                        if disableNavigationOtherDomains.count > 0 {
+//                            // 1. 是否包含了不允许跳转的
+//                            var containDisableOtherDomain = false
+//                            if let rootDomain = url.rootDomain {
+//                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+//                                for domain in disableNavigationOtherDomains {
+//                                    if domain.contains(rootDomain) {
+//                                        containDisableOtherDomain = true
+//                                        break
+//                                    }
+//                                }
+//                            }
+//
+//                            if containDisableOtherDomain {
+//                                print("In disable domains open other: \(url)")
+//                                decisionHandler(.cancel)
+//                                return
+//                            }
+//                        }
+//
+//                        if enableNavigationOtherDomains.count > 0 {
+//                            // 2. 当前域名是否包含在允许跳转的
+//                            var containNavigationOtherDomain = false
+//                            if let rootDomain = url.rootDomain {
+//                                // 获取当前根域名，判断是否要允许加载 navigationType == .other 的情况
+//                                for domain in enableNavigationOtherDomains {
+//                                    if domain.contains(rootDomain) {
+//                                        containNavigationOtherDomain = true
+//                                        break
+//                                    }
+//                                }
+//                            }
+//
+//                            if(!containNavigationOtherDomain) {
+//                                print("Not in enable domains open other : \(url)")
+//                                decisionHandler(.cancel)
+//                                return
+//                            }
+//                        }
+//                    } else {
+//                        print("Disable open other : \(url)")
+//                        decisionHandler(.cancel)
+//                        return
+//                    }
+//                }
+//            }
+//        }
         
         print("Open it locally: \(url)")
         decisionHandler(.allow)
@@ -786,7 +788,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     // 2 页面开始加载时调用
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         showLoading(true)
-        if responseBackHandler != nil {
+        if responseBackHandler != nil && responseBackHandlerHiddenWebView {
             webView.isHidden = true
         }
         delegate?.webViewController?(self, didStartLoading: webView.url)
@@ -799,22 +801,23 @@ extension  NKWebViewController: WKNavigationDelegate {
         if responseBackHandler != nil {
             responseBackHandler!(webView)
         }
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            for cookie in cookies {
-                NKCookieStore.shared.addCookie(cookie)
+        DispatchQueue.main.async {
+            webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+                for cookie in cookies {
+                    NKCookieStore.shared.addCookie(cookie)
+                }
             }
         }
         delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
         decisionHandler(.allow)
     }
     
-    
     // 6 页面加载完成之后调用
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
         refreshControl.endRefreshing()
         
-        if responseBackHandler != nil {
+        if responseBackHandler != nil && responseBackHandlerHiddenWebView {
             webView.isHidden = false
         }
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
