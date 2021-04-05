@@ -44,10 +44,11 @@ https://github.com/xmartlabs/Eureka
 https://github.com/BackWorld/TreeTableView 提供实现思路
 https://github.com/gringoireDM/LNZTreeView
 https://github.com/genkernel/TreeView
-https://github.com/cenksk/NKTreeView    最终采用
+https://github.com/cenksk/CPTreeView    最终采用
 https://github.com/partho-maple/PBTreeView      挺好的实现
 https://github.com/KiranJasvanee/InfinityExpandableTableTree    
 https://github.com/Augustyniak/RATreeView       star 数很多，不过是 oc
+https://github.com/varun-naharia/VNTreeView
 
 
 # 索引视图

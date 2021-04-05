@@ -57,3 +57,6 @@ https://github.com/scinfu/SwiftSoup
 https://github.com/cezheng/Fuzi
 https://github.com/mattt/Ono
 
+
+# 加速加载
+https://github.com/bernikovich/WebViewWarmUper
