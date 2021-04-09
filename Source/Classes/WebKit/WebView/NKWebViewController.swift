@@ -52,6 +52,10 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     open var sharingEnabled = true 
     open var toolBarHidden = false
     
+    ///  内容过滤，JSON 格式
+    ///  参考：https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
+    open var contentRules: String?
+    
     /// 需要使用 Safari 打开的域名，不受"屏蔽跳转与允许跳转"影响
     open var openWithSafariDomains: [String] = []
     
@@ -70,12 +74,6 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             webView.allowsBackForwardNavigationGestures = value
         }
     }
-    
-    /// 得到 webview response 的处理结果
-    open var responseBackHandler: ((WKWebView)->Void)?
-    /// 在处理 webview response完成前是否隐藏 webview
-    open var responseBackHandlerHiddenWebView: Bool = false
-    
     
     // MARK: Private Properties
     fileprivate var progressView: UIProgressView!
@@ -189,41 +187,56 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
     
-    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("detect webview click ")
-        delegate?.userContentController?(userContentController, didReceive: message)
-    }
-    
-    ////////////////////////////////////////////////
-    public convenience init(urlString: String, sharingEnabled: Bool = true) {
+   
+    // MARK: - Init
+    public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
         var urlString = urlString
         if !urlString.hasPrefix("https://") && !urlString.hasPrefix("http://") {
             urlString = "https://"+urlString
         }
-        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled)
+        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled, contentRules: contentRules)
     }
     
-    public convenience init(pageURL: URL, sharingEnabled: Bool = true) {
-        self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled)
+    public convenience init(pageURL: URL, sharingEnabled: Bool = true, contentRules: String?) {
+        self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, contentRules: contentRules)
     }
     
-    public convenience init(aRequest: URLRequest, sharingEnabled: Bool = true) {
+    public convenience init(aRequest: URLRequest, sharingEnabled: Bool = true, contentRules: String?) {
         self.init()
         self.sharingEnabled = sharingEnabled
         self.request = aRequest
+        self.contentRules = contentRules
     }
     
     func loadRequest(_ request: URLRequest?) {
         guard request != nil else {
             return
         }
+        if self.contentRules != nil, self.contentRules!.isNotEmpty {
+            WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
+                guard let contentRuleList = list else { return }
+                self.webView.configuration.userContentController.add(contentRuleList)
+                self.really_loadRequest(self.request)
+            }
+        } else {
+            self.really_loadRequest(self.request)
+        }
+     
+    }
+    
+    fileprivate func really_loadRequest(_ request: URLRequest?) {
         if let url = request!.url,
            url.absoluteString.contains("file:"),
            #available(iOS 9.0, *) {
-            webView.loadFileURL(url, allowingReadAccessTo: url)
+            self.webView.loadFileURL(url, allowingReadAccessTo: url)
         } else {
-            webView.load(request!)
+            self.webView.load(request!)
         }
+    }
+    
+    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("detect webview click ")
+        delegate?.userContentController?(userContentController, didReceive: message)
     }
     
     func clearWebView() {
@@ -385,16 +398,15 @@ extension  NKWebViewController {
             navigationController?.setToolbarHidden(toolBarHidden, animated: false)
         }
         
-        var allBarHeight = toolBarHidden ? topBarHeight : topBarHeight+tabBarHeight
-        if NKDevice.isIPad() {  // ipad 只有 top，没有 tab
-            allBarHeight = topBarHeight
+        var toolBarHeght = toolBarHidden ? 0 : 0
+        if NKDevice.isIPad() {  
+            toolBarHeght = 0
         }
-        let webHeight = NKSCREEN_HEIGHT-allBarHeight
         
         webView.snp.remakeConstraints { (make) in
             make.left.right.equalTo(0)
             make.top.equalTo(0)
-            make.height.equalTo(webHeight)
+            make.bottom.equalToSuperview().offset(-toolBarHeght)
         }
     }
     
@@ -693,9 +705,6 @@ extension  NKWebViewController: WKNavigationDelegate {
     // 2 页面开始加载时调用
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         showLoading(true)
-        if responseBackHandler != nil && responseBackHandlerHiddenWebView {
-            webView.isHidden = true
-        }
         delegate?.webViewController?(self, didStartLoading: webView.url)
         updateToolbarItems()
     }
@@ -703,9 +712,6 @@ extension  NKWebViewController: WKNavigationDelegate {
     
     // 3、5 在收到响应后，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        if responseBackHandler != nil {
-            responseBackHandler!(webView)
-        }
         DispatchQueue.main.async {
             webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
                 for cookie in cookies {
@@ -721,10 +727,6 @@ extension  NKWebViewController: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
         refreshControl.endRefreshing()
-        
-        if responseBackHandler != nil && responseBackHandlerHiddenWebView {
-            webView.isHidden = false
-        }
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
         if userDefinedTitle == nil {
             webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in

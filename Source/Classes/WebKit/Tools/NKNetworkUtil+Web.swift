@@ -95,20 +95,24 @@ public extension NKNetworkUtil {
                 return
             }
             
-            elements.forEach {
-                removeElement(id: $0, from: webView, completionHandler: completionHandler)
-            }
-        }
-        
-        public static func removeElement(id: String,
-                                         from webView: WKWebView,
-                                         completionHandler: ((Any?, Error?) -> Void)? = nil) {
-            let removeElementIdScript = "var element = document.getElementById('\(id)'); element.parentElement.removeChild(element);"
-            webView.evaluateJavaScript(removeElementIdScript) { (result, error) in
-                let removeElementClassScript = "document.getElementsByClassName('\(id)')[0].style.display=\"none\";"
-                webView.evaluateJavaScript(removeElementClassScript) { (result, error) in
-                    completionHandler?(result, error)
+            let js = """
+                var removeEles = \(elements);
+                for (let i = 0; i < removeEles.length; i++) {
+                    let rid = removeEles[i];
+                    var element = document.getElementById(rid);
+                    if(element !== null && element !== undefined) {
+                        element.parentElement.removeChild(element);
+                    }
+                    var elements = document.getElementsByClassName(rid);
+                    if(elements !== null && elements !== undefined) {
+                        for (let j = 0; j < elements.length; j++) {
+                            elements[j].style.display=\"none\";
+                        }
+                    }
                 }
+            """
+            webView.evaluateJavaScript(js) { (result, error) in
+                completionHandler?(result, error)
             }
         }
     }

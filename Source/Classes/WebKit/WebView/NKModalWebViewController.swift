@@ -19,28 +19,28 @@ public class NKModalWebViewController: UINavigationController {
     
     weak var webViewDelegate: UIWebViewDelegate? = nil
     
-    public convenience init(urlString: String, sharingEnabled: Bool = true) {
+    public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
         var urlString = urlString
         if !urlString.hasPrefix("https://") && !urlString.hasPrefix("http://") {
             urlString = "https://"+urlString
         }
-        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled)
+        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled, contentRules: contentRules)
     }
     
-    public convenience init(urlString: String, theme: SwiftModalWebVCTheme, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle, sharingEnabled: Bool = true) {
-        self.init(pageURL: URL(string: urlString)!, theme: theme, dismissButtonStyle: dismissButtonStyle, sharingEnabled: sharingEnabled)
+    public convenience init(urlString: String, theme: SwiftModalWebVCTheme, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle, sharingEnabled: Bool = true, contentRules: String?) {
+        self.init(pageURL: URL(string: urlString)!, theme: theme, dismissButtonStyle: dismissButtonStyle, sharingEnabled: sharingEnabled, contentRules: contentRules)
     }
     
-    public convenience init(pageURL: URL, sharingEnabled: Bool = true) {
-        self.init(request: URLRequest(url: pageURL), sharingEnabled: sharingEnabled)
+    public convenience init(pageURL: URL, sharingEnabled: Bool = true, contentRules: String?) {
+        self.init(request: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, contentRules:contentRules)
     }
     
-    public convenience init(pageURL: URL, theme: SwiftModalWebVCTheme, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle, sharingEnabled: Bool = true) {
-        self.init(request: URLRequest(url: pageURL), theme: theme, dismissButtonStyle: dismissButtonStyle, sharingEnabled: sharingEnabled)
+    public convenience init(pageURL: URL, theme: SwiftModalWebVCTheme, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle, sharingEnabled: Bool = true, contentRules: String?) {
+        self.init(request: URLRequest(url: pageURL), theme: theme, dismissButtonStyle: dismissButtonStyle, sharingEnabled: sharingEnabled, contentRules: contentRules)
     }
     
-    public init(request: URLRequest, theme: SwiftModalWebVCTheme = .lightBlue, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle = .arrow, sharingEnabled: Bool = true) {
-        let webViewController =  NKWebViewController(aRequest: request)
+    public init(request: URLRequest, theme: SwiftModalWebVCTheme = .lightBlue, dismissButtonStyle: SwiftModalWebVCDismissButtonStyle = .arrow, sharingEnabled: Bool = true, contentRules: String?) {
+        let webViewController =  NKWebViewController(aRequest: request, contentRules: contentRules)
         webViewController.sharingEnabled = sharingEnabled
         webViewController.storedStatusColor = UINavigationBar.appearance().barStyle
         
