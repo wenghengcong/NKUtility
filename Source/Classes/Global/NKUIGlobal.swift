@@ -33,7 +33,7 @@ public func iOSVersionIsEqualOrEarlier(to version: String) -> Bool {
 // MARK: - UIView
 public let NKSCREEN_WIDTH =  NKDevice.Screen.width
 public let NKSCREEN_HEIGHT = NKDevice.Screen.height
-public let NKTopBarHeight = UIViewController.topViewController()?.topBarHeight
+public let NKTopBarHeight = UIViewController.topViewController()?.topBarHeight ?? 44.0
 
 /// https://ios-resolution.com/
 // MARK: - Design Scale
