@@ -110,3 +110,9 @@ override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
 ```
 
 方法二：实现 view 的 transform
+
+
+# status bar
+https://www.jianshu.com/p/be68592f259e
+
+

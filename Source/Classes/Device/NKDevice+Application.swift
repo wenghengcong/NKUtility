@@ -15,24 +15,36 @@ extension NKDevice {
     /// Application information.
     public struct Application {
         /// The current app version.
-        public static var version: String {
-            return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+        public static var version: String? {
+            return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         }
         
         /// The build number.
-        public static var build: String {
-            return Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+        public static var buildNumber: String? {
+            return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        }
+        
+        ///  Application name (if applicable).
+        public static  var displayName: String? {
+            return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         }
         
         /// The complete app version with build number (i.e. : "2.1.3 (343)").
         public static var completeAppVersion: String {
-            return "\(Application.version) (\(Application.build))"
+            return "\(Application.version) (\(Application.buildNumber))"
         }
         
         /// The current content of the clipboard (only string).
         public static var clipboardString: String? {
             return UIPasteboard.general.string
         }
+        
+        
+        /// App bundle identifier in Info.plist(i.e. : com.---.---
+        public static var bundleId: String? {
+            return Bundle.main.infoDictionary!["CFBundleIdentifier"] as? String
+        }
+
     }
     
     ///  - UUID
