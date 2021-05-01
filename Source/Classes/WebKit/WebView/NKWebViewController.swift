@@ -712,6 +712,13 @@ extension  NKWebViewController: WKNavigationDelegate {
     
     // 3、5 在收到响应后，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        
+        if let response = navigationResponse.response as? HTTPURLResponse {
+            let headers = response.allHeaderFields
+            //do something with headers
+            print("webvie headers: \(headers)")
+        }
+        
         DispatchQueue.main.async {
             webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
                 for cookie in cookies {

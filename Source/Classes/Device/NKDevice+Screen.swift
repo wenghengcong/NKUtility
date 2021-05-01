@@ -442,8 +442,8 @@ extension NKDevice.Screen {
         guard #available(iOS 11.0, *), let window = UIWindow.topWindow() else {
             return false
         }
-        if UIDevice.current.orientation.isPortrait {
-            return window.safeAreaInsets.top >= 44
+        if isPortrait() {
+            return window.safeAreaInsets.bottom >= 0
         } else {
             return window.safeAreaInsets.left > 0 || window.safeAreaInsets.right > 0
         }

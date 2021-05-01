@@ -21,6 +21,24 @@ loading animations https://github.com/ninjaprox/NVActivityIndicatorView
 pod 'NVActivityIndicatorView'
 
 
+# ProgressHUD
+很简单的进度显示，类似NVActivityIndicatorView
+https://github.com/relatedcode/ProgressHUD
+pod 'ProgressHUD'
+
+
+# SwiftMessages
+https://github.com/SwiftKickMobile/SwiftMessages
+pod 'SwiftMessages'
+
+# Whisper
+https://github.com/hyperoslo/Whisper
+顶部小提示，在view的 top，导航栏，状态栏
+pod 'Whisper'
+
+
+
+
 由上面几部分组成这个系统。
 
 
