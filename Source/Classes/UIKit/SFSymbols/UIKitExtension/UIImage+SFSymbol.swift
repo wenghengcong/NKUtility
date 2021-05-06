@@ -5,6 +5,24 @@ import UIKit
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public extension UIImage {
     
+    //NKTODO: 无法设置颜色
+    static func symbol(symbolName: String,
+                       pointSize: CGFloat? = 17,
+                       font: UIFont?,
+                       weight: UIImage.SymbolWeight? = nil,
+                       scale: UIImage.SymbolScale? = nil,
+                       textStyle: UIFont.TextStyle? = nil,
+                       tintColor: UIColor?) -> UIImage? {
+        let config = UIImage.SymbolConfiguration.combine(pointSize, weight, scale, textStyle)
+        if tintColor != nil {
+            let image = UIImage(systemName: symbolName, withConfiguration: config)?.withTintColor(tintColor!, renderingMode: .alwaysOriginal)
+            return image
+        } else {
+            let image = UIImage(systemName: symbolName, withConfiguration: config)
+            return image
+        }
+    }
+    
     convenience init?(symbolName: String,
                       pointSize: CGFloat? = 17,
                       font: UIFont?,

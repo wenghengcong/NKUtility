@@ -48,7 +48,18 @@ extension NKDevice {
     }
     
     ///  - UUID
-    public static func uuid() -> String? {
-        return UIDevice.current.identifierForVendor?.uuidString
+    /// uuid
+    /// - Returns: Each time the same will be generated
+    public static func uuid() -> String {
+        if let uuid = UIDevice.current.identifierForVendor?.uuidString {
+            return uuid
+        }
+        return uuidRandom()
+    }
+    
+    /// uuid
+    /// - Returns: Each time a new one will be generated
+    public static func uuidRandom() -> String {
+        return UUID().uuidString
     }
 }

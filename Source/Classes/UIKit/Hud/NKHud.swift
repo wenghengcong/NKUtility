@@ -65,8 +65,15 @@ public struct NKHud {
     }
 
 
-    static public func showFailure(in view: UIView, with caption: String = "") {
-        HUD.shared.showFailure(in: view, with: caption)
+    static public func showFailure(in view: UIView?, with caption: String = "") {
+        var topView = view
+        if view == nil {
+            topView = UIViewController.topViewController()?.view
+        }
+        guard topView != nil else {
+            return
+        }
+        HUD.shared.showFailure(in: topView!, with: caption)
     }
     
 
