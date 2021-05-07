@@ -1364,7 +1364,7 @@ public extension String {
 
 
 public extension String {
-
+    
     var htmlToAttributedString: NSAttributedString? {
         guard let data = data(using: .utf8) else { return nil }
         do {
@@ -1432,4 +1432,21 @@ public extension String {
         return removeCharacters(from: CharacterSet(charactersIn: from))
     }
     
+    func caseInsensitiveCompare(_ other: String) -> Bool {
+        if(self.caseInsensitiveCompare(other) == .orderedSame){
+            return true
+        }
+        return false
+    }
+    
+    func compare(_ other: String) -> Bool {
+        if(self.compare(other) == .orderedSame){
+            return true
+        }
+        return false
+    }
+    
+    func isEqual(_ other: String) -> Bool {
+        return compare(other)
+    }
 }

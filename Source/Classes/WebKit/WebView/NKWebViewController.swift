@@ -49,6 +49,11 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             navBarTitle.text = userDefinedTitle
         }
     }
+    
+    
+    ///  导航栏右上角按钮
+    open var navRightItems: [UIBarButtonItem]? = []
+    
     open var sharingEnabled = true 
     open var toolBarHidden = false
     
@@ -260,7 +265,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     ////////////////////////////////////////////////
     // Toolbar
     
-    func updateToolbarItems() {
+    public func updateToolbarItems() {
         if toolBarHidden {
             return
         }
@@ -274,7 +279,13 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
             
-            let items: NSArray = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
+            var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
+            
+            if let addMore = self.navRightItems {
+                if addMore.count > 0 {
+                    items.insert(contentsOf: addMore, at: 0)
+                }
+            }
             
             ipadToolbar.frame =  CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: toolbarHeight)
             if !closing {
@@ -293,7 +304,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
                     ipadToolbar.barTintColor = barTintColor
                 }
             }
-            navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
+            navigationItem.rightBarButtonItems = items
         }
         else {
             let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
