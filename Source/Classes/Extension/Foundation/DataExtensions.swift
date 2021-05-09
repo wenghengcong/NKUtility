@@ -17,6 +17,11 @@ public extension Data {
         let jsonString = (try? String(data: JSONSerialization.data(withJSONObject: JSONSerialization.jsonObject(with: self, options: []), options: .prettyPrinted), encoding: .utf8)!) ?? ""
         return jsonString
     }
+
+    var strings: [String] {
+        let strs = split(separator: 0).flatMap { String(bytes: $0, encoding: .utf8) }
+        return strs
+    }
 }
 
 // MARK: - Methods
@@ -28,6 +33,11 @@ public extension Data {
     /// - Returns: String by encoding Data using the given encoding (if applicable).
     func string(encoding: String.Encoding) -> String? {
         return String(data: self, encoding: encoding)
+    }
+
+    func strings(encoding: String.Encoding) -> [String] {
+        let strs = split(separator: 0).flatMap { String(bytes: $0, encoding: encoding) }
+        return strs
     }
 
     /// SwifterSwift: Returns a Foundation object from given JSON data.
