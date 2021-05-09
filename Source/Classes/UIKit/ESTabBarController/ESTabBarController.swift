@@ -99,7 +99,18 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     /// Customize set tabBar use KVC.
     open override func viewDidLoad() {
         super.viewDidLoad()
-        let tabBar = { () -> ESTabBar in 
+        self.refreshNewTabbar()
+        barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
+    }
+
+    open func reloadTabBar() {
+        if let tabbar = self.value(forKey: "tabBar") as? ESTabBar {
+            tabbar.reload()
+        }
+    }
+
+    open func refreshNewTabbar() {
+        let tabBar = { () -> ESTabBar in
             let tabBar = ESTabBar()
             tabBar.delegate = self
             tabBar.customDelegate = self
@@ -107,7 +118,6 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
             return tabBar
         }()
         self.setValue(tabBar, forKey: "tabBar")
-        barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
         tabBar.itemCustomPositioning = .automatic
     }
     
