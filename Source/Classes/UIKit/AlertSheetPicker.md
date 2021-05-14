@@ -38,6 +38,7 @@ pod 'ProgressHUD'
 https://github.com/SwiftKickMobile/SwiftMessages
 pod 'SwiftMessages'
 
+
 # Whisper
 https://github.com/hyperoslo/Whisper
 顶部小提示，在view的 top，导航栏，状态栏
