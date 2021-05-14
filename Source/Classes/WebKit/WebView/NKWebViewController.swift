@@ -240,7 +240,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("detect webview click ")
+//        print("detect webview click ")
         delegate?.userContentController?(userContentController, didReceive: message)
     }
     
@@ -700,7 +700,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             // 使用 Safari 打开网页
             if (containOpenWithSafariUrl) {
                 if UIApplication.shared.canOpenURL(url) {
-                    print("Redirected to browser. No need to open it locally: \(url)")
+//                    print("Redirected to browser. No need to open it locally: \(url)")
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     decisionHandler(.cancel)
                     return
@@ -708,7 +708,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             }
         }
         
-        print("Open it locally: \(url)")
+//        print("Open it locally: \(url)")
         decisionHandler(.allow)
     }
     
@@ -727,7 +727,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         if let response = navigationResponse.response as? HTTPURLResponse {
             let headers = response.allHeaderFields
             //do something with headers
-            print("webvie headers: \(headers)")
+//            print("webvie headers: \(headers)")
         }
         
         DispatchQueue.main.async {
@@ -757,7 +757,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             
             webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
                 if error == nil {
-                    print(response)
+//                    print(response)
                     self.navBarTitle.text = response as! String?
                     self.navBarTitle.sizeToFit()
                     self.updateToolbarItems()
