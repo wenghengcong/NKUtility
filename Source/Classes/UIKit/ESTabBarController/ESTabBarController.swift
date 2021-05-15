@@ -35,7 +35,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     /// 打印异常
     public static func printError(_ description: String) {
         #if DEBUG
-            print("ERROR: ESTabBarController catch an error '\(description)' \n")
+            NKlogger.debug("ERROR: ESTabBarController catch an error '\(description)' \n")
         #endif
     }
     

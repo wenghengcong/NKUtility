@@ -19,7 +19,15 @@ https://github.com/liufengting/FTPopOverMenu    FTPopOverMenu is a pop over menu
 https://github.com/younatics/YNDropDownMenu     Awesome Dropdown menu for iOS with Swift 5.0 类似于美团app 下拉选择
 
 
-# FluentUI
+# Hud
+
+https://github.com/JonasGessner/JGProgressHUD   oc 写的
+##  ProgressHUD
+很简单的进度显示，类似NVActivityIndicatorView
+https://github.com/relatedcode/ProgressHUD
+pod 'ProgressHUD'
+
+## FluentUI
 里面的 Hud
 
 
@@ -28,16 +36,17 @@ loading animations https://github.com/ninjaprox/NVActivityIndicatorView
 pod 'NVActivityIndicatorView'
 
 
-# ProgressHUD
-很简单的进度显示，类似NVActivityIndicatorView
-https://github.com/relatedcode/ProgressHUD
-pod 'ProgressHUD'
+
 
 
 # SwiftMessages
+不推荐，不喜欢这种样式 
 https://github.com/SwiftKickMobile/SwiftMessages
 pod 'SwiftMessages'
 
+# SwiftEntryKit
+非常便利的一个库 presentation library https://github.com/huri000/SwiftEntryKit
+pod 'SwiftEntryKit'
 
 # Whisper
 https://github.com/hyperoslo/Whisper

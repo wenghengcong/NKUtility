@@ -34,7 +34,7 @@ extension NSManagedObject {
             let objects = try moc.fetch(fetchRequest) as! [NSManagedObject]
             return objects
         } catch let error {
-            print(error)
+            //NKlogger.debug(error)
         }
         
         return []
@@ -54,7 +54,7 @@ extension NSManagedObject {
             let result = try moc.fetch(request) as! [NSManagedObject]
             return result
         } catch let error as NSError {
-            print(error)
+            NKlogger.debug(error)
             return []
         }
     }
@@ -75,7 +75,7 @@ extension NSManagedObject {
            let result = try moc.fetch(request)
             return result
         } catch let error as NSError {
-            print(error)
+            NKlogger.debug(error)
         }
         return []
     }
@@ -116,7 +116,7 @@ extension NSManagedObject {
             let ret = try moc.fetch(request)
             result = ret.last as? NSManagedObject
         } catch let error as NSError {
-            print(error)
+            NKlogger.debug(error)
             result = nil
         }
         return result
@@ -135,7 +135,7 @@ extension NSManagedObject {
                 return objects.first as! NSManagedObject
             }
         } catch let error {
-            print(error)
+            NKlogger.debug(error)
         }
         
         //If it didn't exist in memory and wasn't fetched, we should create a new object

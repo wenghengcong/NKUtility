@@ -22,7 +22,7 @@
   },
   "source_files": [
     "Source/*.{h,m,swift,xib,storyboard,md}",
-    "Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md}"
+    "Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md,css,html,js}"
   ],
   "resource_bundles": {
     "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}"
@@ -42,6 +42,12 @@
 
     ],
     "SnapKit": [
+
+    ],
+    "Kingfisher": [
+
+    ],
+    "XCGLogger": [
 
     ]
   },

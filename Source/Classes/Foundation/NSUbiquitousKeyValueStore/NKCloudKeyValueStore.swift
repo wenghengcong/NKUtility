@@ -532,7 +532,7 @@ private extension Zephyr {
     ///     - status: The string that should be printed to the console.
     static func printStatus(status: String) {
         if debugEnabled == true {
-            print("[Zephyr] \(status)")
+            NKlogger.debug("[Zephyr] \(status)")
         }
     }
 

@@ -35,7 +35,8 @@ class CommandBarButton: UIButton {
         translatesAutoresizingMaskIntoConstraints = false
         setImage(item.iconImage, for: .normal)
 
-        accessibilityLabel = item.accessibilityLabel
+        let accessibilityDescription = item.accessibilityLabel
+        accessibilityLabel = (accessibilityDescription != nil) ? accessibilityDescription : item.title
         contentEdgeInsets = CommandBarButton.contentEdgeInsets
 
         if #available(iOS 14.0, *) {
@@ -55,12 +56,15 @@ class CommandBarButton: UIButton {
         isEnabled = item.isEnabled
         isSelected = isPersistSelection && item.isSelected
 
-        if item.iconImage == nil {
-            setTitle(item.title, for: .normal)
-            if let font = item.titleFont {
-                titleLabel?.font = font
-            }
-        }
+        // always update icon and title as we only display one; we may alterenate between them, and the icon may also change
+        let iconImage = item.iconImage
+        let title = item.title
+        let accessibilityDescription = item.accessibilityLabel
+        setImage(iconImage, for: .normal)
+        setTitle(iconImage != nil ? nil : title, for: .normal)
+        titleLabel?.isEnabled = isEnabled
+        titleLabel?.font = item.titleFont
+        accessibilityLabel = (accessibilityDescription != nil) ? accessibilityDescription : title
     }
 
     private let isPersistSelection: Bool

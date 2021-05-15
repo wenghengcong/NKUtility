@@ -58,7 +58,7 @@ public class NKCoreDataStack {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
-                print("Unresolved error \(error), \(error.userInfo)")
+                NKlogger.debug("Unresolved error \(error), \(error.userInfo)")
             }
         }
         if let descs = descriptions, descs.count > 0 {

@@ -29,6 +29,26 @@ public extension UIViewController {
             return false
         }
     }
+
+    /**
+     returns true only if the viewcontroller is presented.
+     form: https://stackoverflow.com/questions/23620276/how-to-check-if-a-view-controller-is-presented-modally-or-pushed-on-a-navigation
+     */
+    var isModal: Bool {
+        if let index = navigationController?.viewControllers.firstIndex(of: self), index > 0 {
+            return false
+        } else if presentingViewController != nil {
+            if let parent = parent, !(parent is UINavigationController || parent is UITabBarController) {
+                return false
+            }
+            return true
+        } else if let navController = navigationController, navController.presentingViewController?.presentedViewController == navController {
+            return true
+        } else if tabBarController?.presentingViewController is UITabBarController {
+            return true
+        }
+        return false
+    }
     
     /// 检查当前是否是暗黑模式下
     /// - Parameters:
@@ -39,12 +59,12 @@ public extension UIViewController {
         let style = traitCollection.userInterfaceStyle
         switch style {
         case .light, .unspecified:
-            print("light mode now")
+            NKlogger.debug("light mode now")
             if let handler = lightHandler {
                 handler(style)
             }
         case .dark:
-            print("dark mode now")
+            NKlogger.debug("dark mode now")
             if let handler = darkHandler {
                 handler(style)
             }
@@ -85,7 +105,7 @@ public extension UIViewController {
         let viewControllerIdentifier = identifier ?? String(describing: self)
         let storyboard = UIStoryboard(name: storyboard, bundle: bundle)
         guard let viewController = storyboard
-            .instantiateViewController(withIdentifier: viewControllerIdentifier) as? Self else {
+                .instantiateViewController(withIdentifier: viewControllerIdentifier) as? Self else {
             preconditionFailure(
                 "Unable to instantiate view controller with identifier \(viewControllerIdentifier) as type \(type(of: self))")
         }
@@ -219,7 +239,7 @@ public extension UIViewController {
             }
             return tabBarController.topViewController()
         }
-            
+
         else if let presentedViewController = self.presentedViewController {
             return presentedViewController.topViewController()
         }

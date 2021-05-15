@@ -29,7 +29,7 @@ open class NKPlaceholderTableViewCell: UITableViewCell {
     
     @IBAction func sendNKPlaceholderAction(_ sender: Any) {
         onActionButtonTap?()
-        print("NKPlaceholder action button tapped")
+        NKlogger.debug("NKPlaceholder action button tapped")
     }
 }
 

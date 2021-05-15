@@ -40,10 +40,15 @@ open class TabBarView: UIView {
                 preconditionFailure("tab bar items can't be more than \(Constants.maxTabCount)")
             }
 
-            for item in items {
+            for (index, item) in items.enumerated() {
                 let tabBarItemView = TabBarItemView(item: item, showsTitle: showsItemTitles)
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTabBarItemTapped(_:)))
                 tabBarItemView.addGestureRecognizer(tapGesture)
+
+                // seems like iOS 14 `.tabBar` accessibilityTrait doesn't seem to read out the index automatically
+                if #available(iOS 14.0, *) {
+                    tabBarItemView.accessibilityHint = String.localizedStringWithFormat( "Accessibility.TabBarItemView.Hint".localized, index + 1, numberOfItems)
+                }
                 stackView.addArrangedSubview(tabBarItemView)
             }
 
@@ -100,6 +105,8 @@ open class TabBarView: UIView {
         addInteraction(UILargeContentViewerInteraction())
 
         accessibilityTraits = .tabBar
+        // add container trait to mimic default OS UITabbar experience
+        accessibilityTraits.insert(UIAccessibilityTraits(rawValue: 0x200000000000))
         updateHeight()
     }
 

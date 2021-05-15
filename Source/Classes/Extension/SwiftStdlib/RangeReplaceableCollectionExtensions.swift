@@ -6,7 +6,7 @@ public extension RangeReplaceableCollection {
     /// SwifterSwift: Creates a new collection of a given size where for each position of the collection the value will be the result of a call of the given expression.
     ///
     ///     let values = Array(expression: "Value", count: 3)
-    ///     print(values)
+    ///     NKlogger.debug(values)
     ///     // Prints "["Value", "Value", "Value"]"
     ///
     /// - Parameters:

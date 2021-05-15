@@ -26,7 +26,7 @@ do {
             let message = String(format: "Safe loop took %.3f seconds, count: %d.",
                 Date().timeIntervalSince1970 - start,
                 array.count)
-            print(message)
+            NKlogger.debug(message)
     }
     }
 }

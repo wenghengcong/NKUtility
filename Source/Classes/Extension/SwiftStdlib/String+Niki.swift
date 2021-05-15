@@ -674,7 +674,7 @@ public extension String {
     ///
     ///        var str = "sOme vaRiabLe Name"
     ///        str.camelize()
-    ///        print(str) // prints "someVariableName"
+    ///        NKlogger.debug(str) // prints "someVariableName"
     ///
     @discardableResult
     mutating func camelize() -> String {
@@ -772,7 +772,7 @@ public extension String {
     ///
     ///        var str = "Hèllö Wórld!"
     ///        str.latinize()
-    ///        print(str) // prints "Hello World!"
+    ///        NKlogger.debug(str) // prints "Hello World!"
     ///
     @discardableResult
     mutating func latinize() -> String {
@@ -826,7 +826,7 @@ public extension String {
     ///
     ///        var str = "Hello World"
     ///        str.slice(from: 6, length: 5)
-    ///        print(str) // prints "World"
+    ///        NKlogger.debug(str) // prints "World"
     ///
     /// - Parameters:
     ///   - index: string index the slicing should start from.
@@ -843,7 +843,7 @@ public extension String {
     ///
     ///        var str = "Hello World"
     ///        str.slice(from: 6, to: 11)
-    ///        print(str) // prints "World"
+    ///        NKlogger.debug(str) // prints "World"
     ///
     /// - Parameters:
     ///   - start: string index the slicing should start from.
@@ -861,7 +861,7 @@ public extension String {
     ///
     ///        var str = "Hello World"
     ///        str.slice(at: 6)
-    ///        print(str) // prints "World"
+    ///        NKlogger.debug(str) // prints "World"
     ///
     /// - Parameter index: string index the slicing should start from.
     @discardableResult
@@ -909,7 +909,7 @@ public extension String {
     ///
     ///        var str = "  \n Hello World \n\n\n"
     ///        str.trim()
-    ///        print(str) // prints "Hello World"
+    ///        NKlogger.debug(str) // prints "Hello World"
     ///
     @discardableResult
     mutating func trim() -> String {
@@ -922,7 +922,7 @@ public extension String {
     ///
     ///        var str = "This is a very long sentence"
     ///        str.truncate(toLength: 14)
-    ///        print(str) // prints "This is a very..."
+    ///        NKlogger.debug(str) // prints "This is a very..."
     ///
     /// - Parameters:
     ///   - toLength: maximum number of characters before cutting.
@@ -955,7 +955,7 @@ public extension String {
     ///
     ///        var str = "it's%20easy%20to%20decode%20strings"
     ///        str.urlDecode()
-    ///        print(str) // prints "it's easy to decode strings"
+    ///        NKlogger.debug(str) // prints "it's easy to decode strings"
     ///
     @discardableResult
     mutating func urlDecode() -> String {
@@ -971,7 +971,7 @@ public extension String {
     ///
     ///        var str = "it's easy to encode strings"
     ///        str.urlEncode()
-    ///        print(str) // prints "it's%20easy%20to%20encode%20strings"
+    ///        NKlogger.debug(str) // prints "it's%20easy%20to%20encode%20strings"
     ///
     @discardableResult
     mutating func urlEncode() -> String {
@@ -1407,7 +1407,7 @@ public extension String {
         ~~~
         let character = "1Vi234s56a78l9"
         let alphaNumericSet = character.removeCharacters(from: CharacterSet.decimalDigits.inverted)
-        print(alphaNumericSet) // will print: 123456789
+        NKlogger.debug(alphaNumericSet) // will NKlogger.debug: 123456789
         ~~~
     */
     func removeCharacters(from retainChars: CharacterSet) -> String {
@@ -1425,7 +1425,7 @@ public extension String {
         ~~~
         let character = "1Vi234s56a78l9"
         let alphaNumericCharacterSet = character.removeCharacters(from: "0123456789")
-        print("no digits",alphaNumericCharacterSet) // will print: Vishal
+        NKlogger.debug("no digits",alphaNumericCharacterSet) // will NKlogger.debug: Vishal
         ~~~
     */
     func removeCharacters(from: String) -> String {

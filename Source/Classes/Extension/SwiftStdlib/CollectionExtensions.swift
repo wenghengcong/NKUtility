@@ -18,7 +18,7 @@ public extension Collection {
     /// SwifterSwift: Performs `each` closure for each element of collection in parallel.
     ///
     ///        array.forEachInParallel { item in
-    ///            print(item)
+    ///            NKlogger.debug(item)
     ///        }
     ///
     /// - Parameter each: closure to run for each element.
@@ -73,8 +73,8 @@ public extension Collection {
 
     /// SwifterSwift: Calls the given closure with an array of size of the parameter slice.
     ///
-    ///     [0, 2, 4, 7].forEach(slice: 2) { print($0) } -> // print: [0, 2], [4, 7]
-    ///     [0, 2, 4, 7, 6].forEach(slice: 2) { print($0) } -> // print: [0, 2], [4, 7], [6]
+    ///     [0, 2, 4, 7].forEach(slice: 2) { NKlogger.debug($0) } -> // NKlogger.debug: [0, 2], [4, 7]
+    ///     [0, 2, 4, 7, 6].forEach(slice: 2) { NKlogger.debug($0) } -> // NKlogger.debug: [0, 2], [4, 7], [6]
     ///
     /// - Parameters:
     ///   - slice: size of array in each interation.

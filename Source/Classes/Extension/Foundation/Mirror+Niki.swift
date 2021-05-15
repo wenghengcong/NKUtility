@@ -10,11 +10,11 @@ import Foundation
 /*
  //将对象进行反射
  let hMirror = Mirror(reflecting: theme)
- print("对象类型：\(hMirror.subjectType)")
- print("对象子元素个数：\(hMirror.children.count)")
- print("--- 对象子元素的属性名和属性值分别如下 ---")
+ NKlogger.debug("对象类型：\(hMirror.subjectType)")
+ NKlogger.debug("对象子元素个数：\(hMirror.children.count)")
+ NKlogger.debug("--- 对象子元素的属性名和属性值分别如下 ---")
  for case let (label?, value) in hMirror.children {
-     print("属性：\(label)     值：\(value)")
+     NKlogger.debug("属性：\(label)     值：\(value)")
  }
  
  https://stackoverflow.com/a/38424653/4124634

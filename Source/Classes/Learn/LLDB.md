@@ -1,7 +1,7 @@
-#  print
+#  NKlogger.debug
 
 打印 JSON :
 ```
-e print(String(data: JSONSerialization.data(withJSONObject: JSONSerialization.jsonObject(with: data, options: []), options: .prettyPrinted), encoding: .utf8)!)
+e NKlogger.debug(String(data: JSONSerialization.data(withJSONObject: JSONSerialization.jsonObject(with: data, options: []), options: .prettyPrinted), encoding: .utf8)!)
 ```
 

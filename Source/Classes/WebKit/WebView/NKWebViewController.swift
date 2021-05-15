@@ -164,6 +164,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         tempWebView.backgroundColor = .white
+        tempWebView.scrollView.delegate = self
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
         // after done with setup the `webView`:
         refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
@@ -240,7 +241,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-//        print("detect webview click ")
+//        NKlogger.debug("detect webview click ")
         delegate?.userContentController?(userContentController, didReceive: message)
     }
     
@@ -529,8 +530,22 @@ extension  NKWebViewController {
     
 }
 
+// MARK: - scroll
+extension  NKWebViewController: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-//MARK: - View Lifecycle
+    }
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+
+    }
+
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+
+    }
+}
+
+// MARK: - View Lifecycle
 extension  NKWebViewController {
     ////////////////////////////////////////////////
     // View Lifecycle
@@ -673,7 +688,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         default:
-            //print("Default")
+            //NKlogger.debug("Default")
             break
         }
         
@@ -700,7 +715,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             // 使用 Safari 打开网页
             if (containOpenWithSafariUrl) {
                 if UIApplication.shared.canOpenURL(url) {
-//                    print("Redirected to browser. No need to open it locally: \(url)")
+//                    NKlogger.debug("Redirected to browser. No need to open it locally: \(url)")
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     decisionHandler(.cancel)
                     return
@@ -708,7 +723,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             }
         }
         
-//        print("Open it locally: \(url)")
+//        NKlogger.debug("Open it locally: \(url)")
         decisionHandler(.allow)
     }
     
@@ -727,7 +742,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         if let response = navigationResponse.response as? HTTPURLResponse {
             let headers = response.allHeaderFields
             //do something with headers
-//            print("webvie headers: \(headers)")
+//            NKlogger.debug("webvie headers: \(headers)")
         }
         
         DispatchQueue.main.async {
@@ -757,7 +772,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             
             webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
                 if error == nil {
-//                    print(response)
+//                    NKlogger.debug(response)
                     self.navBarTitle.text = response as! String?
                     self.navBarTitle.sizeToFit()
                     self.updateToolbarItems()

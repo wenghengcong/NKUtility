@@ -25,7 +25,7 @@ extension NKDevice {
                 try audioSession.setActive(false)
                 return Double(volume)
             } catch {
-                print("NKDevice - Failed to activate audio session.")
+                NKlogger.debug("NKDevice - Failed to activate audio session.")
                 return nil
             }
         }

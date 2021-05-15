@@ -6,10 +6,10 @@ public extension Optional {
     /// SwifterSwift: Get self of default value (if self is nil).
     ///
     ///		let foo: String? = nil
-    ///		print(foo.unwrapped(or: "bar")) -> "bar"
+    ///		NKlogger.debug(foo.unwrapped(or: "bar")) -> "bar"
     ///
     ///		let bar: String? = "bar"
-    ///		print(bar.unwrapped(or: "foo")) -> "bar"
+    ///		NKlogger.debug(bar.unwrapped(or: "foo")) -> "bar"
     ///
     /// - Parameter defaultValue: default value to return if self is nil.
     /// - Returns: self if not nil or default value if nil.
@@ -21,10 +21,10 @@ public extension Optional {
     /// SwifterSwift: Gets the wrapped value of an optional. If the optional is `nil`, throw a custom error.
     ///
     ///        let foo: String? = nil
-    ///        try print(foo.unwrapped(or: MyError.notFound)) -> error: MyError.notFound
+    ///        try NKlogger.debug(foo.unwrapped(or: MyError.notFound)) -> error: MyError.notFound
     ///
     ///        let bar: String? = "bar"
-    ///        try print(bar.unwrapped(or: MyError.notFound)) -> "bar"
+    ///        try NKlogger.debug(bar.unwrapped(or: MyError.notFound)) -> "bar"
     ///
     /// - Parameter error: The error to throw if the optional is `nil`.
     /// - Returns: The value wrapped by the optional.
@@ -39,13 +39,13 @@ public extension Optional {
     ///		let foo: String? = nil
     ///		foo.run { unwrappedFoo in
     ///			// block will never run sice foo is nill
-    ///			print(unwrappedFoo)
+    ///			NKlogger.debug(unwrappedFoo)
     ///		}
     ///
     ///		let bar: String? = "bar"
     ///		bar.run { unwrappedBar in
     ///			// block will run sice bar is not nill
-    ///			print(unwrappedBar) -> "bar"
+    ///			NKlogger.debug(unwrappedBar) -> "bar"
     ///		}
     ///
     /// - Parameter block: a block to run if self is not nil.

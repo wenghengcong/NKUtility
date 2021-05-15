@@ -202,7 +202,7 @@ func hasCycles(_ pairList: [(String,String)]) -> Bool {
         if /*let cyclicPath = */ nil != visit(start) {
             // cyclic path at top level
             // oops I can't report it anywhere.  Oh well.
-            //print("AHA cycle: \(cyclicPath)")
+            //NKlogger.debug("AHA cycle: \(cyclicPath)")
             return true                           /* EXIT FUNCTION */
         }
     }

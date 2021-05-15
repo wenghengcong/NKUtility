@@ -19,14 +19,17 @@ class LargeTitleView: UIView {
         static let compactAvatarSize: AvatarSize = .small
         static let avatarSize: AvatarSize = .medium
 
-        static let compactTitleFont: UIFont = Fonts.title1
-        static let titleFont: UIFont = Fonts.largeTitle
+        // Once we are iOS 14 minimum, we can use Fonts.largeTitle.withSize() function instead
+        static let compactTitleFont = UIFont.systemFont(ofSize: 26, weight: .bold)
+        static let titleFont = UIFont.systemFont(ofSize: 30, weight: .bold)
     }
 
     var avatar: Avatar? {
         didSet {
             updateProfileButtonVisibility()
-            [avatarView, smallMorphingAvatarView].forEach { $0?.setup(avatar: avatar) }
+            [avatarView, smallMorphingAvatarView].forEach {
+                $0?.setup(avatar: avatar)
+            }
         }
     }
 
@@ -45,7 +48,10 @@ class LargeTitleView: UIView {
 
     var avatarCustomAccessibilityLabel: String? {
         didSet {
-            [avatarView, smallMorphingAvatarView].forEach { $0?.customAccessibilityLabel = avatarCustomAccessibilityLabel }
+            [avatarView, smallMorphingAvatarView].forEach {
+                $0?.customAccessibilityLabel = avatarCustomAccessibilityLabel
+                $0?.largeContentTitle = avatarCustomAccessibilityLabel
+            }
         }
     }
 
@@ -170,6 +176,8 @@ class LargeTitleView: UIView {
         avatarView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleAvatarViewTapped)))
         self.avatarView = avatarView
         contentStackView.addArrangedSubview(avatarView)
+        avatarView.showsLargeContentViewer = true
+        avatarView.largeContentTitle = avatarView.accessibilityLabel
 
         // small avatar view setup
         let smallAvatarView = ProfileView(avatarSize: Constants.compactAvatarSize, preferredFallbackImageStyle: preferredFallbackImageStyle)
@@ -177,6 +185,8 @@ class LargeTitleView: UIView {
         self.smallMorphingAvatarView = smallAvatarView
         smallAvatarView.translatesAutoresizingMaskIntoConstraints = false
         contentStackView.addSubview(smallAvatarView)
+        smallAvatarView.showsLargeContentViewer = true
+        smallAvatarView.largeContentTitle = smallAvatarView.accessibilityLabel
 
         smallAvatarView.centerXAnchor.constraint(equalTo: avatarView.centerXAnchor).isActive = true
         smallAvatarView.centerYAnchor.constraint(equalTo: avatarView.centerYAnchor).isActive = true

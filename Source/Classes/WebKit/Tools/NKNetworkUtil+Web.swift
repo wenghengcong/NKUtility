@@ -29,7 +29,7 @@ public extension NKNetworkUtil {
             do {
                 try FileManager.default.removeItem(atPath: libraryPath)
             } catch {
-                print("error")
+                NKlogger.debug("error")
             }
             URLCache.shared.removeAllCachedResponses()
         }
@@ -70,7 +70,7 @@ public extension NKNetworkUtil {
                 do {
                     html = try String(contentsOf: htmlPathURL, encoding: .utf8)
                 } catch  {
-                    print("Unable to get the file.")
+                    NKlogger.debug("Unable to get the file.")
                 }
             }
             

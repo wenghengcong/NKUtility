@@ -73,7 +73,7 @@ public extension Sequence {
 
     /// SwifterSwift: Iterate over a collection in reverse order. (right to left)
     ///
-    ///        [0, 2, 4, 7].forEachReversed({ print($0)}) -> // Order of print: 7,4,2,0
+    ///        [0, 2, 4, 7].forEachReversed({ NKlogger.debug($0)}) -> // Order of NKlogger.debug: 7,4,2,0
     ///
     /// - Parameter body: a closure that takes an element of the array as a parameter.
     func forEachReversed(_ body: (Element) throws -> Void) rethrows {
@@ -82,7 +82,7 @@ public extension Sequence {
 
     /// SwifterSwift: Calls the given closure with each element where condition is true.
     ///
-    ///        [0, 2, 4, 7].forEach(where: {$0 % 2 == 0}, body: { print($0)}) -> // print: 0, 2, 4
+    ///        [0, 2, 4, 7].forEach(where: {$0 % 2 == 0}, body: { NKlogger.debug($0)}) -> // NKlogger.debug: 0, 2, 4
     ///
     /// - Parameters:
     ///   - condition: condition to evaluate each element against.

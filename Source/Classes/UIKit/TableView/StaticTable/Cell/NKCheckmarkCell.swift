@@ -78,9 +78,10 @@ open class NKCheckmarkCell: NKStaticCell {
 
         if iconImageView.image == nil {
             iconImageView.isHidden = true
-            iconImageView.snp.updateConstraints { (make) in
+            iconImageView.snp.remakeConstraints { (make) in
                 make.left.equalTo(0)
                 make.width.height.equalTo(0)
+                make.centerY.equalTo(0)
             }
             
         } else {

@@ -13,7 +13,11 @@ class TabBarItemView: UIView {
             titleLabel.isHighlighted = isSelected
             imageView.isHighlighted = isSelected
             updateColors()
-            accessibilityTraits = isSelected ? .selected : .none
+            if isSelected {
+                accessibilityTraits.insert(.selected)
+            } else {
+                accessibilityTraits.remove(.selected)
+            }
         }
     }
 
@@ -227,7 +231,8 @@ class TabBarItemView: UIView {
         if isInPortraitMode {
             container.axis = .vertical
             container.spacing = Constants.spacingVertical
-            titleLabel.style = .button3
+            titleLabel.style = .button2
+            titleLabel.maxFontSize = 10
 
             if canResizeImage {
                 suggestImageSize = titleLabel.isHidden ? Constants.portraitImageSize : Constants.portraitImageWithLabelSize
@@ -235,7 +240,8 @@ class TabBarItemView: UIView {
         } else {
             container.axis = .horizontal
             container.spacing = Constants.spacingHorizontal
-            titleLabel.style = .footnoteUnscaled
+            titleLabel.style = .footnote
+            titleLabel.maxFontSize = 13
 
             if canResizeImage {
                  suggestImageSize = Constants.landscapeImageSize

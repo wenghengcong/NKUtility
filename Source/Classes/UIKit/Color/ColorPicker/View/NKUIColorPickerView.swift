@@ -57,7 +57,7 @@ open class NKUIColorPickerView: UIView, UICollectionViewDelegate, UICollectionVi
             if let index = preselectedIndex {
                 
                 guard index >= 0, colors.indices.contains(index) else {
-                    print("ERROR ColorPickerView - preselectedItem out of colors range")
+                    NKlogger.debug("ERROR ColorPickerView - preselectedItem out of colors range")
                     return
                 }
                 

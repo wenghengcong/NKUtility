@@ -83,10 +83,10 @@ public extension UserDefaults {
  defaults.register(defaults: [.defaultFontName: "Menlo"])
 
  var fontName = defaults[.defaultFontName]
- print(fontName) // "Menlo"
+ NKlogger.debug(fontName) // "Menlo"
  defaults[.defaultFontName] = "Arial"
  fontName = defaults[.defaultFontName]
- print(fontName) // "Arial"
+ NKlogger.debug(fontName) // "Arial"
  
  */
 import Foundation
