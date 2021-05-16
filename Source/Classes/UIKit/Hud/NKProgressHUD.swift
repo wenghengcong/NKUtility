@@ -356,7 +356,7 @@ public class NKProgressHUD: UIView {
 			toolbarHUD = UIToolbar(frame: CGRect.zero)
 			toolbarHUD?.isTranslucent = true
 			toolbarHUD?.clipsToBounds = true
-			toolbarHUD?.layer.cornerRadius = 10
+			toolbarHUD?.layer.cornerRadius = 8
 			toolbarHUD?.layer.masksToBounds = true
 			viewBackground?.addSubview(toolbarHUD!)
 		}

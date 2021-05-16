@@ -437,7 +437,7 @@ extension  NKWebViewController {
 
             var needUpdate = false
             if lastHeight != curerntToolBarHeght {
-                NKlogger.debug("need update now!!!")
+//                NKlogger.debug("need update now!!!")
                 needUpdate = true
             }
 
@@ -452,7 +452,7 @@ extension  NKWebViewController {
                 self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
                 UIView.animate(withDuration: 0.75) {
                     self.webView.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
-                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
+//                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
                     }
                 }
             }
