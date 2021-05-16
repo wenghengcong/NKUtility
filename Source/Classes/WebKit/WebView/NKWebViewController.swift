@@ -56,6 +56,9 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     
     open var sharingEnabled = true 
     open var toolBarHidden = false
+
+    open var lastOffsetY :CGFloat = 0
+
     
     ///  内容过滤，JSON 格式
     ///  参考：https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
@@ -86,6 +89,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     fileprivate var toolbarContainer: NKWebViewToolbar!
     fileprivate var toolbarHeightConstraint: NSLayoutConstraint!
     fileprivate var toolbarHeight: CGFloat = 44
+    fileprivate var lastToolbarHeight: CGFloat = 44
     fileprivate var navControllerUsesBackSwipe: Bool = false
     fileprivate let refreshControl = UIRefreshControl()
     
@@ -193,7 +197,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
     
-   
+
     // MARK: - Init
     public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
         var urlString = urlString
@@ -227,7 +231,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         } else {
             self.really_loadRequest(self.request)
         }
-     
+
     }
     
     fileprivate func really_loadRequest(_ request: URLRequest?) {
@@ -241,7 +245,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-//        NKlogger.debug("detect webview click ")
+        //        NKlogger.debug("detect webview click ")
         delegate?.userContentController?(userContentController, didReceive: message)
     }
     
@@ -272,16 +276,15 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
         backForwardListChanged()
         let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
-        
+
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
         let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-        
+
         if (NKDevice.isIPad()) {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
             
             var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
-            
             if let addMore = self.navRightItems {
                 if addMore.count > 0 {
                     items.insert(contentsOf: addMore, at: 0)
@@ -309,7 +312,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
         else {
             let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
-            
+
             if let navigationController = navigationController, !closing {
                 if presentingViewController == nil {
                     navigationController.toolbar.barTintColor = navigationController.navigationBar.barTintColor
@@ -321,6 +324,10 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
                 toolbarItems = items as? [UIBarButtonItem]
             }
         }
+    }
+
+    func refreshIphonToolbarItems() {
+
     }
     
     
@@ -406,19 +413,49 @@ extension  NKWebViewController {
     fileprivate func updateToolbarHidden() {
         if (NKDevice.isIPad()) {
             ipadToolbar.isHidden = toolBarHidden
-        } else {
-            navigationController?.setToolbarHidden(toolBarHidden, animated: false)
-        }
-        
-        var toolBarHeght = toolBarHidden ? 0 : 0
-        if NKDevice.isIPad() {  
-            toolBarHeght = 0
-        }
-        
-        webView.snp.remakeConstraints { (make) in
-            make.left.right.equalTo(0)
-            make.top.equalTo(0)
-            make.bottom.equalToSuperview().offset(-toolBarHeght)
+            webView.snp.remakeConstraints { (make) in
+                make.left.right.equalTo(0)
+                make.top.equalTo(0)
+                make.bottom.equalTo(0)
+            }
+        } else if NKDevice.isIPhone() {
+            // 保留先前，用于比较
+            let lastHeight = lastToolbarHeight
+
+            var curerntToolBarHeght: CGFloat = 0
+            if !toolBarHidden {
+                curerntToolBarHeght = toolbarHeight
+            }
+            if NKDevice.isIPad() {
+                curerntToolBarHeght = 0
+            }
+            // 本来就是空数组
+            if NKDevice.isIPhone()  && toolbarItems == nil {
+                curerntToolBarHeght = 0
+            }
+            lastToolbarHeight = curerntToolBarHeght
+
+            var needUpdate = false
+            if lastHeight != curerntToolBarHeght {
+                NKlogger.debug("need update now!!!")
+                needUpdate = true
+            }
+
+            if needUpdate {
+                webView.snp.remakeConstraints { (make) in
+                    make.left.right.equalTo(0)
+                    make.top.equalTo(0)
+                    make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
+                }
+
+                // Fix problem of WebView content height not fitting WebViews frame height
+                self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
+                UIView.animate(withDuration: 0.75) {
+                    self.webView.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
+                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
+                    }
+                }
+            }
         }
     }
     
@@ -531,15 +568,74 @@ extension  NKWebViewController {
 }
 
 // MARK: - scroll
+/*
+ willBeginDragging
+ DidScroll
+ willEndDragging
+ DidEndDragging
+ willBeginDecelerating
+ DidScroll
+ DidEndDecelerating
+ */
 extension  NKWebViewController: UIScrollViewDelegate {
+
+    func scrollToUp() {
+        if NKDevice.isIPhone() {
+            toolBarHidden = false
+            refreshIphonToolbarItems()
+            updateToolbarHidden()
+        }
+    }
+
+    func scrollToDown() {
+        if NKDevice.isIPhone()  {
+            toolBarHidden = true
+//            if toolbarItems != nil {
+//                setToolbarItems(nil, animated: true)
+//            }
+            updateToolbarHidden()
+        }
+    }
+
+    //scrollView滚动时，就调用该方法。任何offset值改变都调用该方法。即滚动过程中，调用多次
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
+        if(scrollView.panGestureRecognizer.translation(in: scrollView.superview).y > 0) {
+            scrollToUp()
+        }else {
+            scrollToDown()
+        }
     }
 
+    // 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastOffsetY = scrollView.contentOffset.y
 
     }
 
+    // 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
+    // 当pagingEnabled属性为YES时，不调用，该方法
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+
+    }
+
+    // 滑动视图，当手指离开屏幕那一霎那，调用该方法。一次有效滑动，只执行一次。
+    // decelerate,指代，当我们手指离开那一瞬后，视图是否还将继续向前滚动（一段距离），经过测试，decelerate=YES
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+
+    }
+
+    // 滑动减速时调用该方法。
+    public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        let hide = scrollView.contentOffset.y > self.lastOffsetY
+
+    }
+
+    // 滚动视图减速完成，滚动将停止时，调用该方法。一次有效滑动，只执行一次。
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+
+    }
+
+    // 当滚动视图动画完成后，调用该方法，如果没有动画，那么该方法将不被调用
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
 
     }
@@ -715,7 +811,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             // 使用 Safari 打开网页
             if (containOpenWithSafariUrl) {
                 if UIApplication.shared.canOpenURL(url) {
-//                    NKlogger.debug("Redirected to browser. No need to open it locally: \(url)")
+                    //                    NKlogger.debug("Redirected to browser. No need to open it locally: \(url)")
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     decisionHandler(.cancel)
                     return
@@ -723,7 +819,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             }
         }
         
-//        NKlogger.debug("Open it locally: \(url)")
+        //        NKlogger.debug("Open it locally: \(url)")
         decisionHandler(.allow)
     }
     
@@ -742,7 +838,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         if let response = navigationResponse.response as? HTTPURLResponse {
             let headers = response.allHeaderFields
             //do something with headers
-//            NKlogger.debug("webvie headers: \(headers)")
+            //            NKlogger.debug("webvie headers: \(headers)")
         }
         
         DispatchQueue.main.async {
@@ -772,7 +868,7 @@ extension  NKWebViewController: WKNavigationDelegate {
             
             webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
                 if error == nil {
-//                    NKlogger.debug(response)
+                    //                    NKlogger.debug(response)
                     self.navBarTitle.text = response as! String?
                     self.navBarTitle.sizeToFit()
                     self.updateToolbarItems()

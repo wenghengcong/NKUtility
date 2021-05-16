@@ -10,9 +10,9 @@ import XCGLogger
 
 // see https://github.com/DaveWoodCom/XCGLogger
 public let NKlogger: XCGLogger = {
-    let log = XCGLogger(identifier: "advancedLogger", includeDefaultDestinations: false)
+    let log = XCGLogger(identifier: "advancedLogger", includeDefaultDestinations: true)
     // Customize as needed
-    log.setup(level: .debug, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
+//    log.setup(level: .debug, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
     return log
 }()
 
