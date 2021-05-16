@@ -9,9 +9,10 @@ import Foundation
 import UIKit
 
 public extension UIColor {
-    // 绿色：25b864，30b767, 47c479
+    // 最初34C759
+    // 绿色：25b864、30b767、47c479
     // 深灰595959
-    static let logoColor = UIColor(hex: "#47c479")
+    static let logoColor = UIColor(hex: "#30b767")
     static let logoGrayColor = UIColor(hex: "#595959")
 
     static let titleColor = NKThemeProvider.currentTheme.titleTextColor
