@@ -56,6 +56,9 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     
     open var sharingEnabled = true 
     open var toolBarHidden = false
+    
+    /// scroll hidden toolbar
+    open var scrollToolBarHidden = true
 
     open var lastOffsetY :CGFloat = 0
 
@@ -578,21 +581,17 @@ extension  NKWebViewController {
  DidEndDecelerating
  */
 extension  NKWebViewController: UIScrollViewDelegate {
-
+    
     func scrollToUp() {
-        if NKDevice.isIPhone() {
+        if NKDevice.isIPhone() && scrollToolBarHidden {
             toolBarHidden = false
-            refreshIphonToolbarItems()
             updateToolbarHidden()
         }
     }
 
     func scrollToDown() {
-        if NKDevice.isIPhone()  {
+        if NKDevice.isIPhone() && scrollToolBarHidden {
             toolBarHidden = true
-//            if toolbarItems != nil {
-//                setToolbarItems(nil, animated: true)
-//            }
             updateToolbarHidden()
         }
     }
