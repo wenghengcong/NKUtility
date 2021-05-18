@@ -29,6 +29,11 @@ extension NKDevice {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         }
         
+        /// bundle name
+        public static  var bundleName: String? {
+            return Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+        }
+                
         /// The complete app version with build number (i.e. : "2.1.3 (343)").
         public static var completeAppVersion: String {
             return "\(Application.version) (\(Application.buildNumber))"

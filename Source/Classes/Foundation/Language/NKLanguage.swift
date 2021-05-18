@@ -37,7 +37,7 @@ class NKLanguage: NSObject {
         } else if system.contains("en") {
             system = AppLanguage.en.rawValue
         } else {
-            system = AppLanguage.en.rawValue
+            system = AppLanguage.cn.rawValue
         }
         return system
     }
