@@ -761,6 +761,10 @@ public extension Date {
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
+    
+    func utcString() -> String {
+        return string(withFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    }
 
     /// SwifterSwift: Date string from date.
     ///

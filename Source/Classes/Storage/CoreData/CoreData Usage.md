@@ -16,6 +16,11 @@ DS_开头，表示基本的数据结构
 （3）
 
 
+# 开发工具
+查看 core data 
+https://betamagic.nl/products/coredatalab.html 收费软件
+https://github.com/ChristianKienle/Core-Data-Editor 开源软件
+
 # 第三方库
 ## TMLPersistentContainer
 https://github.com/johnfairh/TMLPersistentContainer

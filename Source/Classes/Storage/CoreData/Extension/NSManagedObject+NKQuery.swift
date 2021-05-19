@@ -67,9 +67,14 @@ extension NSManagedObject {
     ///   - w: <#w description#>
     /// - Returns: <#description#>
     public static func findLimited(limit:Int, sortBy:[NSSortDescriptor]? = nil, context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> [Any] {
+        return findLimited(limit: limit, offset: 0, sortBy: sortBy, context: moc, where: w)
+    }
+    
+    public static func findLimited(limit:Int, offset: Int, sortBy:[NSSortDescriptor]? = nil, context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> [Any] {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         request.predicate = w
         request.fetchLimit = limit
+        request.fetchOffset = offset
         request.sortDescriptors = sortBy
         do {
            let result = try moc.fetch(request)
