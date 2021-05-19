@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-extension NSManagedObject {
+public extension NSManagedObject {
     
     class var entityName: String! {
         get {
@@ -66,4 +66,20 @@ extension NSManagedObject {
      public func refresh(mergeChanges : Bool) {
         self.managedObjectContext?.refresh(self, mergeChanges: mergeChanges)
      }
+}
+
+public extension NSManagedObject {
+    
+    public func propertyMapper() -> [(name: String, value: Any, type: String)] {
+        var mapper: [(name: String, value: Any, type: String)] = []
+        for (name, attr) in entity.attributesByName {
+            let attrType = attr.attributeType // NSAttributeType enumeration for the property type
+            let attrClass = attr.attributeValueClassName ?? "unknown"
+            let value = value(forKey: name)
+//            print(name, "=", value, "type =", attrClass)
+            let one = (name: name, value:value, type: attrClass)
+            mapper.append(one)
+        }
+        return mapper
+    }
 }

@@ -703,6 +703,19 @@ public extension String {
         self = String(first).uppercased() + dropFirst()
     }
 
+    func firstCharacterUppercasing() -> String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+    
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).capitalized + dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+    
+    
     /// SwifterSwift: Check if string contains only unique characters.
     ///
     func hasUniqueCharacters() -> Bool {
