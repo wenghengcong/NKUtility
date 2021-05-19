@@ -1,5 +1,3 @@
-
-
 # 参考文档
 https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/CloudKitQuickStart/Introduction/Introduction.html#//apple_ref/doc/uid/TP40014987-CH1-SW1
 https://github.com/DeveloperErenLiu/CoreDataPDF
@@ -24,6 +22,9 @@ https://github.com/johnfairh/TMLPersistentContainer
 version: 5.0.1
 Shortest-path multi-step Core Data migrations in Swift
 
+## MagicalRecord
+https://github.com/magicalpanda/MagicalRecord
+
 
 ## CoreStore
 不支持 cloudkit，很遗憾
@@ -37,6 +38,13 @@ pod 'JSQCoreDataKit'
 ## Sync
 JSON to Core Data and back https://github.com/3lvis/Sync
 pod 'Sync'
+
+## 查询
+https://github.com/KrakenDev/PrediKit
+https://github.com/ftchirou/PredicateKit
+NSPredicate 的便捷
+
+PredicateKit 库更好用
 
 
 # 概念
