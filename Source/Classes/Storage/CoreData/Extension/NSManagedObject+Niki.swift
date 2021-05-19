@@ -82,4 +82,15 @@ public extension NSManagedObject {
         }
         return mapper
     }
+
+    public func propertyJson() -> Dictionary<String, Any> {
+        var mappepJson = [String: Any]()
+        for (name, attr) in entity.attributesByName {
+            let attrType = attr.attributeType // NSAttributeType enumeration for the property type
+            let attrClass = attr.attributeValueClassName ?? "unknown"
+            let value = value(forKey: name)
+            mappepJson[name] = value
+        }
+        return mappepJson
+    }
 }
