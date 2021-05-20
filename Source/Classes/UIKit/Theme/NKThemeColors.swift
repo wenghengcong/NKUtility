@@ -8,17 +8,6 @@
 import Foundation
 import UIKit
 
-public extension UIColor {
-    // 最初34C759
-    // 绿色：25b864、30b767、47c479
-    // 深灰595959
-    static let logoColor = UIColor(hex: "#30b767")
-    static let logoGrayColor = UIColor(hex: "#595959")
-
-    static let titleColor = NKThemeProvider.currentTheme.titleTextColor
-    static let subTitleColor = NKThemeProvider.currentTheme.mainTextColor
-}
-
 public extension ThemeColorPicker {
     static let logoColor = NKThemeProvider.getColorPicker(name: "tintColor")
     
@@ -33,6 +22,9 @@ public extension ThemeColorPicker {
     static let borderColor = NKThemeProvider.getColorPicker(name: "borderColor")
 
     static let titleColor = NKThemeProvider.getColorPicker(name: "titleTextColor")
+    
+    static let vipTextColor = NKThemeProvider.getColorPicker(name: "vipTextColor")
+
     static let subTitleColor = NKThemeProvider.getColorPicker(name: "mainTextColor")
     
     static let linkColor = UIColor(hex: "#0000EE")

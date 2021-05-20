@@ -443,7 +443,7 @@ extension NKDevice.Screen {
             return false
         }
         if isPortrait() {
-            return window.safeAreaInsets.bottom >= 0
+            return window.safeAreaInsets.bottom > 0
         } else {
             return window.safeAreaInsets.left > 0 || window.safeAreaInsets.right > 0
         }

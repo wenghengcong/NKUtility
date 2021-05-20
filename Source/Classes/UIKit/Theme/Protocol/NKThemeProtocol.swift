@@ -32,6 +32,9 @@ public protocol NKThemeProtocol {
     /// 主要内容的文字颜色，例如列表的 textLabel
     var mainTextColor: UIColor {set get}
     
+    ///  会员颜色，用于区分 vip 的标识
+    var vipTextColor: UIColor {set get}
+    
     /// 界面上一些附属说明的小字颜色
     var descriptionTextColor: UIColor {set get}
     
@@ -146,6 +149,16 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
             return .lightGray
         }
     }
+    
+    open var vipTextColor: UIColor {
+        set {
+            vipTextColor = newValue
+        }
+        get {
+            return UIColor(hex: "#e9be7b")
+        }
+    }
+    
     
     open var descriptionTextColor: UIColor {
         set {
