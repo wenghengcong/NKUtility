@@ -1377,7 +1377,7 @@ public extension String {
 
 
 public extension String {
-    
+
     var htmlToAttributedString: NSAttributedString? {
         guard let data = data(using: .utf8) else { return nil }
         do {
@@ -1443,6 +1443,24 @@ public extension String {
     */
     func removeCharacters(from: String) -> String {
         return removeCharacters(from: CharacterSet(charactersIn: from))
+    }
+
+    /// 删除转义字符
+    /// - Parameter string: string description
+    /// - Returns: <#description#>
+    func convertSpecialCharacters() -> String {
+            var newString = self
+            let char_dictionary = [
+                "&amp;" : "&",
+                "&lt;" : "<",
+                "&gt;" : ">",
+                "&quot;" : "\"",
+                "&apos;" : "'"
+            ];
+            for (escaped_char, unescaped_char) in char_dictionary {
+                newString = newString.replacingOccurrences(of: escaped_char, with: unescaped_char, options: NSString.CompareOptions.literal, range: nil)
+            }
+            return newString
     }
     
     func caseInsensitiveCompare(_ other: String) -> Bool {

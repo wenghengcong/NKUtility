@@ -69,7 +69,10 @@ public extension NSManagedObject {
 }
 
 public extension NSManagedObject {
-    
+
+
+    /// 返回属性-值-类型信息
+    /// - Returns: 元组列表
     public func propertyMapper() -> [(name: String, value: Any, type: String)] {
         var mapper: [(name: String, value: Any, type: String)] = []
         for (name, attr) in entity.attributesByName {
@@ -81,6 +84,18 @@ public extension NSManagedObject {
             mapper.append(one)
         }
         return mapper
+    }
+
+    /// 返回属性-类型信息
+    /// - Returns: 字典
+    public func propertyTypeMapper() -> [String: String] {
+        var typeMapper = [String: String]()
+        for (name, attr) in entity.attributesByName {
+            let attrType = attr.attributeType // NSAttributeType enumeration for the property type
+            let attrClass = attr.attributeValueClassName ?? "unknown"
+            typeMapper[name] = attrClass
+        }
+        return typeMapper
     }
 
     public func propertyJson() -> Dictionary<String, Any> {
