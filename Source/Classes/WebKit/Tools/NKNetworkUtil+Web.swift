@@ -46,6 +46,11 @@ public extension NKNetworkUtil {
             let cssren = NKNetworkUtil.CSS.renderTemplate(html: inHtml, with: "github-markdownRender")
             return cssren
         }
+
+        public static func github(html inHtml: String, cssTemplateFile: String) -> (outHtml: String, baseURL: URL?)?{
+            let cssren = NKNetworkUtil.CSS.renderTemplate(html: inHtml, with: cssTemplateFile)
+            return cssren
+        }
     }
     
     public struct CSS {
@@ -79,7 +84,10 @@ public extension NKNetworkUtil {
         
         public static func templateHtmlPathURL(_ path: String) -> URL? {
             let bundle: Bundle = Bundle.nikiFrameworkBundle()
-            let htmlPathURL = bundle.url(forResource: path, withExtension: "html")
+            var htmlPathURL = bundle.url(forResource: path, withExtension: "html")
+            if htmlPathURL == nil {
+                htmlPathURL = Bundle.main.url(forResource: path, withExtension: "html")
+            }
             return htmlPathURL
         }
     }
