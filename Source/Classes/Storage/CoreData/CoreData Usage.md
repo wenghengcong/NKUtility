@@ -44,6 +44,11 @@ pod 'JSQCoreDataKit'
 JSON to Core Data and back https://github.com/3lvis/Sync
 pod 'Sync'
 
+## JSON 库
+https://github.com/gonzalezreal/Groot
+https://github.com/Yalantis/FastEasyMapping
+
+
 ## 查询
 https://github.com/KrakenDev/PrediKit
 https://github.com/ftchirou/PredicateKit
