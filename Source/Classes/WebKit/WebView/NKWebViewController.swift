@@ -50,6 +50,8 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
     
+    /// 文字缩放比例
+    open var textSzieScalePercent: CGFloat = 100
     
     ///  导航栏右上角按钮
     open var navRightItems: [UIBarButtonItem]? = []
@@ -183,7 +185,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         get {
             let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
             let userController:WKUserContentController = WKUserContentController()
-            let javascript = """
+            let messageJS = """
                 window.onload = function() {
                     document.addEventListener("click", function(evt) {
                         var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
@@ -191,10 +193,17 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
                     });
                 }
                 """
-            let userScript:WKUserScript =  WKUserScript(source: javascript, injectionTime:.atDocumentStart, forMainFrameOnly: true)
-            
+            // atDocumentStart: 意思是网页中的元素标签创建刚出来的时候，但是还没有内容。该时机适合通过注入脚本来添加元素标签等操作。（注意：此时<head>和<body>等标签都还没有出现）
+            let messageUserScript:WKUserScript = WKUserScript(source: messageJS, injectionTime:.atDocumentStart, forMainFrameOnly: true)
             userController.add(self, name: "jsMessenger")
-            userController.addUserScript(userScript)
+            userController.addUserScript(messageUserScript)
+            
+            // atDocumentEnd: 意思是网页中的元素标签已经加载好了内容，但是网页还没有渲染出来。该时机适合通过注入脚本来获取元素标签内容等操作。（如果注入的js代码跟修改元素标签有关的话，这就是合适的时机）
+            // 字体自适应
+            let scaleTextJS = "document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust='\(textSzieScalePercent)%'"
+            let scaleTextScript:WKUserScript =  WKUserScript(source: scaleTextJS, injectionTime:.atDocumentEnd, forMainFrameOnly: true)
+            userController.addUserScript(scaleTextScript)
+            
             webCfg.userContentController = userController
             return webCfg
         }
@@ -744,7 +753,6 @@ extension  NKWebViewController: WKUIDelegate {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
 }
 
 //MARK: - WKNavigationDelegate
@@ -833,7 +841,6 @@ extension  NKWebViewController: WKNavigationDelegate {
     
     // 3、5 在收到响应后，决定是否跳转
     public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        
         if let response = navigationResponse.response as? HTTPURLResponse {
             let headers = response.allHeaderFields
             //do something with headers
@@ -856,6 +863,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         showLoading(false)
         refreshControl.endRefreshing()
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
+        
         if userDefinedTitle == nil {
             webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
                 if error == nil {

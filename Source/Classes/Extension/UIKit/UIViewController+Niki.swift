@@ -225,6 +225,15 @@ public extension UIViewController {
 }
 
 public extension UIViewController {
+    
+    static func push(_ viewController: UIViewController, animated: Bool = true) {
+        topViewController()?.navigationController?.pushViewController(viewController, animated: animated)
+    }
+    
+    static func present(_ viewControllerToPresent: UIViewController, animated flag: Bool = true, completion: (() -> Void)? = nil) {
+        topViewController()?.navigationController?.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+    
     static func topViewController() -> UIViewController? {
         return UIWindow.topViewController()
     }
