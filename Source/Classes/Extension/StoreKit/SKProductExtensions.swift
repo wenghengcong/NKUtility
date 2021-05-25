@@ -12,7 +12,7 @@ public extension SKProduct {
     }()
 
     /// SwifterSwift: Localized price of SKProduct
-    var localizedPrice: String? {
+    var localizedPriceString: String? {
         let formatter = SKProduct.priceFormatter
         formatter.locale = priceLocale
         return formatter.string(from: price)
