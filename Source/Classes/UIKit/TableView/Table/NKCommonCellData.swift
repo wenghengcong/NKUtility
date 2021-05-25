@@ -8,6 +8,14 @@
 import Foundation
 import UIKit
 
+
+///  底部横线的样式
+public enum NKCommonCellSeperator {
+    case none
+    case inset  // 有一定间距
+    case full
+}
+
 public enum NKCommonCellCellType {
     case `switch`
     case checkmark
@@ -48,6 +56,10 @@ public class NKCommonCellData {
     // check 是否选中
     public var on: Bool? = false
     
+    
+    /// 是否有 > 详情箭头
+    public var hasDetail: Bool = false
+    
     public init() {
         self.icon = ""
         self.title = ""
@@ -57,11 +69,13 @@ public class NKCommonCellData {
                 icon: String? = nil,
                 title: String,
                 desc: String? = nil,
-                on: Bool? = false) {
+                on: Bool? = false,
+                hasDetail: Bool = false) {
         self.type = type
         self.icon = icon
         self.title = title
         self.desc = desc
         self.on = on
+        self.hasDetail = hasDetail
     }
 }

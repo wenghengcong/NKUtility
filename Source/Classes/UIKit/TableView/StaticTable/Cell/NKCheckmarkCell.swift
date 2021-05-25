@@ -74,23 +74,37 @@ open class NKCheckmarkCell: NKStaticCell {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
-        let left = NKDesignByW375(15.0)
+        let left = 15.0
+        let right = -12.0
 
+        backView.snp.remakeConstraints { make in
+            make.edges.equalTo(0)
+        }
+        
         if iconImageView.image == nil {
             iconImageView.isHidden = true
             iconImageView.snp.remakeConstraints { (make) in
                 make.left.equalTo(0)
                 make.width.height.equalTo(0)
-                make.centerY.equalTo(0)
+                make.centerY.equalTo(backView.snp.centerY).offset(0)
             }
             
         } else {
             iconImageView.isHidden = false
             iconImageView.snp.remakeConstraints { (make) in
-                make.width.height.equalTo(NKDesignByW375(30))
-                make.left.equalTo(left)
-                make.centerY.equalTo(0)
+                make.width.height.equalTo(30)
+                make.left.equalTo(17)
+                make.centerY.equalTo(backView.snp.centerY).offset(0)
             }
+        }
+        
+        let titleLeft = iconImageView.isHidden ? left : 5
+        titleLabel.font = UIFont.systemFont(ofSize: 17.0)
+        titleLabel.snp.remakeConstraints { make in
+            make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
+            make.right.equalTo(backView.snp.right).offset(right)
+            make.top.equalTo(0)
+            make.height.equalTo(backView.height)
         }
     }
     

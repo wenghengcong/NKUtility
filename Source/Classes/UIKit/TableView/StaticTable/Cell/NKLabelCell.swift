@@ -9,12 +9,15 @@ import UIKit
 
 open class NKLabelCell: NKStaticCell {
     
+    @IBOutlet weak var detailImageView: UIImageView!
     @IBOutlet weak var backView: UIView!
     
     @IBOutlet weak var iconImageView: UIImageView!
     
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var descLabel: UILabel!
     
+    var hasDesc = false
     
     public override var data: NKCommonCellData? {
         didSet {
@@ -23,24 +26,31 @@ open class NKLabelCell: NKStaticCell {
     }
     
     open override func fillData() {
-        setup(icon: data!.icon, title: data!.title)
-        
-        setNeedsDisplay()
-    }
-    
-    func setup(icon: String?, title: String) {
-        if let iconString = icon, iconString.isNotEmpty {
-            if let image = UIImage(named: iconString) {
-                iconImageView.image = image
-            } else {
-                if let url = URL(string: iconString) {
-                    iconImageView.kf.setImage(with: url)
+        if let realData = data {
+            
+            if let iconString = realData.icon, iconString.isNotEmpty {
+                if let image = UIImage(named: iconString) {
+                    iconImageView.image = image
+                } else {
+                    if let url = URL(string: iconString) {
+                        iconImageView.kf.setImage(with: url)
+                    }
                 }
             }
+            
+            if let desc = realData.desc, desc.isNotEmpty {
+                hasDesc = true
+                descLabel.text = desc
+            } else {
+                hasDesc = false
+                descLabel.text = ""
+            }
+            
+            detailImageView.isHidden = realData.hasDetail
+            titleLabel.text = realData.title
+            setNeedsDisplay()
         }
-        
-        titleLabel.text = title
-        setNeedsDisplay()
+
     }
     
     open override func awakeFromNib() {
@@ -53,6 +63,7 @@ open class NKLabelCell: NKStaticCell {
         super.setupSubviews()
         backView.theme_backgroundColor = .tableCellBackgroundColor
         titleLabel.theme_textColor = .titleColor
+        descLabel.theme_textColor = .subTitleColor
     }
 
     open override func setSelected(_ selected: Bool, animated: Bool) {
@@ -63,24 +74,70 @@ open class NKLabelCell: NKStaticCell {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        let left = NKDesignByW375(15.0)
+        let left = 15.0
+        let right = -12.0
 
+        backView.snp.remakeConstraints { make in
+            make.edges.equalTo(0)
+        }
+        
         if iconImageView.image == nil {
             iconImageView.isHidden = true
             iconImageView.snp.remakeConstraints { (make) in
                 make.left.equalTo(0)
                 make.width.height.equalTo(0)
-                make.centerY.equalTo(0)
+                make.centerY.equalTo(backView.snp.centerY).offset(0)
             }
             
         } else {
             iconImageView.isHidden = false
             iconImageView.snp.remakeConstraints { (make) in
-                make.width.height.equalTo(NKDesignByW375(30))
-                make.left.equalTo(left)
-                make.centerY.equalTo(0)
+                make.width.height.equalTo(30)
+                make.left.equalTo(17)
+                make.centerY.equalTo(backView.snp.centerY).offset(0)
             }
         }
+        
+        if detailImageView.isHidden {
+            detailImageView.snp.remakeConstraints { (make) in
+                make.right.equalTo(0)
+                make.width.height.equalTo(0)
+                make.centerY.equalTo(0)
+            }
+        } else {
+            detailImageView.snp.remakeConstraints { (make) in
+                make.width.height.equalTo(20)
+                make.right.equalTo(right)
+                make.centerY.equalTo(backView.snp.centerY).offset(0)
+            }
+        }
+        
+        let titleLeft = iconImageView.isHidden ? left : 5
+        descLabel.isHidden = !hasDesc
+        if hasDesc {
+            titleLabel.font = UIFont.systemFont(ofSize: 15.0)
+            descLabel.font =  UIFont.systemFont(ofSize: 12.0)
+            titleLabel.snp.remakeConstraints { make in
+                make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
+                make.right.equalTo(detailImageView.snp.left).offset(-5)
+                make.top.equalTo(3)
+                make.height.equalTo(20)
+            }
+        } else {
+            titleLabel.font =  UIFont.systemFont(ofSize: 17.0)
+            titleLabel.snp.remakeConstraints { make in
+                make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
+                make.right.equalTo(detailImageView.snp.left).offset(-5)
+                make.top.equalTo(0)
+                make.height.equalTo(backView.height)
+            }
+        }
+        
+        descLabel.snp.remakeConstraints { make in
+            make.left.equalTo(titleLabel.snp.left).offset(3)
+            make.right.equalTo(titleLabel.snp.right).offset(0)
+            make.top.equalTo(titleLabel.snp.bottom).offset(2)
+            make.height.equalTo(15)
+        }
     }
-    
 }

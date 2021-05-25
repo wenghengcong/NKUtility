@@ -10,7 +10,7 @@ import UIKit
 
 open class NKStaticCell: NKUITableViewCell {
   
-    public static var cellHeight: CGFloat = NKDesignByW375(44.0)
+    public static var cellHeight: CGFloat = 44.0
     
     public var data: NKCommonCellData? {
         didSet {
@@ -19,6 +19,7 @@ open class NKStaticCell: NKUITableViewCell {
     }
     
     open func fillData() {
+
     }
     
     open override func awakeFromNib() {
