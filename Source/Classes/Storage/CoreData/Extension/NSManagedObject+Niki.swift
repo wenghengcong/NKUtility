@@ -13,8 +13,8 @@ public extension NSManagedObject {
     class var entityName: String! {
         get {
             let classString = NSStringFromClass(self)
-                    // The entity is the last component of dot-separated class name:
-                    let components = classString.components(separatedBy:".")
+            // The entity is the last component of dot-separated class name:
+            let components = classString.components(separatedBy:".")
             let name = components.last ?? classString
             return name
         }
@@ -57,15 +57,25 @@ public extension NSManagedObject {
         let newObject = NSEntityDescription.insertNewObject(forEntityName: entityName , into: context)
         return newObject
     }
+
+    class public func deleteAll(entityName: String, context: NSManagedObjectContext) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            // TODO: handle the error
+        }
+    }
     
     
     public func delete() {
         self.managedObjectContext?.delete(self)
-     }
-     
-     public func refresh(mergeChanges : Bool) {
+    }
+
+    public func refresh(mergeChanges : Bool) {
         self.managedObjectContext?.refresh(self, mergeChanges: mergeChanges)
-     }
+    }
 }
 
 public extension NSManagedObject {
@@ -79,7 +89,7 @@ public extension NSManagedObject {
             let attrType = attr.attributeType // NSAttributeType enumeration for the property type
             let attrClass = attr.attributeValueClassName ?? "unknown"
             let value = value(forKey: name)
-//            print(name, "=", value, "type =", attrClass)
+            //            print(name, "=", value, "type =", attrClass)
             let one = (name: name, value:value, type: attrClass)
             mapper.append(one)
         }
