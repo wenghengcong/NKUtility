@@ -97,6 +97,30 @@ public extension NSManagedObject {
         }
         return typeMapper
     }
+    
+    public func propertyJsonInsnake_case() -> Dictionary<String, Any> {
+        var mappepJson = [String: Any]()
+        for (name, attr) in entity.attributesByName {
+            let attrType = attr.attributeType // NSAttributeType enumeration for the property type
+            let attrClass = attr.attributeValueClassName ?? "unknown"
+            let value = value(forKey: name)
+            let namesnake_case = name.camelCaseTosnake_case()
+            mappepJson[namesnake_case] = value
+        }
+        return mappepJson
+    }
+    
+    public func propertyJsonInCamelCase() -> Dictionary<String, Any> {
+        var mappepJson = [String: Any]()
+        for (name, attr) in entity.attributesByName {
+            let attrType = attr.attributeType // NSAttributeType enumeration for the property type
+            let attrClass = attr.attributeValueClassName ?? "unknown"
+            let value = value(forKey: name)
+            let nameCamelCase = name.snake_caseToCamelCase()
+            mappepJson[nameCamelCase] = value
+        }
+        return mappepJson
+    }
 
     public func propertyJson() -> Dictionary<String, Any> {
         var mappepJson = [String: Any]()

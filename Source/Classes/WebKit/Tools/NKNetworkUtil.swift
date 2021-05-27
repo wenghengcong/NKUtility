@@ -7,32 +7,38 @@
 
 import Foundation
 
+/// 网络工具类
 public class NKNetworkUtil: NSObject {
     
-    static let shared = NKNetworkUtil()
-    var lastState: Reachability.Connection = .unavailable
-    
-    typealias ReachabilityConnectionListener = (Reachability.Connection) -> Void
+    public static let shared = NKNetworkUtil()
     
     private var reachability: Reachability!
-    
     private var listeners: [ReachabilityConnectionListener] = []
     
-    var reachabilityStatus: Reachability.Connection {
+    /// 上一次的状态
+    public var lastState: Reachability.Connection = .unavailable
+    
+    /// 监听网络状态变更的回调类型
+    public typealias ReachabilityConnectionListener = (Reachability.Connection) -> Void
+    
+    /// 当前网络连接
+    public var reachabilityStatus: Reachability.Connection {
         return self.reachability.connection
     }
     
-    var isReachable: Bool {
+    /// 网络是否可用
+    public var isReachable: Bool {
         lastState = currentConnection()
         return currentConnection() != .unavailable
     }
     
-    var isReachableOnCellular: Bool {
+    /// 是否是蜂窝数据网络
+    public var isReachableOnCellular: Bool {
         lastState = currentConnection()
         return currentConnection() == .cellular
     }
-    
-    var isReachableOnWiFi: Bool {
+    /// 是否是 wifi
+    public var isReachableOnWiFi: Bool {
         lastState = currentConnection()
         return currentConnection() == .wifi
     }
@@ -45,11 +51,13 @@ public class NKNetworkUtil: NSObject {
         
     }
     
-    func currentConnection() -> Reachability.Connection {
+    /// 当前网络状态
+    public func currentConnection() -> Reachability.Connection {
         return self.reachability.connection
     }
     
-    func addReachabilityChangeHandlers(_ listener: @escaping ReachabilityConnectionListener) {
+    /// 添加网络监听
+    public func addReachabilityChangeHandlers(_ listener: @escaping ReachabilityConnectionListener) {
         self.listeners.append(listener)
     }
     

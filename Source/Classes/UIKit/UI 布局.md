@@ -116,3 +116,9 @@ override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
 https://www.jianshu.com/p/be68592f259e
 
 
+# Label
+https://github.com/optonaut/ActiveLabel.swift           UILabel drop-in replacement supporting Hashtags (#), Mentions (@) and URLs (http://) written in Swift
+
+
+# 浮层
+https://github.com/scenee/FloatingPanel     A clean and easy-to-use floating panel UI component for iOS
