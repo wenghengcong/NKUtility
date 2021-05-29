@@ -53,8 +53,8 @@ extension NSManagedObjectContext {
         wait ? performAndWait(block) : perform(block)
     }
     
-    public func find(objectMatchingPredicate predicate: NSPredicate) -> NSManagedObject? {
-        for object in self.registeredObjects where !object.isFault {
+    public func find(objectMatchingPredicate predicate: NSPredicate, entityName: String) -> NSManagedObject? {
+        for object in self.registeredObjects where (!object.isFault && object.entity.name == entityName) {
             if predicate.evaluate(with: object) {
                 return object
             }

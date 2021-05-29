@@ -93,7 +93,7 @@ extension NSManagedObject {
     /// - Returns: <#description#>
     public static func findOrCreate(predicate: NSPredicate, context moc: NSManagedObjectContext) -> NSManagedObject {
         //First we should fetch an existing object in the context as a performance optimization
-        guard let existingObject = moc.find(objectMatchingPredicate: predicate) else {
+        guard let existingObject = moc.find(objectMatchingPredicate: predicate, entityName: entityName) else {
             return fetchOrCreate(objectMatchingPredicate: predicate, context: moc)
         }
         return existingObject
