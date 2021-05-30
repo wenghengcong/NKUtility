@@ -75,13 +75,17 @@ public extension Bundle {
 public extension Bundle {
     // 访问 NKUtility 资源文件需要从该 bundel 读取（即 Resource 下文件）
     static func nikiFrameworkBundle() -> Bundle {
-        let bundleNames = [
+        let mainBundld = Bundle.main.bundleIdentifier
+        var bundleNames = [
             // For Swift Package Manager
             "NKUtility_NKUtility",
             "NKUtility-NKUtility",
             // For Carthage
             "NKUtility",
         ]
+        if bundleNames.isNotEmpty, let mainBundleIdStr = mainBundld {
+            bundleNames.append(mainBundleIdStr)
+        }
         return frameworkBundle(bundleNames: bundleNames)
     }
 }

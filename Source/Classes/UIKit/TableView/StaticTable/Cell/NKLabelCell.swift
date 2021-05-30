@@ -16,7 +16,23 @@ open class NKLabelCell: NKStaticCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
-    
+
+    open var desc: String? {
+        didSet {
+            data?.desc = desc
+            fillData()
+        }
+    }
+
+    open var title: String? {
+        didSet {
+            if let titleString = title {
+                data?.title = titleString
+                fillData()
+            }
+        }
+    }
+
     var hasDesc = false
     
     public override var data: NKCommonCellData? {
@@ -27,7 +43,6 @@ open class NKLabelCell: NKStaticCell {
     
     open override func fillData() {
         if let realData = data {
-            
             if let iconString = realData.icon, iconString.isNotEmpty {
                 if let image = UIImage(named: iconString) {
                     iconImageView.image = image
@@ -45,12 +60,13 @@ open class NKLabelCell: NKStaticCell {
                 hasDesc = false
                 descLabel.text = ""
             }
-            
-            detailImageView.isHidden = realData.hasDetail
+
+            let detailImage = NKThemeProvider.shared.isNight() ? UIImage(nkBundleNamed: "nk_cell_arrow_right _white") : UIImage(nkBundleNamed: "nk_cell_arrow_right")
+            detailImageView.image = detailImage
+            detailImageView.isHidden = !realData.hasDetail
             titleLabel.text = realData.title
             setNeedsDisplay()
         }
-
     }
     
     open override func awakeFromNib() {
@@ -92,7 +108,7 @@ open class NKLabelCell: NKStaticCell {
         } else {
             iconImageView.isHidden = false
             iconImageView.snp.remakeConstraints { (make) in
-                make.width.height.equalTo(30)
+                make.width.height.equalTo(25)
                 make.left.equalTo(17)
                 make.centerY.equalTo(backView.snp.centerY).offset(0)
             }
@@ -134,7 +150,7 @@ open class NKLabelCell: NKStaticCell {
         }
         
         descLabel.snp.remakeConstraints { make in
-            make.left.equalTo(titleLabel.snp.left).offset(3)
+            make.left.equalTo(titleLabel.snp.left).offset(1)
             make.right.equalTo(titleLabel.snp.right).offset(0)
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
             make.height.equalTo(15)

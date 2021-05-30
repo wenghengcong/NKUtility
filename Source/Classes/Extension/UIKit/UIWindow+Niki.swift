@@ -59,6 +59,14 @@ public extension UIWindow {
         }
         return top
     }
+
+    static func pushVC(_ viewController: UIViewController, animated: Bool = true) {
+        topViewController()?.navigationController?.pushViewController(viewController, animated: animated)
+    }
+
+    static func presentVC(_ viewControllerToPresent: UIViewController, animated flag: Bool = true, completion: (() -> Void)? = nil) {
+        topViewController()?.navigationController?.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
     
     /// switch current root view controller
     ///

@@ -71,7 +71,7 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
     
     open override func layoutSubviews() {
         
-        let left = NKDesignByW375(15.0)
+        let left = NKDesignByW375(12.0)
         
         if title != nil && desc != nil {
             titleLabel.sizeToFit()

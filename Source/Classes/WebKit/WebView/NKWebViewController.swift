@@ -43,6 +43,8 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     open var titleColor: UIColor? = nil
     open var closing: Bool! = false
     open var request: URLRequest?
+    open var weburl: String?
+    open var htmlString: String?
     open var navBarTitle: UILabel! = UILabel()
     open var userDefinedTitle: String? {
         didSet {
@@ -210,7 +212,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
 
-    // MARK: - Init
+    // MARK: - Init by url
     public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
         var urlString = urlString
         if !urlString.hasPrefix("https://") && !urlString.hasPrefix("http://") {
@@ -227,9 +229,42 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         self.init()
         self.sharingEnabled = sharingEnabled
         self.request = aRequest
+        self.weburl = aRequest.url?.absoluteString
         self.contentRules = contentRules
     }
-    
+
+    // MARK: - Init by html string
+    public convenience init(htmlString: String?, sharingEnabled: Bool = true, contentRules: String?) {
+        self.init()
+        self.sharingEnabled = sharingEnabled
+        self.htmlString = htmlString
+        self.contentRules = contentRules
+    }
+
+    //MARK: - load method
+    func beginLoadWebView() {
+        if htmlString != nil && htmlString!.isNotEmpty {
+            loadHtmlString()
+        } else {
+            loadRequest(request)
+        }
+    }
+
+    func loadHtmlString() {
+        guard htmlString != nil else {
+            return
+        }
+        if self.contentRules != nil, self.contentRules!.isNotEmpty {
+            WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
+                guard let contentRuleList = list else { return }
+                self.webView.configuration.userContentController.add(contentRuleList)
+                self.really_loadHtmlString()
+            }
+        } else {
+            self.really_loadHtmlString()
+        }
+    }
+
     func loadRequest(_ request: URLRequest?) {
         guard request != nil else {
             return
@@ -243,7 +278,12 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         } else {
             self.really_loadRequest(self.request)
         }
+    }
 
+    fileprivate func really_loadHtmlString() {
+        if let html = htmlString{
+            self.webView.loadHTMLString(html, baseURL: nil)
+        }
     }
     
     fileprivate func really_loadRequest(_ request: URLRequest?) {
@@ -280,8 +320,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     ////////////////////////////////////////////////
-    // Toolbar
-    
+    // MARK: - Toolbar
     public func updateToolbarItems() {
         if toolBarHidden {
             return
@@ -341,10 +380,8 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     func refreshIphonToolbarItems() {
 
     }
-    
-    
-    ////////////////////////////////////////////////
-    // Target Actions
+
+    // MARK: - Target Actions
     open func goBack() {
         webView.goBack()
     }
@@ -513,6 +550,7 @@ extension  NKWebViewController {
     
     
     fileprivate func showLoading(_ animate: Bool) {
+        /*
         guard view != nil else {
             return
         }
@@ -529,6 +567,7 @@ extension  NKWebViewController {
                 activityIndicator?.stopAnimating()
             }
         }
+         */
     }
 }
 
@@ -663,7 +702,7 @@ extension  NKWebViewController {
         setupWebview()
         setupProgressView()
         addObserver()
-        loadRequest(request)
+        beginLoadWebView()
     }
     
     override open func viewWillAppear(_ animated: Bool) {

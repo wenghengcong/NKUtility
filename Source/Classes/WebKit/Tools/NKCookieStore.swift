@@ -112,11 +112,8 @@ public extension NKCookieStore {
     }
 
     func deleteCookies() {
-        if let cookies = HTTPCookieStorage.shared.cookies {
-            for cookie in cookies {
-                HTTPCookieStorage.shared.deleteCookie(cookie)
-            }
-        }
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        print("[WebCacheCleaner] All cookies deleted")
         self.saveCookies()
     }
 
