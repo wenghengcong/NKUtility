@@ -58,10 +58,9 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
         }
         
         titleLabel.theme_textColor = .titleColor
-        titleLabel.font = NKBoldSysFont17
+        titleLabel.font = NKSysFont17
         contentView.addSubview(titleLabel)
-        
-        
+
         descriptionLabel.theme_textColor = .subTitleColor
         descriptionLabel.font = NKSysFont13
         contentView.addSubview(descriptionLabel)
