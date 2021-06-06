@@ -50,7 +50,9 @@ public class NKTreeViewController:NSObject  {
     
     func removeTreeViewNodesAtRange(from start:Int , to end:Int)
     {
-        treeViewNodes.removeSubrange(start ... end)
+        if start < treeViewNodes.count && end < treeViewNodes.count {
+            treeViewNodes.removeSubrange(start ... end)
+        }
     }
     
     func setExpandTreeViewNode(atIndex index:Int){
