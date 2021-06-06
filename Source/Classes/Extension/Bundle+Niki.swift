@@ -7,7 +7,7 @@
 
 import UIKit
 
-private class NKBundleToken {}
+public class NKBundleToken {}
 
 public extension Bundle {
     /// 中文Bundle

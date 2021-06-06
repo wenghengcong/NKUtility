@@ -28,22 +28,6 @@ public extension UserDefaults {
         }
     }
 
-    /// SwifterSwift: Float from UserDefaults.
-    ///
-    /// - Parameter forKey: key to find float for.
-    /// - Returns: Float object for key (if exists).
-    func float(forKey key: String) -> Float? {
-        return object(forKey: key) as? Float
-    }
-
-    /// SwifterSwift: Date from UserDefaults.
-    ///
-    /// - Parameter forKey: key to find date for.
-    /// - Returns: Date object for key (if exists).
-    func date(forKey key: String) -> Date? {
-        return object(forKey: key) as? Date
-    }
-
     /// SwifterSwift: Retrieves a Codable object from UserDefaults.
     ///
     /// - Parameters:

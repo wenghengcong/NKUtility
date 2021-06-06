@@ -49,6 +49,18 @@
     ],
     "XCGLogger": [
 
+    ],
+    "SwiftyJSON": [
+
+    ],
+    "GCDWebServer": [
+
+    ],
+    "GCDWebServer/WebUploader": [
+
+    ],
+    "GCDWebServer/WebDAV": [
+
     ]
   },
   "swift_version": "5.0"

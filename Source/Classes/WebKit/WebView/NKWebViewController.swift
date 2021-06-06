@@ -52,8 +52,71 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
     
+    fileprivate var contentScriptManager = TabContentScriptManager()
+        
+    func addContentScript(_ helper: TabContentScript, name: String) {
+        contentScriptManager.addContentScript(helper, name: name, forWebVc: self)
+    }
+
+    func getContentScript(name: String) -> TabContentScript? {
+        return contentScriptManager.getContentScript(name)
+    }
+    
     /// 文字缩放比例
     open var textSzieScalePercent: CGFloat = 100
+    
+    // Use computed property so @available can be used to guard `noImageMode`.
+    open var noImageMode: Bool = false {
+        didSet {
+            guard noImageMode != oldValue else {
+                return
+            }
+//            contentBlocker?.noImageMode(enabled: noImageMode)
+            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
+        }
+    }
+
+    open var nightMode: Bool = false {
+        didSet {
+//            guard nightMode != oldValue else {
+//                return
+//            }
+
+            webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.NightMode.setEnabled(\(nightMode))"){ object, error in
+                print("log")
+//                if let readabilityResult = ReadabilityResult(object: object as AnyObject?) {
+    //                try? self.readerModeCache.put(currentURL, readabilityResult)
+    //                if let nav = webView.load(PrivilegedRequest(url: readerModeURL) as URLRequest) {
+    //                    self.ignoreNavigationInTab(tab, navigation: nav)
+    //                }
+//                }
+            }
+            // For WKWebView background color to take effect, isOpaque must be false,
+            // which is counter-intuitive. Default is true. The color is previously
+            // set to black in the WKWebView init.
+            webView.isOpaque = !nightMode
+            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
+        }
+    }
+    
+    open var readerMode: Bool = false {
+        didSet {
+//            guard readerMode != oldValue else {
+//                return
+//            }
+
+            // Store the readability result in the cache and load it. This will later move to the ReadabilityHelper.
+            webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.reader.readerize()") { object, error in
+                print("log")
+//                if let readabilityResult = ReadabilityResult(object: object as AnyObject?) {
+    //                try? self.readerModeCache.put(currentURL, readabilityResult)
+    //                if let nav = webView.load(PrivilegedRequest(url: readerModeURL) as URLRequest) {
+    //                    self.ignoreNavigationInTab(tab, navigation: nav)
+    //                }
+//                }
+            }
+        }
+    }
     
     ///  导航栏右上角按钮
     open var navRightItems: [UIBarButtonItem]? = []
@@ -703,6 +766,13 @@ extension  NKWebViewController {
         setupProgressView()
         addObserver()
         beginLoadWebView()
+        addUserScript()
+    }
+    
+    func addUserScript() {
+        let readerMode = ReaderMode(web: self)
+        readerMode.delegate = self
+        self.addContentScript(readerMode, name: ReaderMode.name())
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -765,6 +835,23 @@ extension  NKWebViewController {
     }
     
 }
+
+//MARK: - reader mode
+extension NKWebViewController: ReaderModeDelegate {
+    func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController) {
+        
+    }
+    
+    func readerMode(_ readerMode: ReaderMode, didParseReadabilityResult readabilityResult: ReadabilityResult, forWebVC web: NKWebViewController) {
+        
+    }
+    
+    func readerMode(_ readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forWebVc web: NKWebViewController) {
+        
+    }
+    
+}
+
 
 //MARK: - WKUIDelegate
 extension  NKWebViewController: WKUIDelegate {
