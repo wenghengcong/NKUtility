@@ -770,6 +770,7 @@ extension  NKWebViewController {
     }
     
     func addUserScript() {
+        UserScriptManager.shared
         let readerMode = ReaderMode(web: self)
         readerMode.delegate = self
         self.addContentScript(readerMode, name: ReaderMode.name())
