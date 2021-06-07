@@ -10,23 +10,23 @@ import NKUtility
 
 let ReaderModeProfileKeyStyle = "readermode.style"
 
-enum ReaderModeMessageType: String {
+public enum ReaderModeMessageType: String {
     case stateChange = "ReaderModeStateChange"
     case pageEvent = "ReaderPageEvent"
     case contentParsed = "ReaderContentParsed"
 }
 
-enum ReaderPageEvent: String {
+public enum ReaderPageEvent: String {
     case pageShow = "PageShow"
 }
 
-enum ReaderModeState: String {
+public enum ReaderModeState: String {
     case available = "Available"
     case unavailable = "Unavailable"
     case active = "Active"
 }
 
-enum ReaderModeTheme: String {
+public enum ReaderModeTheme: String {
     case light = "light"
     case dark = "dark"
     case sepia = "sepia"
@@ -58,7 +58,7 @@ private struct FontFamily {
     static let families = [serifFamily, sansFamily]
 }
 
-enum ReaderModeFontType: String {
+public enum ReaderModeFontType: String {
     case serif = "serif"
     case serifBold = "serif-bold"
     case sansSerif = "sans-serif"
@@ -85,7 +85,7 @@ enum ReaderModeFontType: String {
     }
 }
 
-enum ReaderModeFontSize: Int {
+public enum ReaderModeFontSize: Int {
     case size1 = 1
     case size2 = 2
     case size3 = 3
@@ -100,11 +100,11 @@ enum ReaderModeFontSize: Int {
     case size12 = 12
     case size13 = 13
 
-    func isSmallest() -> Bool {
+    public func isSmallest() -> Bool {
         return self == ReaderModeFontSize.size1
     }
 
-    func smaller() -> ReaderModeFontSize {
+    public  func smaller() -> ReaderModeFontSize {
         if isSmallest() {
             return self
         } else {
@@ -112,11 +112,11 @@ enum ReaderModeFontSize: Int {
         }
     }
 
-    func isLargest() -> Bool {
+    public  func isLargest() -> Bool {
         return self == ReaderModeFontSize.size13
     }
 
-    static var defaultSize: ReaderModeFontSize {
+    public static var defaultSize: ReaderModeFontSize {
         switch UIApplication.shared.preferredContentSizeCategory {
         case .extraSmall:
             return .size1
@@ -137,7 +137,7 @@ enum ReaderModeFontSize: Int {
         }
     }
 
-    func bigger() -> ReaderModeFontSize {
+    public func bigger() -> ReaderModeFontSize {
         if isLargest() {
             return self
         } else {
@@ -146,29 +146,29 @@ enum ReaderModeFontSize: Int {
     }
 }
 
-struct ReaderModeStyle {
-    var theme: ReaderModeTheme
-    var fontType: ReaderModeFontType
-    var fontSize: ReaderModeFontSize
+public  struct ReaderModeStyle {
+    public var theme: ReaderModeTheme
+    public var fontType: ReaderModeFontType
+    public var fontSize: ReaderModeFontSize
 
     /// Encode the style to a JSON dictionary that can be passed to ReaderMode.js
-    func encode() -> String {
+    public func encode() -> String {
         return JSON(["theme": theme.rawValue, "fontType": fontType.rawValue, "fontSize": fontSize.rawValue]).stringify() ?? ""
     }
 
     /// Encode the style to a dictionary that can be stored in the profile
-    func encodeAsDictionary() -> [String: Any] {
+    public func encodeAsDictionary() -> [String: Any] {
         return ["theme": theme.rawValue, "fontType": fontType.rawValue, "fontSize": fontSize.rawValue]
     }
 
-    init(theme: ReaderModeTheme, fontType: ReaderModeFontType, fontSize: ReaderModeFontSize) {
+    public init(theme: ReaderModeTheme, fontType: ReaderModeFontType, fontSize: ReaderModeFontSize) {
         self.theme = theme
         self.fontType = fontType
         self.fontSize = fontSize
     }
 
     /// Initialize the style from a dictionary, taken from the profile. Returns nil if the object cannot be decoded.
-    init?(dict: [String: Any]) {
+    public init?(dict: [String: Any]) {
         let themeRawValue = dict["theme"] as? String
         let fontTypeRawValue = dict["fontType"] as? String
         let fontSizeRawValue = dict["fontSize"] as? Int
@@ -188,22 +188,22 @@ struct ReaderModeStyle {
         self.fontSize = fontSize!
     }
     
-    mutating func ensurePreferredColorThemeIfNeeded() {
+    public mutating func ensurePreferredColorThemeIfNeeded() {
         self.theme = ReaderModeTheme.preferredTheme(for: self.theme)
     }
 }
 
-let DefaultReaderModeStyle = ReaderModeStyle(theme: .light, fontType: .sansSerif, fontSize: ReaderModeFontSize.defaultSize)
+public let DefaultReaderModeStyle = ReaderModeStyle(theme: .light, fontType: .sansSerif, fontSize: ReaderModeFontSize.defaultSize)
 
 /// This struct captures the response from the Readability.js code.
-struct ReadabilityResult {
+public struct ReadabilityResult {
     var domain = ""
     var url = ""
     var content = ""
     var title = ""
     var credits = ""
 
-    init?(object: AnyObject?) {
+    public init?(object: AnyObject?) {
         if let dict = object as? NSDictionary {
             if let uri = dict["uri"] as? NSDictionary {
                 if let url = uri["spec"] as? String {
@@ -228,7 +228,7 @@ struct ReadabilityResult {
     }
 
     /// Initialize from a JSON encoded string
-    init?(string: String) {
+    public init?(string: String) {
         let object = JSON(parseJSON: string)
         let domain = object["domain"].string
         let url = object["url"].string
@@ -248,19 +248,19 @@ struct ReadabilityResult {
     }
 
     /// Encode to a dictionary, which can then for example be json encoded
-    func encode() -> [String: Any] {
+    public func encode() -> [String: Any] {
         return ["domain": domain, "url": url, "content": content, "title": title, "credits": credits]
     }
 
     /// Encode to a JSON encoded string
-    func encode() -> String {
+    public func encode() -> String {
         let dict: [String: Any] = self.encode()
         return JSON(dict).stringify()!
     }
 }
 
 /// Delegate that contains callbacks that we have added on top of the built-in WKWebViewDelegate
-protocol ReaderModeDelegate {
+public protocol ReaderModeDelegate {
     func readerMode(_ readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forWebVc web: NKWebViewController)
     func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController)
     func readerMode(_ readerMode: ReaderMode, didParseReadabilityResult readabilityResult: ReadabilityResult, forWebVC web: NKWebViewController)
@@ -268,14 +268,14 @@ protocol ReaderModeDelegate {
 
 let ReaderModeNamespace = "window.__firefox__.reader"
 
-class ReaderMode: TabContentScript {
-    var delegate: ReaderModeDelegate?
+public class ReaderMode: TabContentScript {
+    public var delegate: ReaderModeDelegate?
 
     fileprivate weak var web: NKWebViewController?
-    var state = ReaderModeState.unavailable
+    public var state = ReaderModeState.unavailable
     fileprivate var originalURL: URL?
 
-    class func name() -> String {
+    public  class func name() -> String {
         return "ReaderMode"
     }
 
@@ -311,7 +311,7 @@ class ReaderMode: TabContentScript {
         delegate?.readerMode(self, didParseReadabilityResult: readabilityResult, forWebVC: web)
     }
 
-    func userContentController(_ userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+    public func userContentController(_ userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         guard let msg = message.body as? [String: Any], let type = msg["Type"] as? String, let messageType = ReaderModeMessageType(rawValue: type) else { return }
         
         switch messageType {
@@ -330,7 +330,7 @@ class ReaderMode: TabContentScript {
         }
     }
 
-    var style: ReaderModeStyle = DefaultReaderModeStyle {
+    public var style: ReaderModeStyle = DefaultReaderModeStyle {
         didSet {
             if state == ReaderModeState.active {
                 web?.webView.evaluateJavascriptInDefaultContentWorld("\(ReaderModeNamespace).setStyle(\(style.encode()))") { object, error in

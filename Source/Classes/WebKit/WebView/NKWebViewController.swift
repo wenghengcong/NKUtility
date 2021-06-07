@@ -836,15 +836,15 @@ extension  NKWebViewController {
 
 //MARK: - reader mode
 extension NKWebViewController: ReaderModeDelegate {
-    func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController) {
+    public func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController) {
         
     }
     
-    func readerMode(_ readerMode: ReaderMode, didParseReadabilityResult readabilityResult: ReadabilityResult, forWebVC web: NKWebViewController) {
+    public func readerMode(_ readerMode: ReaderMode, didParseReadabilityResult readabilityResult: ReadabilityResult, forWebVC web: NKWebViewController) {
         
     }
     
-    func readerMode(_ readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forWebVc web: NKWebViewController) {
+    public func readerMode(_ readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forWebVc web: NKWebViewController) {
         
     }
     

@@ -4,20 +4,21 @@
 
 import Foundation
 
-struct ReaderModeUtils {
+public struct ReaderModeUtils {
 
-    static let DomainPrefixesToSimplify = ["www.", "mobile.", "m.", "blog."]
+    public static let DomainPrefixesToSimplify = ["www.", "mobile.", "m.", "blog."]
 
-    static func simplifyDomain(_ domain: String) -> String {
+    public static func simplifyDomain(_ domain: String) -> String {
         return DomainPrefixesToSimplify.first { domain.hasPrefix($0) }.map {
             String($0[$0.index($0.startIndex, offsetBy: $0.count)...])
         } ?? domain
     }
 
-    static func generateReaderContent(_ readabilityResult: ReadabilityResult, initialStyle: ReaderModeStyle) -> String? {
-        guard let stylePath = Bundle.main.path(forResource: "Reader", ofType: "css"),
+    public static func generateReaderContent(_ readabilityResult: ReadabilityResult, initialStyle: ReaderModeStyle) -> String? {
+        let bundle = Bundle(for: NKBundleToken.self)
+        guard let stylePath = bundle.path(forResource: "Reader", ofType: "css"),
             let css = try? String(contentsOfFile: stylePath, encoding: .utf8),
-            let tmplPath = Bundle.main.path(forResource: "Reader", ofType: "html"),
+            let tmplPath = bundle.path(forResource: "Reader", ofType: "html"),
             let tmpl = try? String(contentsOfFile: tmplPath, encoding: .utf8) else { return nil }
 
         return tmpl.replacingOccurrences(of: "%READER-CSS%", with: css)

@@ -153,7 +153,7 @@ body {
 
 .light > .header > .domain {
   color: #ee7600;
-  border-bottom-color: #d0d0d0; 
+  border-bottom-color: #d0d0d0;
 }
 
 .light > .header > h1 {
@@ -166,7 +166,7 @@ body {
 
 .dark > .header > .domain {
   color: #ff9400;
-  border-bottom-color: #777777; 
+  border-bottom-color: #777777;
 }
 
 .dark > .header > h1 {
@@ -364,7 +364,7 @@ body {
   margin-bottom: 20px !important;
 }
 
-/* Covers all images showing edge-to-edge using a 
+/* Covers all images showing edge-to-edge using a
    an optional caption text */
 .content .wp-caption,
 .content figure {
@@ -814,3 +814,4 @@ body {
     width: 56px;
   }
 }
+

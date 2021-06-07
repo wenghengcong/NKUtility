@@ -79,7 +79,8 @@ public class WebServer {
 
     /// Convenience method to register a resource in the main bundle. Will be mounted at $base/$module/$resource
     func registerMainBundleResource(_ resource: String, module: String) {
-        if let path = Bundle.main.path(forResource: resource, ofType: nil) {
+        let bundle = Bundle(for: NKBundleToken.self)
+        if let path = bundle.path(forResource: resource, ofType: nil) {
             server.addGETHandler(forPath: "/\(module)/\(resource)", filePath: path, isAttachment: false, cacheAge: UInt.max, allowRangeRequests: true)
         }
     }
