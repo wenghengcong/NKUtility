@@ -148,7 +148,7 @@ open class  NKWebViewController: UIViewController {
         #if swift(>=4.2)
         activityIndicator.style = UIActivityIndicatorView.Style.large
         #else
-        activityIndicator.activityIndicatorViewStyle = .whiteLarge
+        activityIndicator.activityIndicatorViewStyle = NKThemeProvider.shared.isNight() ? .gray : .whiteLarge
         #endif
         //设置指示器控件的颜色
         activityIndicator.color = UIColor.systemGray
@@ -216,7 +216,7 @@ open class  NKWebViewController: UIViewController {
         var tempWebView = WKWebView(frame: .zero, configuration: webConfig)
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
-        tempWebView.backgroundColor = .white
+        tempWebView.backgroundColor = NKThemeProvider.shared.isNight() ? UIColor(hex: "#000000") : .white
         tempWebView.scrollView.delegate = self
         tempWebView.translatesAutoresizingMaskIntoConstraints = false
         // after done with setup the `webView`:
@@ -255,34 +255,48 @@ open class  NKWebViewController: UIViewController {
     
 
     // MARK: - Init by url
-    public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
+    public convenience init(urlString: String,
+                            sharingEnabled: Bool = true,
+                            darkMode: Bool = false,
+                            contentRules: String?) {
         var urlString = urlString
         if !urlString.hasPrefix("https://") && !urlString.hasPrefix("http://") {
             urlString = "https://"+urlString
         }
-        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled, contentRules: contentRules)
+        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
     }
     
-    public convenience init(pageURL: URL, sharingEnabled: Bool = true, contentRules: String?) {
-        self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, contentRules: contentRules)
+    public convenience init(pageURL: URL,
+                            sharingEnabled: Bool = true,
+                            darkMode: Bool = false,
+                            contentRules: String?) {
+        self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, darkMode:darkMode, contentRules: contentRules)
     }
     
-    public convenience init(aRequest: URLRequest, sharingEnabled: Bool = true, contentRules: String?) {
+    public convenience init(aRequest: URLRequest,
+                            sharingEnabled: Bool = true,
+                            darkMode: Bool = false,
+                            contentRules: String?) {
         self.init()
         self.sharingEnabled = sharingEnabled
         self.request = aRequest
         self.weburl = aRequest.url?.absoluteString
         self.readerModeCache = DiskReaderModeCache.sharedInstance
         self.contentRules = contentRules
+        self.nightMode = darkMode
     }
 
     // MARK: - Init by html string
-    public convenience init(htmlString: String?, sharingEnabled: Bool = true, contentRules: String?) {
+    public convenience init(htmlString: String?,
+                            sharingEnabled: Bool = true,
+                            darkMode: Bool = false,
+                            contentRules: String?) {
         self.init()
         self.sharingEnabled = sharingEnabled
         self.htmlString = htmlString
         self.contentRules = contentRules
         self.readerModeCache = DiskReaderModeCache.sharedInstance
+        self.nightMode = darkMode
     }
 
     //MARK: - load method
@@ -292,52 +306,7 @@ open class  NKWebViewController: UIViewController {
         } else {
             loadRequest(request)
         }
-    }
-
-    func loadHtmlString() {
-        guard htmlString != nil else {
-            return
-        }
-        if self.contentRules != nil, self.contentRules!.isNotEmpty {
-            WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
-                guard let contentRuleList = list else { return }
-                self.webView.configuration.userContentController.add(contentRuleList)
-                self.really_loadHtmlString()
-            }
-        } else {
-            self.really_loadHtmlString()
-        }
-    }
-
-    func loadRequest(_ request: URLRequest?) {
-        guard request != nil else {
-            return
-        }
-        if self.contentRules != nil, self.contentRules!.isNotEmpty {
-            WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
-                guard let contentRuleList = list else { return }
-                self.webView.configuration.userContentController.add(contentRuleList)
-                self.really_loadRequest(self.request)
-            }
-        } else {
-            self.really_loadRequest(self.request)
-        }
-    }
-
-    internal func really_loadHtmlString() {
-        if let html = htmlString{
-            self.webView.loadHTMLString(html, baseURL: nil)
-        }
-    }
-    
-    internal func really_loadRequest(_ request: URLRequest?) {
-        if let url = request!.url,
-           url.absoluteString.contains("file:"),
-           #available(iOS 9.0, *) {
-            self.webView.loadFileURL(url, allowingReadAccessTo: url)
-        } else {
-            self.webView.load(request!)
-        }
+        execuDarkModeChanage()
     }
     
     func clearWebView() {
@@ -737,12 +706,12 @@ extension  NKWebViewController {
         // 设置edgesForExtendedLayout可以使得 webview 从导航栏bottom 开始布局
         //        edgesForExtendedLayout = []
         view.autoresizingMask = .flexibleHeight
-        view.backgroundColor = .white
+        view.backgroundColor = NKThemeProvider.shared.isNight() ? UIColor(hex: "#000000") : .white
+        addUserScript()
         setupWebview()
         setupProgressView()
         addObserver()
         beginLoadWebView()
-        addUserScript()
         setupReaderModeCache()
     }
 

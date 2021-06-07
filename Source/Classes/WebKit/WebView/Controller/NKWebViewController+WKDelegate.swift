@@ -40,7 +40,7 @@ extension  NKWebViewController: WKUIDelegate {
 extension  NKWebViewController: WKNavigationDelegate {
     
     // 1、4 在发送请求之前，决定是否跳转
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             return
         }
@@ -113,7 +113,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     
     
     // 2 页面开始加载时调用
-    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         showLoading(true)
         delegate?.webViewController?(self, didStartLoading: webView.url)
         updateToolbarItems()
@@ -121,7 +121,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     
     
     // 3、5 在收到响应后，决定是否跳转
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+    open func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         if let response = navigationResponse.response as? HTTPURLResponse {
             let headers = response.allHeaderFields
             //do something with headers
@@ -140,7 +140,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     }
     
     // 6 页面加载完成之后调用
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
         refreshControl.endRefreshing()
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
@@ -166,12 +166,12 @@ extension  NKWebViewController: WKNavigationDelegate {
     }
     
     /// 当内容开始返回时调用
-    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         
     }
     
     // 页面加载失败时调用
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    open func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         showLoading(false)
         refreshControl.endRefreshing()
         
@@ -179,7 +179,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         updateToolbarItems()
     }
     
-    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         showLoading(false)
         refreshControl.endRefreshing()
         
@@ -187,7 +187,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         updateToolbarItems()
     }
     
-    func openCustomApp(urlScheme: String, additional_info:String){
+    open func openCustomApp(urlScheme: String, additional_info:String){
         if let requestUrl: URL = URL(string:"\(urlScheme)"+"\(additional_info)") {
             let application:UIApplication = UIApplication.shared
             if application.canOpenURL(requestUrl) {

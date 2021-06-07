@@ -15,7 +15,7 @@ extension NKWebViewController: WKScriptMessageHandler {
         let readerMode = ReaderMode(web: self)
         readerMode.delegate = self
         self.addContentScript(readerMode, name: ReaderMode.name())
-        UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: false, noImageMode: false)
+        UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
     }
     
     func addContentScript(_ helper: TabContentScript, name: String) {
