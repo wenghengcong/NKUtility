@@ -34,8 +34,12 @@ public extension NKNetworkUtil {
             }
             URLCache.shared.removeAllCachedResponses()
         }
+        
+        if shared.readerModeEnable {
+            MemoryReaderModeCache.sharedInstance.clear()
+            DiskReaderModeCache.sharedInstance.clear()
+        }
     }
-
 }
 
 //MARK: - css 渲染

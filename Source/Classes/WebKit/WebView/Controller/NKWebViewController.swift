@@ -33,7 +33,7 @@ public enum NKWebViewControllerProgressIndicatorStyle {
 }
 
 
-open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
+open class  NKWebViewController: UIViewController {
     
     /** Boolean flag which indicates whether JavaScript alerts are allowed. Default is `true`. */
     open var allowJavaScriptAlerts = true
@@ -46,24 +46,26 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     open var weburl: String?
     open var htmlString: String?
     open var navBarTitle: UILabel! = UILabel()
+    open var readerModeCache: ReaderModeCache?
+    
     open var userDefinedTitle: String? {
         didSet {
             navBarTitle.text = userDefinedTitle
         }
     }
     
-    fileprivate var contentScriptManager = TabContentScriptManager()
-        
-    func addContentScript(_ helper: TabContentScript, name: String) {
-        contentScriptManager.addContentScript(helper, name: name, forWebVc: self)
-    }
-
-    func getContentScript(name: String) -> TabContentScript? {
-        return contentScriptManager.getContentScript(name)
+    internal var contentScriptManager = TabContentScriptManager()
+    
+    /// 文字缩放
+    open var textSzieScalePercent: CGFloat = 100 {
+        didSet {
+            guard textSzieScalePercent != oldValue else {
+                return
+            }
+            self.textSzieScale()
+        }
     }
     
-    /// 文字缩放比例
-    open var textSzieScalePercent: CGFloat = 100
     
     // Use computed property so @available can be used to guard `noImageMode`.
     open var noImageMode: Bool = false {
@@ -71,8 +73,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             guard noImageMode != oldValue else {
                 return
             }
-//            contentBlocker?.noImageMode(enabled: noImageMode)
-            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
+            self.execuNoImageModeChanage()
         }
     }
 
@@ -81,15 +82,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             guard nightMode != oldValue else {
                 return
             }
-            
-            webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.NightMode.setEnabled(\(nightMode))"){ object, error in
-                print("启用暗黑模式")
-            }
-            // For WKWebView background color to take effect, isOpaque must be false,
-            // which is counter-intuitive. Default is true. The color is previously
-            // set to black in the WKWebView init.
-            webView.isOpaque = !nightMode
-//            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
+            self.execuDarkModeChanage()
         }
     }
     
@@ -100,17 +93,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
             guard readerMode != oldValue else {
                 return
             }
-
-            // Store the readability result in the cache and load it. This will later move to the ReadabilityHelper.
-            webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.reader.readerize()") { object, error in
-                print("log")
-//                if let readabilityResult = ReadabilityResult(object: object as AnyObject?) {
-    //                try? self.readerModeCache.put(currentURL, readabilityResult)
-    //                if let nav = webView.load(PrivilegedRequest(url: readerModeURL) as URLRequest) {
-    //                    self.ignoreNavigationInTab(tab, navigation: nav)
-    //                }
-//                }
-            }
+            self.execuReaderModeChange()
         }
     }
     
@@ -150,16 +133,16 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     // MARK: Private Properties
-    fileprivate var progressView: UIProgressView!
-    fileprivate var ipadToolbar = UIToolbar()
-    fileprivate var toolbarContainer: NKWebViewToolbar!
-    fileprivate var toolbarHeightConstraint: NSLayoutConstraint!
-    fileprivate var toolbarHeight: CGFloat = 44
-    fileprivate var lastToolbarHeight: CGFloat = 44
-    fileprivate var navControllerUsesBackSwipe: Bool = false
-    fileprivate let refreshControl = UIRefreshControl()
+    internal var progressView: UIProgressView!
+    internal var ipadToolbar = UIToolbar()
+    internal var toolbarContainer: NKWebViewToolbar!
+    internal var toolbarHeightConstraint: NSLayoutConstraint!
+    internal var toolbarHeight: CGFloat = 44
+    internal var lastToolbarHeight: CGFloat = 44
+    internal var navControllerUsesBackSwipe: Bool = false
+    internal let refreshControl = UIRefreshControl()
     
-    lazy fileprivate var activityIndicator: UIActivityIndicatorView? = {
+    lazy internal var activityIndicator: UIActivityIndicatorView? = {
         var activityIndicator = UIActivityIndicatorView()
         activityIndicator.backgroundColor = .clear
         #if swift(>=4.2)
@@ -289,6 +272,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         self.sharingEnabled = sharingEnabled
         self.request = aRequest
         self.weburl = aRequest.url?.absoluteString
+        self.readerModeCache = DiskReaderModeCache.sharedInstance
         self.contentRules = contentRules
     }
 
@@ -298,6 +282,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         self.sharingEnabled = sharingEnabled
         self.htmlString = htmlString
         self.contentRules = contentRules
+        self.readerModeCache = DiskReaderModeCache.sharedInstance
     }
 
     //MARK: - load method
@@ -339,13 +324,13 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         }
     }
 
-    fileprivate func really_loadHtmlString() {
+    internal func really_loadHtmlString() {
         if let html = htmlString{
             self.webView.loadHTMLString(html, baseURL: nil)
         }
     }
     
-    fileprivate func really_loadRequest(_ request: URLRequest?) {
+    internal func really_loadRequest(_ request: URLRequest?) {
         if let url = request!.url,
            url.absoluteString.contains("file:"),
            #available(iOS 9.0, *) {
@@ -353,11 +338,6 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
         } else {
             self.webView.load(request!)
         }
-    }
-    
-    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        //        NKlogger.debug("detect webview click ")
-        delegate?.userContentController?(userContentController, didReceive: message)
     }
     
     func clearWebView() {
@@ -505,7 +485,7 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
 
 //MARK: - Back gesture
 extension  NKWebViewController {
-    fileprivate func backForwardListChanged() {
+    internal func backForwardListChanged() {
         if self.navControllerUsesBackSwipe && self.allowsBackForwardNavigationGestures {
             self.navigationController?.interactivePopGestureRecognizer?.isEnabled = !webView.canGoBack
         }
@@ -518,7 +498,7 @@ extension  NKWebViewController {
 //MARK: - UI-progress/error
 extension  NKWebViewController {
     
-    fileprivate func updateToolbarHidden() {
+    internal func updateToolbarHidden() {
         if (NKDevice.isIPad()) {
             ipadToolbar.isHidden = toolBarHidden
             webView.snp.remakeConstraints { (make) in
@@ -567,7 +547,7 @@ extension  NKWebViewController {
         }
     }
     
-    fileprivate func setupProgressView() {
+    internal func setupProgressView() {
         if progressView == nil {
             progressView = UIProgressView()
             progressView.translatesAutoresizingMaskIntoConstraints = false
@@ -582,12 +562,12 @@ extension  NKWebViewController {
         }
     }
     
-    fileprivate func setupWebview() {
+    internal func setupWebview() {
         view.insertSubview(webView, at: 0)
         webView.frame = view.bounds
     }
     
-    fileprivate func progressChanged(_ newValue: NSNumber) {
+    internal func progressChanged(_ newValue: NSNumber) {
         progressView.progress = newValue.floatValue
         if progressView.progress == 1 {
             progressView.progress = 0
@@ -601,14 +581,14 @@ extension  NKWebViewController {
         }
     }
     
-    fileprivate func showError(_ errorString: String?) {
+    internal func showError(_ errorString: String?) {
         let alertView = UIAlertController(title: "Error", message: errorString, preferredStyle: .alert)
         alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alertView, animated: true, completion: nil)
     }
     
     
-    fileprivate func showLoading(_ animate: Bool) {
+    internal func showLoading(_ animate: Bool) {
         /*
         guard view != nil else {
             return
@@ -632,14 +612,14 @@ extension  NKWebViewController {
 
 //MARK: - KVO
 extension  NKWebViewController {
-    fileprivate func addObserver() {
+    internal func addObserver() {
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
     }
     
-    fileprivate func removeObserver() {
+    internal func removeObserver() {
         guard view != nil else {
             return
         }
@@ -763,15 +743,9 @@ extension  NKWebViewController {
         addObserver()
         beginLoadWebView()
         addUserScript()
+        setupReaderModeCache()
     }
-    
-    func addUserScript() {
-        UserScriptManager.shared
-        let readerMode = ReaderMode(web: self)
-        readerMode.delegate = self
-        self.addContentScript(readerMode, name: ReaderMode.name())
-        UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: false, noImageMode: false)
-    }
+
     
     override open func viewWillAppear(_ animated: Bool) {
         assert(self.navigationController != nil, "NKWebViewController needs to be contained in a UINavigationController. If you are presenting NKWebViewController modally, use NKModalWebViewController instead.")
@@ -830,212 +804,5 @@ extension  NKWebViewController {
     override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         webView.stopLoading()
-    }
-    
-}
-
-//MARK: - reader mode
-extension NKWebViewController: ReaderModeDelegate {
-    public func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController) {
-        
-    }
-    
-    public func readerMode(_ readerMode: ReaderMode, didParseReadabilityResult readabilityResult: ReadabilityResult, forWebVC web: NKWebViewController) {
-        
-    }
-    
-    public func readerMode(_ readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forWebVc web: NKWebViewController) {
-        
-    }
-    
-}
-
-
-//MARK: - WKUIDelegate
-extension  NKWebViewController: WKUIDelegate {
-    
-    // Add any desired WKUIDelegate methods here: https://developer.apple.com/reference/webkit/wkuidelegate
-    open func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        if navigationAction.targetFrame == nil, let url = navigationAction.request.url{
-            if url.description.lowercased().range(of: "http://") != nil || url.description.lowercased().range(of: "https://") != nil  {
-                webView.load(navigationAction.request)
-            }
-        }
-        return nil
-    }
-    
-    
-    open func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-        if !allowJavaScriptAlerts {
-            return
-        }
-        
-        let alertController: UIAlertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: {(action: UIAlertAction) -> Void in
-            completionHandler()
-        }))
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
-}
-
-//MARK: - WKNavigationDelegate
-extension  NKWebViewController: WKNavigationDelegate {
-    
-    // 1、4 在发送请求之前，决定是否跳转
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard let url = navigationAction.request.url else {
-            return
-        }
-        let hostAddress = navigationAction.request.url?.host
-        
-        // 1.To connnect app store
-        if hostAddress == "itunes.apple.com" {
-            if UIApplication.shared.canOpenURL(navigationAction.request.url!) {
-                UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
-            }
-        }
-        
-        // 2. handle other scheme
-        let url_elements = url.absoluteString.components(separatedBy: ":")
-        
-        switch url_elements[0] {
-        case "tel":
-            openCustomApp(urlScheme: "telprompt://", additional_info: url_elements[1])
-            decisionHandler(.cancel)
-            return
-        case "sms":
-            openCustomApp(urlScheme: "sms://", additional_info: url_elements[1])
-            decisionHandler(.cancel)
-            return
-        case "mailto":
-            openCustomApp(urlScheme: "mailto://", additional_info: url_elements[1])
-            decisionHandler(.cancel)
-            return
-        default:
-            //NKlogger.debug("Default")
-            break
-        }
-        
-        // 3. 处理自定义跳转
-        if customDecideNavigation != nil {
-            let isReturn = customDecideNavigation!(webView, navigationAction)
-            if isReturn {
-                decisionHandler(.cancel)
-                return
-            }
-        }
-        
-        // 4. 支持用 Safari 打开的
-        if openWithSafariDomains.isNotEmpty {
-            var containOpenWithSafariUrl = false
-            if let rootDomain = url.rootDomain {
-                for domain in openWithSafariDomains {
-                    if domain.contains(rootDomain) {
-                        containOpenWithSafariUrl = true
-                        break
-                    }
-                }
-            }
-            // 使用 Safari 打开网页
-            if (containOpenWithSafariUrl) {
-                if UIApplication.shared.canOpenURL(url) {
-                    //                    NKlogger.debug("Redirected to browser. No need to open it locally: \(url)")
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                    decisionHandler(.cancel)
-                    return
-                }
-            }
-        }
-        
-        //        NKlogger.debug("Open it locally: \(url)")
-        decisionHandler(.allow)
-    }
-    
-    
-    // 2 页面开始加载时调用
-    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        showLoading(true)
-        delegate?.webViewController?(self, didStartLoading: webView.url)
-        updateToolbarItems()
-    }
-    
-    
-    // 3、5 在收到响应后，决定是否跳转
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        if let response = navigationResponse.response as? HTTPURLResponse {
-            let headers = response.allHeaderFields
-            //do something with headers
-            //            NKlogger.debug("webvie headers: \(headers)")
-        }
-        
-        DispatchQueue.main.async {
-            webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-                for cookie in cookies {
-                    NKCookieStore.shared.addCookie(cookie)
-                }
-            }
-        }
-        delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
-        decisionHandler(.allow)
-    }
-    
-    // 6 页面加载完成之后调用
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        showLoading(false)
-        refreshControl.endRefreshing()
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
-        
-        if userDefinedTitle == nil {
-            webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
-                if error == nil {
-                    self.navBarTitle.text = response as! String?
-                    self.navBarTitle.sizeToFit()
-                    self.updateToolbarItems()
-                }
-            })
-            
-            webView.evaluateJavaScript("document.getElementById('article-title').textContent") { (response, error) -> Void in
-                if error == nil {
-                    //                    NKlogger.debug(response)
-                    self.navBarTitle.text = response as! String?
-                    self.navBarTitle.sizeToFit()
-                    self.updateToolbarItems()
-                }
-            }
-        }
-    }
-    
-    /// 当内容开始返回时调用
-    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        
-    }
-    
-    // 页面加载失败时调用
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        showLoading(false)
-        refreshControl.endRefreshing()
-        
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
-        updateToolbarItems()
-    }
-    
-    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        showLoading(false)
-        refreshControl.endRefreshing()
-        
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
-        updateToolbarItems()
-    }
-    
-    func openCustomApp(urlScheme: String, additional_info:String){
-        if let requestUrl: URL = URL(string:"\(urlScheme)"+"\(additional_info)") {
-            let application:UIApplication = UIApplication.shared
-            if application.canOpenURL(requestUrl) {
-                application.open(requestUrl, options: [:], completionHandler: nil)
-            }
-        }
     }
 }

@@ -32,6 +32,8 @@ public class NKNetworkUtil: NSObject {
         return currentConnection() != .unavailable
     }
     
+    public var readerModeEnable = false
+    
     /// 是否是蜂窝数据网络
     public var isReachableOnCellular: Bool {
         lastState = currentConnection()
