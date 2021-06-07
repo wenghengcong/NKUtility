@@ -57,7 +57,7 @@ open class  NKWebViewController: UIViewController {
     internal var contentScriptManager = TabContentScriptManager()
     
     /// 文字缩放
-    open var textSzieScalePercent: CGFloat = 100 {
+    open var textSzieScalePercent: Double = 100 {
         didSet {
             guard textSzieScalePercent != oldValue else {
                 return
