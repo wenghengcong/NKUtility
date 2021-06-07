@@ -16,8 +16,7 @@ class NKWebThemeManager {
     var current: Theme = themeFrom(name: UserDefaults.standard.string(forKey: ThemeManagerPrefs.themeName.rawValue)) {
         didSet {
             UserDefaults.standard.set(current.name, forKey: ThemeManagerPrefs.themeName.rawValue)
-            //FFTODO:
-//            NotificationCenter.default.post(name: .DisplayThemeChanged, object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name.init("DisplayThemeChanged"), object: nil)
         }
     }
 
@@ -73,9 +72,7 @@ class NKWebThemeManager {
     }
 
     func updateCurrentThemeBasedOnScreenBrightness() {
-        //FFTODO:
         let prefValue = UserDefaults.standard.float(forKey: "ThemeManagerPrefs.automaticSliderValue.rawValue")
-        
         let screenLessThanPref = Float(UIScreen.main.brightness) < prefValue
 
         if screenLessThanPref, self.currentName == .normal {

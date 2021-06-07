@@ -202,7 +202,6 @@ class DynamicFontHelper: NSObject {
 
     @objc func contentSizeCategoryDidChange(_ notification: Notification) {
         refreshFonts()
-        //FFTODO:
         let notification = Notification(name: Notification.Name.init("DynamicFontChanged") , object: nil)
         NotificationCenter.default.post(notification)
     }

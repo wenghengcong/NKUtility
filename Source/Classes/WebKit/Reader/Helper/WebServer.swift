@@ -54,8 +54,7 @@ public class WebServer {
     @discardableResult func start() throws -> Bool {
         if !server.isRunning {
             try server.start(options: [
-                //FFTODO: 6571
-                GCDWebServerOption_Port: 6571,
+                GCDWebServerOption_Port: WebServerInfo.port,
                 GCDWebServerOption_BindToLocalhost: true,
                 GCDWebServerOption_AutomaticallySuspendInBackground: false, // done by the app in AppDelegate
                 GCDWebServerOption_AuthenticationMethod: GCDWebServerAuthenticationMethod_Basic,
@@ -87,7 +86,8 @@ public class WebServer {
 
     /// Convenience method to register all resources in the main bundle of a specific type. Will be mounted at $base/$module/$resource
     func registerMainBundleResourcesOfType(_ type: String, module: String) {
-        for path: String in Bundle.paths(forResourcesOfType: type, inDirectory: Bundle.main.bundlePath) {
+        let bundle = Bundle(for: NKBundleToken.self)
+        for path: String in Bundle.paths(forResourcesOfType: type, inDirectory: bundle.bundlePath) {
             if let resource = NSURL(string: path)?.lastPathComponent {
                 server.addGETHandler(forPath: "/\(module)/\(resource)", filePath: path as String, isAttachment: false, cacheAge: UInt.max, allowRangeRequests: true)
             } else {

@@ -372,8 +372,7 @@ public struct InternalURL {
     private let sessionRestoreHistoryItemBaseUrl = "\(InternalURL.baseUrl)/\(InternalURL.Path.sessionrestore.rawValue)?url="
 
     public static func isValid(url: URL) -> Bool {
-        //FFTODO: 6571
-        let isWebServerUrl = url.absoluteString.hasPrefix("http://localhost:\(6571)/")
+        let isWebServerUrl = url.absoluteString.hasPrefix("http://localhost:\(WebServerInfo.port)/")
         if isWebServerUrl, url.path.hasPrefix("/test-fixture/") {
             // internal test pages need to be treated as external pages
             return false

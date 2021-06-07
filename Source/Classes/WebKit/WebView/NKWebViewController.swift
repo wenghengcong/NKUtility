@@ -78,32 +78,28 @@ open class  NKWebViewController: UIViewController, WKScriptMessageHandler {
 
     open var nightMode: Bool = false {
         didSet {
-//            guard nightMode != oldValue else {
-//                return
-//            }
-
+            guard nightMode != oldValue else {
+                return
+            }
+            
             webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.NightMode.setEnabled(\(nightMode))"){ object, error in
-                print("log")
-//                if let readabilityResult = ReadabilityResult(object: object as AnyObject?) {
-    //                try? self.readerModeCache.put(currentURL, readabilityResult)
-    //                if let nav = webView.load(PrivilegedRequest(url: readerModeURL) as URLRequest) {
-    //                    self.ignoreNavigationInTab(tab, navigation: nav)
-    //                }
-//                }
+                print("启用暗黑模式")
             }
             // For WKWebView background color to take effect, isOpaque must be false,
             // which is counter-intuitive. Default is true. The color is previously
             // set to black in the WKWebView init.
             webView.isOpaque = !nightMode
-            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
+//            UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
         }
     }
     
+    
+    /// 暂时还不支持
     open var readerMode: Bool = false {
         didSet {
-//            guard readerMode != oldValue else {
-//                return
-//            }
+            guard readerMode != oldValue else {
+                return
+            }
 
             // Store the readability result in the cache and load it. This will later move to the ReadabilityHelper.
             webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.reader.readerize()") { object, error in
@@ -774,6 +770,7 @@ extension  NKWebViewController {
         let readerMode = ReaderMode(web: self)
         readerMode.delegate = self
         self.addContentScript(readerMode, name: ReaderMode.name())
+        UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: false, noImageMode: false)
     }
     
     override open func viewWillAppear(_ animated: Bool) {

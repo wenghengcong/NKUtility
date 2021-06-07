@@ -46,8 +46,7 @@ class ReadabilityOperation: Operation {
 
             let readerMode = ReaderMode(web: self.web)
             readerMode.delegate = self
-            //FFTODO:
-//            self.tab.addContentScript(readerMode, name: ReaderMode.name())
+            self.web.addContentScript(readerMode, name: ReaderMode.name())
 
             // Load the page in the webview. This either fails with a navigation error, or we
             // get a readability callback. Or it takes too long, in which case the semaphore
