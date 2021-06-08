@@ -23,7 +23,6 @@ private struct ETLDEntry: CustomStringConvertible {
 }
 
 private typealias TLDEntryMap = [String: ETLDEntry]
-
 let ETLD_NAMES_LIST:[String] = []
 
 private func loadEntries() -> TLDEntryMap? {

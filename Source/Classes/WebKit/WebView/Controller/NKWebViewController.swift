@@ -83,7 +83,7 @@ open class  NKWebViewController: UIViewController {
             guard nightMode != oldValue else {
                 return
             }
-            self.execuDarkModeChanage()
+            self.execuDarkModeChanage(completion: nil)
         }
     }
     
@@ -94,7 +94,7 @@ open class  NKWebViewController: UIViewController {
             guard readerMode != oldValue else {
                 return
             }
-            self.execuReaderModeChange()
+//            self.execuReaderModeChange()
         }
     }
     

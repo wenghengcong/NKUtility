@@ -10,14 +10,17 @@ import WebKit
 
 extension NKWebViewController {
 
-    func execuNoImageModeChanage() {
+   open func execuNoImageModeChanage() {
         //            contentBlocker?.noImageMode(enabled: noImageMode)
         UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
     }
     
-    func execuDarkModeChanage() {
+    open func execuDarkModeChanage(completion: ( ()->Void )? = nil) {
         webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.NightMode.setEnabled(\(nightMode))"){ object, error in
-            print("启用暗黑模式")
+//            print("启用暗黑模式")
+            if completion != nil {
+                completion!()
+            }
         }
         // For WKWebView background color to take effect, isOpaque must be false,
         // which is counter-intuitive. Default is true. The color is previously
