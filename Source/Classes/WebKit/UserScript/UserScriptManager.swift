@@ -17,6 +17,7 @@ class UserScriptManager {
     private let noImageModeUserScript = WKUserScript.createInDefaultContentWorld(source: "window.__firefox__.NoImageMode.setEnabled(true)", injectionTime: .atDocumentStart, forMainFrameOnly: true)
     private let nightModeUserScript = WKUserScript.createInDefaultContentWorld(source: "window.__firefox__.NightMode.setEnabled(true)", injectionTime: .atDocumentStart, forMainFrameOnly: true)
 
+    // warning: 如果未生效，这里的 js 文件就是未加载成功。
     private init() {
         var compiledUserScripts: [String : WKUserScript] = [:]
 
