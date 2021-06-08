@@ -38,12 +38,14 @@ extension NKWebViewController: ReaderModeDelegate {
     
     /// 文字缩放
     func textSzieScale() {
-        let scaleTextJS = "document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust='\(textSzieScalePercent)%'"
-        webView.evaluateJavaScript(scaleTextJS, completionHandler: {(response, error) in
-            if error == nil {
-                
-            }
-        })
+        if isFirstLoading {
+            let scaleTextJS = "document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust='\(textSzieScalePercent)%'"
+            webView.evaluateJavaScript(scaleTextJS, completionHandler: {(response, error) in
+                if error == nil {
+                    
+                }
+            })
+        }
     }
     
     public func readerMode(_ readerMode: ReaderMode, didDisplayReaderizedContentForWebVC web: NKWebViewController) {

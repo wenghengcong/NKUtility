@@ -48,6 +48,8 @@ open class  NKWebViewController: UIViewController {
     open var navBarTitle: UILabel! = UILabel()
     open var readerModeCache: ReaderModeCache?
     
+    open var isFirstLoading: Bool = false
+    
     open var userDefinedTitle: String? {
         didSet {
             navBarTitle.text = userDefinedTitle
@@ -57,7 +59,7 @@ open class  NKWebViewController: UIViewController {
     internal var contentScriptManager = TabContentScriptManager()
     
     /// 文字缩放
-    open var textSzieScalePercent: Double = 100 {
+    open var textSzieScalePercent: Int = 100 {
         didSet {
             guard textSzieScalePercent != oldValue else {
                 return
@@ -65,7 +67,6 @@ open class  NKWebViewController: UIViewController {
             self.textSzieScale()
         }
     }
-    
     
     // Use computed property so @available can be used to guard `noImageMode`.
     open var noImageMode: Bool = false {
@@ -241,13 +242,7 @@ open class  NKWebViewController: UIViewController {
             let messageUserScript:WKUserScript = WKUserScript(source: messageJS, injectionTime:.atDocumentStart, forMainFrameOnly: true)
             userController.add(self, name: "jsMessenger")
             userController.addUserScript(messageUserScript)
-            
-            // atDocumentEnd: 意思是网页中的元素标签已经加载好了内容，但是网页还没有渲染出来。该时机适合通过注入脚本来获取元素标签内容等操作。（如果注入的js代码跟修改元素标签有关的话，这就是合适的时机）
-            // 字体自适应
-            let scaleTextJS = "document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust='\(textSzieScalePercent)%'"
-            let scaleTextScript:WKUserScript =  WKUserScript(source: scaleTextJS, injectionTime:.atDocumentEnd, forMainFrameOnly: true)
-            userController.addUserScript(scaleTextScript)
-            
+                        
             webCfg.userContentController = userController
             return webCfg
         }
@@ -301,6 +296,7 @@ open class  NKWebViewController: UIViewController {
 
     //MARK: - load method
     func beginLoadWebView() {
+        isFirstLoading = true
         if htmlString != nil && htmlString!.isNotEmpty {
             loadHtmlString()
         } else {
