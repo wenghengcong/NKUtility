@@ -337,7 +337,7 @@ open class  NKWebViewController: UIViewController {
 
         if (NKDevice.isIPad()) {
             let toolbarWidth: CGFloat = 250.0
-            fixedSpace.width = 35.0
+            fixedSpace.width = 15.0
             
             var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace,forwardBarButtonItem  , fixedSpace,backBarButtonItem , fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, backBarButtonItem]
             if let addMore = self.navRightItems {
