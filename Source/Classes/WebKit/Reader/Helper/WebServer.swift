@@ -3,12 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
-import GCDWebServer
+//import GCDWebServer
 import NKUtility
 //import Shared
 
+/*
 public class WebServer {
-
+    
     static let WebServerSharedInstance = WebServer()
 
     public class var sharedInstance: WebServer {
@@ -106,3 +107,4 @@ public class WebServer {
         return WebServer.sharedInstance.URLForResource("page", module: "reader-mode")
     }
 }
+*/

@@ -46,8 +46,8 @@ Pod::Spec.new do |s|
   s.dependency 'Kingfisher'
   s.dependency 'XCGLogger'
   s.dependency 'SwiftyJSON'
-  s.dependency 'GCDWebServer'
-  s.dependency 'GCDWebServer/WebUploader'
-  s.dependency 'GCDWebServer/WebDAV'
+#  s.dependency 'GCDWebServer'
+#  s.dependency 'GCDWebServer/WebUploader'
+#  s.dependency 'GCDWebServer/WebDAV'
 #  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

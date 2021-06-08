@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
-import GCDWebServer
+//import GCDWebServer
 
 public struct ReaderModeHandlers {
     static let ReaderModeStyleHash = "sha256-L2W8+0446ay9/L1oMrgucknQXag570zwgQrHwE68qbQ="
@@ -12,6 +12,7 @@ public struct ReaderModeHandlers {
 
 //    static func register(_ webServer: WebServer, profile: Profile) {
     //FFTODO:
+/*FFTODO
     static func register(_ webServer: WebServer) {
 
         // Register our fonts and css, which we want to expose to web content that we present in the WebView
@@ -21,6 +22,7 @@ public struct ReaderModeHandlers {
         // Register a handler that simply lets us know if a document is in the cache or not. This is called from the
         // reader view interstitial page to find out when it can stop showing the 'Loading...' page and instead load
         // the readerized content.
+  
         webServer.registerHandlerForMethod("GET", module: "reader-mode", resource: "page-exists") { (request: GCDWebServerRequest?) -> GCDWebServerResponse? in
             guard let stringURL = request?.query?["url"],
                   let url = URL(string: stringURL) else {
@@ -89,4 +91,5 @@ public struct ReaderModeHandlers {
             return GCDWebServerDataResponse(html: errorString) // TODO Needs a proper error page
         }
     }
+ */
 }
