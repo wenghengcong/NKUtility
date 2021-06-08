@@ -46,7 +46,6 @@ open class  NKWebViewController: UIViewController {
     open var weburl: String?
     open var htmlString: String?
     open var navBarTitle: UILabel! = UILabel()
-    open var readerModeCache: ReaderModeCache?
     
     open var isFirstLoading: Bool = false
     
@@ -94,7 +93,6 @@ open class  NKWebViewController: UIViewController {
             guard readerMode != oldValue else {
                 return
             }
-            self.execuReaderModeChange()
         }
     }
     
@@ -276,7 +274,6 @@ open class  NKWebViewController: UIViewController {
         self.sharingEnabled = sharingEnabled
         self.request = aRequest
         self.weburl = aRequest.url?.absoluteString
-        self.readerModeCache = DiskReaderModeCache.sharedInstance
         self.contentRules = contentRules
         self.nightMode = darkMode
     }
@@ -290,7 +287,6 @@ open class  NKWebViewController: UIViewController {
         self.sharingEnabled = sharingEnabled
         self.htmlString = htmlString
         self.contentRules = contentRules
-        self.readerModeCache = DiskReaderModeCache.sharedInstance
         self.nightMode = darkMode
     }
 
@@ -708,7 +704,6 @@ extension  NKWebViewController {
         setupProgressView()
         addObserver()
         beginLoadWebView()
-        setupReaderModeCache()
     }
 
     

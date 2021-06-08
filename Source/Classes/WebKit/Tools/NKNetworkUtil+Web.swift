@@ -36,8 +36,7 @@ public extension NKNetworkUtil {
         }
         
         if shared.readerModeEnable {
-            MemoryReaderModeCache.sharedInstance.clear()
-            DiskReaderModeCache.sharedInstance.clear()
+   
         }
     }
 }

@@ -12,9 +12,6 @@ extension NKWebViewController: WKScriptMessageHandler {
     
     func addUserScript() {
         UserScriptManager.shared
-        let readerMode = ReaderMode(web: self)
-        readerMode.delegate = self
-        self.addContentScript(readerMode, name: ReaderMode.name())
         UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
         
         // atDocumentEnd: 意思是网页中的元素标签已经加载好了内容，但是网页还没有渲染出来。该时机适合通过注入脚本来获取元素标签内容等操作。（如果注入的js代码跟修改元素标签有关的话，这就是合适的时机）
