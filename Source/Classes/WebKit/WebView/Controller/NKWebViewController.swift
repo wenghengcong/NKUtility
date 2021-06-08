@@ -101,7 +101,7 @@ open class  NKWebViewController: UIViewController {
     ///  导航栏右上角按钮
     open var navRightItems: [UIBarButtonItem]? = []
     
-    open var sharingEnabled = true 
+    open var sharingEnabled = true
     open var toolBarHidden = false
     
     /// scroll hidden toolbar
