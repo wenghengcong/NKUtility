@@ -7,8 +7,6 @@
 
 import UIKit
 
-public class NKBundleToken {}
-
 public extension Bundle {
     /// 中文Bundle
     class var cnBundle: Bundle {
@@ -53,7 +51,7 @@ public extension Bundle {
             // Bundle should be present here when the package is linked into an App.
             Bundle.main.resourceURL,
             // Bundle should be present here when the package is linked into a framework.
-            Bundle(for: NKBundleToken.self).resourceURL,
+            NKUtilityFramework.bundle.resourceURL,
             // For command-line tools.
             Bundle.main.bundleURL,
         ]
@@ -67,25 +65,6 @@ public extension Bundle {
             }
         }
         // Return whatever bundle this code is in as a last resort.
-        return Bundle(for: NKBundleToken.self)
-    }
-}
-
-//MARK: - Only for NKUtility
-public extension Bundle {
-    // 访问 NKUtility 资源文件需要从该 bundel 读取（即 Resource 下文件）
-    static func nikiFrameworkBundle() -> Bundle {
-        let mainBundld = Bundle.main.bundleIdentifier
-        var bundleNames = [
-            // For Swift Package Manager
-            "NKUtility_NKUtility",
-            "NKUtility-NKUtility",
-            // For Carthage
-            "NKUtility",
-        ]
-        if bundleNames.isNotEmpty, let mainBundleIdStr = mainBundld {
-            bundleNames.append(mainBundleIdStr)
-        }
-        return frameworkBundle(bundleNames: bundleNames)
+        return NKUtilityFramework.bundle
     }
 }

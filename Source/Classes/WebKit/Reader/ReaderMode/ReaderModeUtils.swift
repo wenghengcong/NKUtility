@@ -15,7 +15,7 @@ public struct ReaderModeUtils {
     }
 
     public static func generateReaderContent(_ readabilityResult: ReadabilityResult, initialStyle: ReaderModeStyle) -> String? {
-        let bundle = Bundle(for: NKBundleToken.self)
+        let bundle = NKUtilityFramework.resourceBundle
         guard let stylePath = bundle.path(forResource: "Reader", ofType: "css"),
             let css = try? String(contentsOfFile: stylePath, encoding: .utf8),
             let tmplPath = bundle.path(forResource: "Reader", ofType: "html"),

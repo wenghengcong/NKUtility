@@ -65,7 +65,7 @@ public struct ReaderModeHandlers {
                         // screen, which will periodically call page-exists to see if the readerized content has
                         // become available.
                         ReadabilityService.sharedInstance.process(url, cache: readerModeCache)
-                        let bundle = Bundle(for: NKBundleToken.self)
+                        let bundle = NKUtilityFramework.resourceBundle
                         if let readerViewLoadingPath = bundle.path(forResource: "ReaderViewLoading", ofType: "html") {
                             do {
                                 let readerViewLoading = try NSMutableString(contentsOfFile: readerViewLoadingPath, encoding: String.Encoding.utf8.rawValue)

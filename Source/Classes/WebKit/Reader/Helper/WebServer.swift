@@ -79,7 +79,7 @@ public class WebServer {
 
     /// Convenience method to register a resource in the main bundle. Will be mounted at $base/$module/$resource
     func registerMainBundleResource(_ resource: String, module: String) {
-        let bundle = Bundle(for: NKBundleToken.self)
+        let bundle = NKUtilityFramework.resourceBundle
         if let path = bundle.path(forResource: resource, ofType: nil) {
             server.addGETHandler(forPath: "/\(module)/\(resource)", filePath: path, isAttachment: false, cacheAge: UInt.max, allowRangeRequests: true)
         }
@@ -87,7 +87,7 @@ public class WebServer {
 
     /// Convenience method to register all resources in the main bundle of a specific type. Will be mounted at $base/$module/$resource
     func registerMainBundleResourcesOfType(_ type: String, module: String) {
-        let bundle = Bundle(for: NKBundleToken.self)
+        let bundle = NKUtilityFramework.resourceBundle
         for path: String in Bundle.paths(forResourcesOfType: type, inDirectory: bundle.bundlePath) {
             if let resource = NSURL(string: path)?.lastPathComponent {
                 server.addGETHandler(forPath: "/\(module)/\(resource)", filePath: path as String, isAttachment: false, cacheAge: UInt.max, allowRangeRequests: true)

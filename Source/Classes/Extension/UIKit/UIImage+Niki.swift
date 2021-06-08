@@ -30,14 +30,14 @@ public extension UIImage {
 public extension UIImage {
     
     convenience init?(nkBundleNamed: String) {
-        let bundle =  Bundle.nikiFrameworkBundle()
+        let bundle =  NKUtilityFramework.resourceBundle
         self.init(named: nkBundleNamed, in: bundle, compatibleWith: nil)
     }
     
     class func nkBundleImage(named: String) -> UIImage? {
         let image = UIImage(named: named)
         if image == nil {
-            let bundleImage = UIImage(named: named, in: Bundle.nikiFrameworkBundle(), compatibleWith: nil)
+            let bundleImage = UIImage(named: named, in: NKUtilityFramework.resourceBundle, compatibleWith: nil)
             return bundleImage
         }
         return image

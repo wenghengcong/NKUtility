@@ -29,7 +29,7 @@ class UserScriptManager {
          (WKUserScriptInjectionTime.atDocumentEnd, mainFrameOnly: true)].forEach { arg in
             let (injectionTime, mainFrameOnly) = arg
             let name = (mainFrameOnly ? "MainFrame" : "AllFrames") + "AtDocument" + (injectionTime == .atDocumentStart ? "Start" : "End")
-            let bundle = Bundle(for: NKBundleToken.self)
+            let bundle = NKUtilityFramework.resourceBundle
             if let path = bundle.path(forResource: name, ofType: "js"),
                 let source = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String {
                 let wrappedSource = "(function() { const APP_ID_TOKEN = '\(UserScriptManager.appIdToken)'; \(source) })()"
