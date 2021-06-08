@@ -146,9 +146,8 @@ public class DiskReaderModeCache: ReaderModeCache {
 
     fileprivate func hashForURL(_ url: URL) -> NSString? {
         guard let data = url.absoluteString.data(using: .utf8) else { return nil }
-        //TODO: 
-//        return data.sha1.hexEncodedString as NSString?
-        return ""
+
+        return data.sha1.hexEncodedString as NSString?
     }
 
     public func clear() {

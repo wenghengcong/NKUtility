@@ -5,6 +5,8 @@
 import Foundation
 //import Shared
 import WebKit
+import SwiftyJSON
+import NKUtility
 
 let ReaderModeProfileKeyStyle = "readermode.style"
 
@@ -151,9 +153,7 @@ public  struct ReaderModeStyle {
 
     /// Encode the style to a JSON dictionary that can be passed to ReaderMode.js
     public func encode() -> String {
-        let dic = ["theme": theme.rawValue, "fontType": fontType.rawValue, "fontSize": fontSize.rawValue] as [String : Any]
-        let str = dic.jsonString() ?? ""
-        return str
+        return JSON(["theme": theme.rawValue, "fontType": fontType.rawValue, "fontSize": fontSize.rawValue]).stringify() ?? ""
     }
 
     /// Encode the style to a dictionary that can be stored in the profile
@@ -226,26 +226,15 @@ public struct ReadabilityResult {
             return nil
         }
     }
-    
-    func convertToDictionary(text: String) -> [String: String]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
 
     /// Initialize from a JSON encoded string
     public init?(string: String) {
-        let object = convertToDictionary(text: string)
-        let domain = object?["domain"]
-        let url = object?["url"]
-        let content = object?["content"]
-        let title = object?["title"]
-        let credits = object?["credits"]
+        let object = JSON(parseJSON: string)
+        let domain = object["domain"].string
+        let url = object["url"].string
+        let content = object["content"].string
+        let title = object["title"].string
+        let credits = object["credits"].string
 
         if domain == nil || url == nil || content == nil || title == nil || credits == nil {
             return nil
@@ -266,8 +255,7 @@ public struct ReadabilityResult {
     /// Encode to a JSON encoded string
     public func encode() -> String {
         let dict: [String: Any] = self.encode()
-        guard let string = dict.jsonString() else { return "" }
-        return string
+        return JSON(dict).stringify()!
     }
 }
 
