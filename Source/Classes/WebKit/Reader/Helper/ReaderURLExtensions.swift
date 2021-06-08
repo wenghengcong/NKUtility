@@ -24,6 +24,8 @@ private struct ETLDEntry: CustomStringConvertible {
 
 private typealias TLDEntryMap = [String: ETLDEntry]
 
+let ETLD_NAMES_LIST:[String] = []
+
 private func loadEntries() -> TLDEntryMap? {
     var entries = TLDEntryMap()
     for line in ETLD_NAMES_LIST where !line.isEmpty && !line.hasPrefix("//") {
