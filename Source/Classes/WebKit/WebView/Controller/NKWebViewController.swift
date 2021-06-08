@@ -339,7 +339,7 @@ open class  NKWebViewController: UIViewController {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
             
-            var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
+            var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace,forwardBarButtonItem  , fixedSpace,backBarButtonItem , fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, backBarButtonItem]
             if let addMore = self.navRightItems {
                 if addMore.count > 0 {
                     items.insert(contentsOf: addMore, at: 0)
@@ -515,6 +515,7 @@ extension  NKWebViewController {
     internal func setupProgressView() {
         if progressView == nil {
             progressView = UIProgressView()
+            progressView.tintColor = NKThemeProvider.shared.currentTheme.tintColor
             progressView.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(progressView)
             

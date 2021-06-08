@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
   TODO: Add long description of the pod here.
   DESC
   
+  # 参考写法 https://github.com/microsoft/fluentui-apple/blob/main/MicrosoftFluentUI.podspec
   s.module_name = 'NKUtility'
   
   s.homepage         = 'https://github.com/wenghengcong/NKUtility'
