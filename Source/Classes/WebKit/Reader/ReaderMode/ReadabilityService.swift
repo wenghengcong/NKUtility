@@ -42,7 +42,7 @@ class ReadabilityOperation: Operation {
             let configuration = WKWebViewConfiguration()
             self.web = NKWebViewController()
 //            Tab(bvc: BrowserViewController.foregroundBVC(), configuration: configuration)
-            self.web.webView.navigationDelegate = self
+            self.web.webView?.navigationDelegate = self
 
             let readerMode = ReaderMode(web: self.web)
             readerMode.delegate = self
@@ -51,7 +51,7 @@ class ReadabilityOperation: Operation {
             // Load the page in the webview. This either fails with a navigation error, or we
             // get a readability callback. Or it takes too long, in which case the semaphore
             // times out. The script on the page will retry every 500ms for 10 seconds.
-            self.web.webView.load(URLRequest(url: self.url))
+            self.web.webView?.load(URLRequest(url: self.url))
         })
         let timeout = DispatchTime.now() + .seconds(10)
         if semaphore.wait(timeout: timeout) == .timedOut {

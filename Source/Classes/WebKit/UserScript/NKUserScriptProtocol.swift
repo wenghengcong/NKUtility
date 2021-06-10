@@ -8,7 +8,7 @@
 import Foundation
 import WebKit
 
-protocol TabContentScript {
+public protocol TabContentScript {
     static func name() -> String
     func scriptMessageHandlerName() -> String?
     func userContentController(_ userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage)

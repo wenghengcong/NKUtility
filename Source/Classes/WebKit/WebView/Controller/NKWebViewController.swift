@@ -33,7 +33,7 @@ public enum NKWebViewControllerProgressIndicatorStyle {
 }
 
 
-open class  NKWebViewController: UIViewController {
+open class   NKWebViewController: UIViewController {
     
     /** Boolean flag which indicates whether JavaScript alerts are allowed. Default is `true`. */
     open var allowJavaScriptAlerts = true
@@ -50,13 +50,15 @@ open class  NKWebViewController: UIViewController {
     
     open var isFirstLoading: Bool = false
     
+    open var webView: WKWebView?
+
     open var userDefinedTitle: String? {
         didSet {
             navBarTitle.text = userDefinedTitle
         }
     }
     
-    internal var contentScriptManager = TabContentScriptManager()
+    internal var scriptMessageManager = NKUserScriptMessageManager()
     
     /// 文字缩放
     open var textSzieScalePercent: Int = 100 {
@@ -126,10 +128,10 @@ open class  NKWebViewController: UIViewController {
     /** A Boolean value indicating whether horizontal swipe gestures will trigger back-forward list navigations. The default value is false. */
     open var allowsBackForwardNavigationGestures: Bool {
         get {
-            return webView.allowsBackForwardNavigationGestures
+            return webView?.allowsBackForwardNavigationGestures ?? false
         }
         set(value) {
-            webView.allowsBackForwardNavigationGestures = value
+            webView?.allowsBackForwardNavigationGestures = value
         }
     }
     
@@ -149,7 +151,7 @@ open class  NKWebViewController: UIViewController {
         #if swift(>=4.2)
         activityIndicator.style = UIActivityIndicatorView.Style.large
         #else
-        activityIndicator.activityIndicatorViewStyle = NKThemeProvider.shared.isNight() ? .gray : .whiteLarge
+        activityIndicator.activityIndicatorViewStyle = nightMode ? .gray : .whiteLarge
         #endif
         //设置指示器控件的颜色
         activityIndicator.color = UIColor.systemGray
@@ -211,43 +213,6 @@ open class  NKWebViewController: UIViewController {
         tempActionBarButtonItem.tintColor = self.buttonColor
         return tempActionBarButtonItem
     }()
-    
-    
-    lazy open var webView: WKWebView = {
-        var tempWebView = WKWebView(frame: .zero, configuration: webConfig)
-        tempWebView.uiDelegate = self
-        tempWebView.navigationDelegate = self
-        tempWebView.backgroundColor = NKThemeProvider.shared.isNight() ? UIColor(hex: "#000000") : .white
-        tempWebView.scrollView.delegate = self
-        tempWebView.translatesAutoresizingMaskIntoConstraints = false
-        // after done with setup the `webView`:
-        refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
-        tempWebView.scrollView.addSubview(refreshControl)
-        return tempWebView;
-    }()
-    
-    var webConfig:WKWebViewConfiguration {
-        get {
-            let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
-            let userController:WKUserContentController = WKUserContentController()
-            let messageJS = """
-                window.onload = function() {
-                    document.addEventListener("click", function(evt) {
-                        var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
-                        window.webkit.messageHandlers.jsMessenger.postMessage(tagClicked.outerHTML.toString());
-                    });
-                }
-                """
-            // atDocumentStart: 意思是网页中的元素标签创建刚出来的时候，但是还没有内容。该时机适合通过注入脚本来添加元素标签等操作。（注意：此时<head>和<body>等标签都还没有出现）
-            let messageUserScript:WKUserScript = WKUserScript(source: messageJS, injectionTime:.atDocumentStart, forMainFrameOnly: true)
-            userController.add(self, name: "jsMessenger")
-            userController.addUserScript(messageUserScript)
-                        
-            webCfg.userContentController = userController
-            return webCfg
-        }
-    }
-    
 
     // MARK: - Init by url
     public convenience init(urlString: String,
@@ -312,9 +277,9 @@ open class  NKWebViewController: UIViewController {
         guard webView != nil else {
             return
         }
-        webView.stopLoading()
-        webView.uiDelegate = nil;
-        webView.navigationDelegate = nil;
+        webView?.stopLoading()
+        webView?.uiDelegate = nil;
+        webView?.navigationDelegate = nil;
     }
     
     deinit {
@@ -330,8 +295,7 @@ open class  NKWebViewController: UIViewController {
             return
         }
         backForwardListChanged()
-        let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
-
+        let refreshStopBarButtonItem: UIBarButtonItem = (webView?.isLoading ?? false) ? stopBarButtonItem : refreshBarButtonItem
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
         let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
 
@@ -387,15 +351,15 @@ open class  NKWebViewController: UIViewController {
 
     // MARK: - Target Actions
     open func goBack() {
-        webView.goBack()
+        webView?.goBack()
     }
     
     open func goForward() {
-        webView.goBack()
+        webView?.goBack()
     }
     
     open func reload() {
-        webView.reload()
+        webView?.reload()
     }
     
     @objc func goBackTapped(_ sender: UIBarButtonItem) {
@@ -411,13 +375,13 @@ open class  NKWebViewController: UIViewController {
     }
     
     @objc func stopTapped(_ sender: UIBarButtonItem) {
-        webView.stopLoading()
+        webView?.stopLoading()
         updateToolbarItems()
     }
     
     @objc func actionButtonTapped(_ sender: AnyObject) {
         
-        if let url: URL = ((webView.url != nil) ? webView.url : request?.url) {
+        if let url: URL = ((webView?.url != nil) ? webView?.url : request?.url) {
             let activities: NSArray = [NKWebViewControllerActivitySafari(),  NKWebViewControllerActivityChrome()]
             
             if url.absoluteString.hasPrefix("file:///") {
@@ -452,10 +416,10 @@ open class  NKWebViewController: UIViewController {
 extension  NKWebViewController {
     internal func backForwardListChanged() {
         if self.navControllerUsesBackSwipe && self.allowsBackForwardNavigationGestures {
-            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = !webView.canGoBack
+            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = !(webView?.canGoBack ?? false)
         }
-        backBarButtonItem.isEnabled =  webView.canGoBack
-        forwardBarButtonItem.isEnabled = webView.canGoForward
+        backBarButtonItem.isEnabled =  webView?.canGoBack ?? false
+        forwardBarButtonItem.isEnabled = webView?.canGoForward ?? false
     }
 }
 
@@ -463,13 +427,20 @@ extension  NKWebViewController {
 //MARK: - UI-progress/error
 extension  NKWebViewController {
     
+    internal func currentBackgroudColor() -> UIColor {
+        let color = nightMode ? UIColor(hex: "#000000") : UIColor.white
+        return color
+    }
+    
     internal func updateToolbarHidden() {
         if (NKDevice.isIPad()) {
             ipadToolbar.isHidden = toolBarHidden
-            webView.snp.remakeConstraints { (make) in
-                make.left.right.equalTo(0)
-                make.top.equalTo(0)
-                make.bottom.equalTo(0)
+            if webView != nil {
+                webView!.snp.remakeConstraints { (make) in
+                    make.left.right.equalTo(0)
+                    make.top.equalTo(0)
+                    make.bottom.equalTo(0)
+                }
             }
         } else if NKDevice.isIPhone() {
             // 保留先前，用于比较
@@ -495,19 +466,30 @@ extension  NKWebViewController {
             }
 
             if needUpdate {
-                webView.snp.remakeConstraints { (make) in
-                    make.left.right.equalTo(0)
-                    make.top.equalTo(0)
-                    make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
+                if NKDevice.isIPad() {
+                    
+                } else {
+                    navigationController?.toolbar.barTintColor = currentBackgroudColor()
                 }
-
-                // Fix problem of WebView content height not fitting WebViews frame height
-                self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
-                UIView.animate(withDuration: 0.75) {
-                    self.webView.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
-//                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
+                
+                if webView != nil {
+                    webView!.snp.remakeConstraints { (make) in
+                        make.left.right.equalTo(0)
+                        make.top.equalTo(0)
+                        make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
                     }
                 }
+            
+                // Fix problem of WebView content height not fitting WebViews frame height
+                self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
+                if webView != nil {
+                    UIView.animate(withDuration: 0.75) {
+                        self.webView!.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView!.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
+    //                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
+                        }
+                    }
+                }
+               
             }
         }
     }
@@ -529,8 +511,19 @@ extension  NKWebViewController {
     }
     
     internal func setupWebview() {
-        view.insertSubview(webView, at: 0)
-        webView.frame = view.bounds
+        webView = NKWebViewBridge.shared.webView()
+        webView?.uiDelegate = self
+        webView?.navigationDelegate = self
+        webView?.backgroundColor = currentBackgroudColor()
+        webView?.scrollView.delegate = self
+        webView?.translatesAutoresizingMaskIntoConstraints = false
+        // after done with setup the `webView`:
+        refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
+        webView?.scrollView.addSubview(refreshControl)
+        if let web = webView {
+            view.insertSubview(webView!, at: 0)
+            webView!.frame = view.bounds
+        }
     }
     
     internal func progressChanged(_ newValue: NSNumber) {
@@ -579,20 +572,20 @@ extension  NKWebViewController {
 //MARK: - KVO
 extension  NKWebViewController {
     internal func addObserver() {
-        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
+        webView?.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+        webView?.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
+        webView?.addObserver(self, forKeyPath: "title", options: .new, context: nil)
+        webView?.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
     }
     
     internal func removeObserver() {
         guard view != nil else {
             return
         }
-        webView.removeObserver(self, forKeyPath: "estimatedProgress")
-        webView.removeObserver(self, forKeyPath: "URL")
-        webView.removeObserver(self, forKeyPath: "title")
-        webView.removeObserver(self, forKeyPath: "loading")
+        webView?.removeObserver(self, forKeyPath: "estimatedProgress")
+        webView?.removeObserver(self, forKeyPath: "URL")
+        webView?.removeObserver(self, forKeyPath: "title")
+        webView?.removeObserver(self, forKeyPath: "loading")
     }
     
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -605,15 +598,15 @@ extension  NKWebViewController {
                 }
             }
         case "URL":
-            delegate?.webViewController?(self, didChangeURL: webView.url)
+            delegate?.webViewController?(self, didChangeURL: webView?.url)
         case "title":
-            delegate?.webViewController?(self, didChangeTitle: webView.title as NSString?)
+            delegate?.webViewController?(self, didChangeTitle: webView?.title as NSString?)
         case "loading":
             if let val = change?[NSKeyValueChangeKey.newKey] as? Bool {
                 if !val {
                     showLoading(false)
                     updateToolbarItems()
-                    delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
+                    delegate?.webViewController?(self, didFinishLoading: webView?.url, success: false)
                 }
             }
         default:
@@ -703,13 +696,13 @@ extension  NKWebViewController {
         // 设置edgesForExtendedLayout可以使得 webview 从导航栏bottom 开始布局
         //        edgesForExtendedLayout = []
         view.autoresizingMask = .flexibleHeight
-        view.backgroundColor = NKThemeProvider.shared.isNight() ? UIColor(hex: "#000000") : .white
-        addUserScript()
+        view.backgroundColor = currentBackgroudColor()
         setupWebview()
+        addUserScript()
         setupProgressView()
         addObserver()
         beginLoadWebView()
-        setupReaderModeCache()
+//        setupReaderModeCache()
     }
 
     
@@ -753,6 +746,7 @@ extension  NKWebViewController {
     
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
+        removeAllScript()
         navigationController?.setToolbarHidden(false, animated: true)
         if NKDevice.isIPad() || NKDevice.isIPhone() {
             // 都要隐藏 toolbar
@@ -769,6 +763,6 @@ extension  NKWebViewController {
     
     override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        webView.stopLoading()
+        webView?.stopLoading()
     }
 }

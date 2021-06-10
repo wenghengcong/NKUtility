@@ -29,7 +29,7 @@ public extension NKWebViewController {
         if self.contentRules != nil, self.contentRules!.isNotEmpty {
             WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
                 guard let contentRuleList = list else { return }
-                self.webView.configuration.userContentController.add(contentRuleList)
+                self.webView?.configuration.userContentController.add(contentRuleList)
                 self.really_loadHtmlString()
             }
         } else {
@@ -39,7 +39,7 @@ public extension NKWebViewController {
     
     internal func really_loadHtmlString() {
         if let html = htmlString{
-            self.webView.loadHTMLString(html, baseURL: nil)
+            self.webView?.loadHTMLString(html, baseURL: nil)
         }
     }
     
@@ -47,7 +47,7 @@ public extension NKWebViewController {
         if self.contentRules != nil, self.contentRules!.isNotEmpty {
             WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
                 guard let contentRuleList = list else { return }
-                self.webView.configuration.userContentController.add(contentRuleList)
+                self.webView?.configuration.userContentController.add(contentRuleList)
                 self.really_loadRequest(self.request)
             }
         } else {
@@ -60,9 +60,9 @@ public extension NKWebViewController {
         if let url = request!.url,
            url.absoluteString.contains("file:"),
            #available(iOS 9.0, *) {
-            self.webView.loadFileURL(url, allowingReadAccessTo: url)
+            self.webView?.loadFileURL(url, allowingReadAccessTo: url)
         } else {
-            self.webView.load(request!)
+            self.webView?.load(request!)
         }
     }
     
@@ -74,7 +74,7 @@ public extension NKWebViewController {
     public func addContentRules(identifier: String, contentRules: String)  {
         WKContentRuleListStore.default().compileContentRuleList(forIdentifier: identifier, encodedContentRuleList: contentRules) { (list, error) in
             guard let contentRuleList = list else { return }
-            self.webView.configuration.userContentController.add(contentRuleList)
+            self.webView?.configuration.userContentController.add(contentRuleList)
         }
     }
 }

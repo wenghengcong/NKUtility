@@ -27,7 +27,7 @@ extension NKWebViewController: ReaderModeDelegate {
     
     func execuReaderModeChange() {
         // Store the readability result in the cache and load it. This will later move to the ReadabilityHelper.
-        webView.evaluateJavascriptInDefaultContentWorld("window.__firefox__.reader.readerize()") { object, error in
+        webView?.evaluateJavascriptInDefaultContentWorld("window.__firefox__.reader.readerize()") { object, error in
             if let readabilityResult = ReadabilityResult(object: object as AnyObject?) {
                 //                    try? self.readerModeCache.put(currentURL, readabilityResult)
                 //                    if let nav = webView.load(PrivilegedRequest(url: readerModeURL) as URLRequest) {
@@ -40,7 +40,7 @@ extension NKWebViewController: ReaderModeDelegate {
     func textSzieScale() {
         if isFirstLoading {
             let scaleTextJS = "document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust='\(textSzieScalePercent)%'"
-            webView.evaluateJavaScript(scaleTextJS, completionHandler: {(response, error) in
+            webView?.evaluateJavaScript(scaleTextJS, completionHandler: {(response, error) in
                 if error == nil {
                     
                 }

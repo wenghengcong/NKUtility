@@ -283,7 +283,7 @@ public class ReaderMode: TabContentScript {
         self.web = web
     }
 
-    func scriptMessageHandlerName() -> String? {
+    public func scriptMessageHandlerName() -> String? {
         return "readerModeMessageHandler"
     }
 
@@ -333,7 +333,7 @@ public class ReaderMode: TabContentScript {
     public var style: ReaderModeStyle = DefaultReaderModeStyle {
         didSet {
             if state == ReaderModeState.active {
-                web?.webView.evaluateJavascriptInDefaultContentWorld("\(ReaderModeNamespace).setStyle(\(style.encode()))") { object, error in
+                web?.webView?.evaluateJavascriptInDefaultContentWorld("\(ReaderModeNamespace).setStyle(\(style.encode()))") { object, error in
                     return
                 }
             }
