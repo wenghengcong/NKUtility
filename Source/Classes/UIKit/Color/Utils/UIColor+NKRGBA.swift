@@ -8,6 +8,25 @@
 import UIKit
 
 public extension UIColor {
+    
+    public convenience init(rgb: Int) {
+        self.init(
+            red: CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgb & 0x00FF00) >> 8)  / 255.0,
+            blue: CGFloat((rgb & 0x0000FF) >> 0)  / 255.0,
+            alpha: 1)
+    }
+
+    public convenience init(rgba: UInt32) {
+        self.init(
+            red: CGFloat((rgba & 0xFF000000) >> 24) / 255.0,
+            green: CGFloat((rgba & 0x00FF0000) >> 16)  / 255.0,
+            blue: CGFloat((rgba & 0x0000FF00) >> 8)  / 255.0,
+            alpha: CGFloat((rgba & 0x000000FF) >> 0) / 255.0
+        )
+    }
+
+    
     convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat) {
 //        assert(red >= 0 && red <= 255, "Invalid red component")
 //        assert(green >= 0 && green <= 255, "Invalid green component")

@@ -64,7 +64,6 @@ public extension NSManagedObject {
         do {
             try context.execute(deleteRequest)
         } catch let error as NSError {
-            // TODO: handle the error
         }
     }
     

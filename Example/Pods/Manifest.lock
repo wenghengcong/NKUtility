@@ -4,6 +4,13 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
+  - GCDWebServer/WebDAV (3.5.4):
+    - GCDWebServer/Core
+  - GCDWebServer/WebUploader (3.5.4):
+    - GCDWebServer/Core
   - iOSSnapshotTestCase (6.2.0):
     - iOSSnapshotTestCase/SwiftSupport (= 6.2.0)
   - iOSSnapshotTestCase/Core (6.2.0)
@@ -158,10 +165,14 @@ PODS:
     - iOSSnapshotTestCase (~> 6.0)
     - Nimble
   - NKUtility (0.1.1):
+    - GCDWebServer
+    - GCDWebServer/WebDAV
+    - GCDWebServer/WebUploader
     - Kingfisher
     - MicrosoftFluentUI
     - SnapKit
     - SwiftTheme
+    - SwiftyJSON
     - XCGLogger
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
@@ -169,6 +180,7 @@ PODS:
   - Quick (4.0.0)
   - SnapKit (5.0.1)
   - SwiftTheme (0.6.0)
+  - SwiftyJSON (5.0.1)
   - XCGLogger (7.0.1):
     - XCGLogger/Core (= 7.0.1)
   - XCGLogger/Core (7.0.1):
@@ -184,6 +196,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - FBSnapshotTestCase
+    - GCDWebServer
     - iOSSnapshotTestCase
     - Kingfisher
     - MicrosoftFluentUI
@@ -193,6 +206,7 @@ SPEC REPOS:
     - Quick
     - SnapKit
     - SwiftTheme
+    - SwiftyJSON
     - XCGLogger
 
 EXTERNAL SOURCES:
@@ -201,16 +215,18 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   Kingfisher: 6c3df386db71d82c0817a429d2c9421a77396529
   MicrosoftFluentUI: 6b3bfd52b232e9abc5cb228b9761a5f42869f4d3
   Nimble: 4f4a345c80b503b3ea13606a4f98405974ee4d0b
   Nimble-Snapshots: 6605431525245f967ca9d558bb12a49da3d040e3
-  NKUtility: e7bf6670b3e5dd236a7076f9f0292c739432afbe
+  NKUtility: 8b7d328fb84c613c1191c00d5a203141c7d0386c
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftTheme: 50c3b3d38bdee43212af1f4ec0fb95dec550b2be
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   XCGLogger: 1943831ef907df55108b0b18657953f868de973b
 
 PODFILE CHECKSUM: 5d2815ced0e64712c4cd2c9dab30dd44b8bec3d9

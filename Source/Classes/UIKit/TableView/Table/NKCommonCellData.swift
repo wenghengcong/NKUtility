@@ -51,6 +51,9 @@ public class NKCommonCellData {
     public var indexPath: IndexPath?
     public var desc: String?
     
+    /// 对应 url
+    public var url: String?
+    
     // switch 是否开关
     // label 无意义
     // check 是否选中

@@ -61,7 +61,7 @@ open class NKLabelCell: NKStaticCell {
                 descLabel.text = ""
             }
 
-            let detailImage = NKThemeProvider.shared.isNight() ? UIImage(nkBundleNamed: "nk_cell_arrow_right _white") : UIImage(nkBundleNamed: "nk_cell_arrow_right")
+            let detailImage = NKThemeProvider.shared.isNight() ? UIImage(nkBundleNamed: "nk_cell_arrow_right_white") : UIImage(nkBundleNamed: "nk_cell_arrow_right")
             detailImageView.image = detailImage
             detailImageView.isHidden = !realData.hasDetail
             titleLabel.text = realData.title

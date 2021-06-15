@@ -107,7 +107,7 @@ open class Localize: NSObject {
      - Returns: Array of available languages.
      */
     open class func availableLanguages(_ excludeBase: Bool = false) -> [String] {
-        var availableLanguages = Bundle.nikiFrameworkBundle().localizations
+        var availableLanguages =  NKUtilityFramework.resourceBundle.localizations
         // If excludeBase = true, don't include "Base" in available languages
         if let indexOfBase = availableLanguages.firstIndex(of: "Base") , excludeBase == true {
             availableLanguages.remove(at: indexOfBase)

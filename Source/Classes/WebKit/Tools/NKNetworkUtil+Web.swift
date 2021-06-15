@@ -34,8 +34,12 @@ public extension NKNetworkUtil {
             }
             URLCache.shared.removeAllCachedResponses()
         }
+        
+        if shared.readerModeEnable {
+            MemoryReaderModeCache.sharedInstance.clear()
+            DiskReaderModeCache.sharedInstance.clear()
+        }
     }
-
 }
 
 //MARK: - css 渲染
@@ -84,7 +88,7 @@ public extension NKNetworkUtil {
         }
         
         public static func templateHtmlPathURL(_ path: String) -> URL? {
-            let bundle: Bundle = Bundle.nikiFrameworkBundle()
+            let bundle: Bundle =  NKUtilityFramework.resourceBundle
             var htmlPathURL = bundle.url(forResource: path, withExtension: "html")
             if htmlPathURL == nil {
                 htmlPathURL = Bundle.main.url(forResource: path, withExtension: "html")

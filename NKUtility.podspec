@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
   TODO: Add long description of the pod here.
   DESC
   
+  # 参考写法 https://github.com/microsoft/fluentui-apple/blob/main/MicrosoftFluentUI.podspec
   s.module_name = 'NKUtility'
   
   s.homepage         = 'https://github.com/wenghengcong/NKUtility'
@@ -33,7 +34,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '13.0'
   
   s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md,css,html,js}'
-  s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}' }
+  s.resource_bundle = { 'NKUtility' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js,ttf,txt}' }
 #  s.resources =  'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js}'
 
   s.swift_version = '5.0'
@@ -45,5 +46,9 @@ Pod::Spec.new do |s|
   s.dependency 'SnapKit'
   s.dependency 'Kingfisher'
   s.dependency 'XCGLogger'
+  s.dependency 'SwiftyJSON'
+  s.dependency 'GCDWebServer'
+  s.dependency 'GCDWebServer/WebUploader'
+  s.dependency 'GCDWebServer/WebDAV'
 #  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

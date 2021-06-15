@@ -22,7 +22,7 @@ public extension String {
      - returns: The localized string.
      */
     func localizedInside(using tableName: String?) -> String {
-        let bundle: Bundle = Bundle.nikiFrameworkBundle()
+        let bundle: Bundle = NKUtilityFramework.resourceBundle
         if let path = bundle.path(forResource: Localize.currentLanguage(), ofType: "lproj"),
             let bundle = Bundle(path: path) {
             return bundle.localizedString(forKey: self, value: nil, table: tableName)

@@ -88,3 +88,30 @@ element.class         p.intro                       Selects only <p> elements wi
 element                 p                           Selects all <p> elements
 element,element,..    div, p                        Selects all <div> elements and all <p> elements
 ````
+
+
+# JS
+[Inject JavaScript into WKWebView](https://www.appsdeveloperblog.com/inject-javascript-into-wkwebview/) 
+
+
+# 暗黑模式与阅读模式
+https://github.com/tsucres/SwiftyMercuryReady       会崩溃
+https://github.com/kharrison/CodeExamples/tree/main/DynamicWebKit
+
+
+https://github.com/PerfectFreeze/PFWebViewController        支持阅读模式
+
+
+# 离线缓存
+https://stackoverflow.com/questions/36246495/swift-ios-cache-wkwebview-content-for-offline-view
+
+
+# GCDWebServer
+https://github.com/swisspol/GCDWebServer
+
+https://www.hangge.com/blog/cache/detail_1555.html#
+
+GCDWebServer 使用详解
+https://xiaovv.me/2018/11/30/GCDWebServer-BasicUse/
+
+
