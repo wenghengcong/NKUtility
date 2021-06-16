@@ -62,6 +62,14 @@ https://github.com/mattt/Ono
 https://github.com/bernikovich/WebViewWarmUper
 
 
+# cookie
+https://github.com/Kofktu/WKCookieWebView
+
+# WebAssembly
+https://github.com/swiftwasm/JavaScriptKit
+
+
+
 # 内容过滤
 官方文档
 https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
@@ -85,10 +93,6 @@ element,element,..    div, p                        Selects all <div> elements a
 ````
 
 
-# JS
-[Inject JavaScript into WKWebView](https://www.appsdeveloperblog.com/inject-javascript-into-wkwebview/) 
-
-
 # 暗黑模式与阅读模式
 https://github.com/tsucres/SwiftyMercuryReady       会崩溃
 https://github.com/kharrison/CodeExamples/tree/main/DynamicWebKit
@@ -108,5 +112,24 @@ https://www.hangge.com/blog/cache/detail_1555.html#
 
 GCDWebServer 使用详解
 https://xiaovv.me/2018/11/30/GCDWebServer-BasicUse/
+
+
+
+# JS 
+## 工具类库
+WKWebViewJavascriptBridge   https://github.com/Lision/WKWebViewJavascriptBridge
+JavaScriptKit       https://github.com/alexisakers/JavaScriptKit
+
+## JS
+[Inject JavaScript into WKWebView](https://www.appsdeveloperblog.com/inject-javascript-into-wkwebview/) 
+
+
+# webview
+https://github.com/XWebView/XWebView
+
+
+# headerless wkwebview
+https://github.com/mkoehnke/WKZombie    navigate within websites and collect data without the need of User Interface or API, also known as Headless browser. It can be used to run automated tests / snapshots and manipulate websites using Javascript.
+已经不维护更新了
 
 
