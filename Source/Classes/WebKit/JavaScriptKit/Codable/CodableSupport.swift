@@ -209,7 +209,7 @@ extension String {
 
     /// Escapes the JavaScript special characters.
     internal var escapingSpecialCharacters: String {
-        let controlCharactersRange = UnicodeScalar(0x08) ... UnicodeScalar(0x0d)
+        let controlCharactersRange = UnicodeScalar(0x08)! ... UnicodeScalar(0x0d)!
         let escapablePuntuation = "\u{0022}\u{0027}\u{005C}"
 
         var escapableCharacters = CharacterSet(charactersIn: controlCharactersRange)
