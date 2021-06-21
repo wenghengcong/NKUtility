@@ -60,9 +60,14 @@ public class JSShowDownHandler {
                 // Fetch and evaluate the Snowdown script.
 //                let snowdownScript = try String(contentsOf: URL(string: "https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js")!)
 //                self.jsContext.evaluateScript(snowdownScript)
-
+                
                 if let showdownJSPath = bundle.path(forResource: "showdown.min", ofType: "js") {
                     let showdownJSSourceContents = try String(contentsOfFile: showdownJSPath)
+                    self.jsContext.evaluateScript(showdownJSSourceContents)
+                }
+                
+                if let showdownJSPath111 = bundle.path(forResource: "Readability", ofType: "js") {
+                    let showdownJSSourceContents = try String(contentsOfFile: showdownJSPath111)
                     self.jsContext.evaluateScript(showdownJSSourceContents)
                 }
             }
@@ -108,9 +113,22 @@ public class JSShowDownHandler {
     
     // MARK: - Html To Markdown
     public func convertHTMLToMarkdown(_ htmlString: String) {
-        if let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
-            _ = functionConvertHTMLToMarkdown.call(withArguments: [htmlString])
+        
+        let myURLString = "https://www.raywenderlich.com/1227-javascriptcore-tutorial-for-ios-getting-started"
+        guard let myURL = URL(string: myURLString) else {
+            print("Error: \(myURLString) doesn't seem to be a valid URL")
+            return
         }
+        do {
+            let myHTMLString = try String(contentsOf: myURL, encoding: .utf8)
+            print("HTML : \(myHTMLString)")
+            if let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
+                _ = functionConvertHTMLToMarkdown.call(withArguments: [myHTMLString])
+            }
+        } catch let error {
+            print("Error: \(error)")
+        }
+        
     }
     
     

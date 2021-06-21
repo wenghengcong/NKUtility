@@ -15,8 +15,9 @@ function convertMarkdownToHTML(source) {
 
 // html to markdown
 function convertHTMLToMarkdown(source) {
-    var converter = new showdown.Converter();
-    var markdownResult = converter.makeMarkdown(source);
+    var markdownResult = new Readability(source).parse();
+//    var converter = new showdown.Converter();
+//    var markdownResult = converter.makeMarkdown(source);
     consoleLog(markdownResult);    
     handleConvertedHtml(markdownResult);
 }
