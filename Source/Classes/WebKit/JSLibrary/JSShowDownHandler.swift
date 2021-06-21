@@ -8,10 +8,21 @@
 import Foundation
 import JavaScriptCore
 import WebKit
+import SwiftSoup
 
-public class JSShowDownHandler {
+extension JSShowDownHandler: WKNavigationDelegate {
+    
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+
+    }
+}
+
+public class JSShowDownHandler: NSObject {
     
     public static let shared = JSShowDownHandler()
+    
+    let webView = WKWebView(frame: CGRect(), configuration: WKWebViewConfiguration())
+
 
     public static var markdownToHTMLNotificationName = NSNotification.Name("markdownToHTMLNotification")
     public static var HTMLToMarkdownNotificationName = NSNotification.Name("HTMLTomarkdownNotification")
@@ -20,12 +31,26 @@ public class JSShowDownHandler {
     
     var wkWebViewBridge: WKWebViewJavascriptBridge!
     
-    init() {
+    override init() {
+        super.init()
         initializeBridge()
         initializeJS()
         addObserverNoti()
+        
+        
+        // setup webView
+        webView.frame = CGRect.zero
+        webView.navigationDelegate = self
+        
+        let bundle = NKUtilityFramework.resourceBundle
+        if let ReadabilityJSPath = bundle.path(forResource: "Readability", ofType: "js"), let source = try? NSString(contentsOfFile: ReadabilityJSPath, encoding: String.Encoding.utf8.rawValue) as String {
+            let ReadabilityJSScript = WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+            webView.configuration.userContentController.addUserScript(ReadabilityJSScript)
+        }
+        webView.load(URLRequest(url: URL(string: "https://www.raywenderlich.com/1227-javascriptcore-tutorial-for-ios-getting-started")!))
     }
     
+
     func initializeBridge() {
         let webView = WKWebView()
         wkWebViewBridge = WKWebViewJavascriptBridge(webView: webView)
@@ -61,14 +86,24 @@ public class JSShowDownHandler {
 //                let snowdownScript = try String(contentsOf: URL(string: "https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js")!)
 //                self.jsContext.evaluateScript(snowdownScript)
                 
-                if let showdownJSPath = bundle.path(forResource: "showdown.min", ofType: "js") {
-                    let showdownJSSourceContents = try String(contentsOfFile: showdownJSPath)
-                    self.jsContext.evaluateScript(showdownJSSourceContents)
+                if let sourcePath = bundle.path(forResource: "showdown.min", ofType: "js") {
+                    let sourceContent = try String(contentsOfFile: sourcePath)
+                    self.jsContext.evaluateScript(sourceContent)
                 }
                 
-                if let showdownJSPath111 = bundle.path(forResource: "Readability", ofType: "js") {
-                    let showdownJSSourceContents = try String(contentsOfFile: showdownJSPath111)
-                    self.jsContext.evaluateScript(showdownJSSourceContents)
+                if let sourcePath = bundle.path(forResource: "Readability", ofType: "js") {
+                    let sourceContent = try String(contentsOfFile: sourcePath)
+                    self.jsContext.evaluateScript(sourceContent)
+                }
+                
+                if let sourcePath = bundle.path(forResource: "JSDOMParser", ofType: "js") {
+                    let sourceContent = try String(contentsOfFile: sourcePath)
+                    self.jsContext.evaluateScript(sourceContent)
+                }
+                
+                if let sourcePath = bundle.path(forResource: "jquery3.6.0", ofType: "js") {
+                    let sourceContent = try String(contentsOfFile: sourcePath)
+                    self.jsContext.evaluateScript(sourceContent)
                 }
             }
             catch {
@@ -120,10 +155,13 @@ public class JSShowDownHandler {
             return
         }
         do {
-            let myHTMLString = try String(contentsOf: myURL, encoding: .utf8)
+            var myHTMLString = try String(contentsOf: myURL, encoding: .utf8)
+            let doc = try? SwiftSoup.parse(myHTMLString)
             print("HTML : \(myHTMLString)")
-            if let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
-                _ = functionConvertHTMLToMarkdown.call(withArguments: [myHTMLString])
+            if let html = try doc?.html(), let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
+                var cleanHtml = myHTMLString.trim().lowercased().replacing("<!doctype html>", with: "")
+                print("HTML : \(cleanHtml)")
+                _ = functionConvertHTMLToMarkdown.call(withArguments: [cleanHtml])
             }
         } catch let error {
             print("Error: \(error)")
