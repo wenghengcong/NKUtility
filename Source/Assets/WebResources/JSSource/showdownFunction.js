@@ -1,10 +1,15 @@
+function setupWKWebViewJavascriptBridge(callback) {
+    if (window.WKWebViewJavascriptBridge) { return callback(WKWebViewJavascriptBridge); }
+    if (window.WKWVJBCallbacks) { return window.WKWVJBCallbacks.push(callback); }
+    window.WKWVJBCallbacks = [callback];
+    window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
+}
+
 // markdown to html
 function convertMarkdownToHTML(source) {
     var converter = new showdown.Converter();
     var htmlResult = converter.makeHtml(source);
-    
     consoleLog(htmlResult);
-    
     handleConvertedMarkdown(htmlResult);
 }
 
@@ -12,8 +17,6 @@ function convertMarkdownToHTML(source) {
 function convertHTMLToMarkdown(source) {
     var converter = new showdown.Converter();
     var markdownResult = converter.makeMarkdown(source);
-    
-    consoleLog(markdownResult);
-    
-    handleConvertedMarkdown(htmlResult);
+    consoleLog(markdownResult);    
+    handleConvertedHtml(markdownResult);
 }

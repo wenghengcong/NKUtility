@@ -107,7 +107,7 @@ open class   NKWebViewController: UIViewController {
     open var toolBarHidden = false
     
     /// scroll hidden toolbar
-    open var scrollToolBarHidden = true
+    open var scrollToolBarHidden = false
 
     open var lastOffsetY :CGFloat = 0
 
@@ -654,7 +654,6 @@ extension  NKWebViewController: UIScrollViewDelegate {
     // 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         lastOffsetY = scrollView.contentOffset.y
-
     }
 
     // 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
