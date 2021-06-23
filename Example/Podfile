@@ -2,15 +2,42 @@ use_frameworks!
 
 platform :ios, '13.0'
 
+def main_pods
+  
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+        config.build_settings['SDKROOT'] = 'iphoneos10.3'
+        config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+      end
+    end
+    
+    installer.pods_project.build_configurations.each do |config|
+      # Can be removed when moving to cocoapods 1.10 https://stackoverflow.com/a/64381018/4124634
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+    end
+    
+    # https://stackoverflow.com/questions/54704207/the-ios-simulator-deployment-targets-is-set-to-7-0-but-the-range-of-supported-d
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+        #        config.build_settings['FRAMEWORK_SEARCH_PATHS'] = '${PODS_ROOT}/**'
+      end
+    end
+  end
+end
+
+
 target 'NKUtility_Example' do
   pod 'NKUtility', :path => '../'
-
+  
   target 'NKUtility_Tests' do
     inherit! :search_paths
-
+    
     pod 'Quick'
     pod 'Nimble'
     pod 'FBSnapshotTestCase'
-    pod 'Nimble-Snapshots' 
+    pod 'Nimble-Snapshots'
   end
 end
