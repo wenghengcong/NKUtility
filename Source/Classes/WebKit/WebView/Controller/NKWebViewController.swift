@@ -465,23 +465,24 @@ extension  NKWebViewController {
                 needUpdate = true
             }
 
-            if needUpdate {
-                if NKDevice.isIPad() {
-                    
-                } else {
-                    navigationController?.toolbar.barTintColor = currentBackgroudColor()
-                }
+            if NKDevice.isIPad() {
                 
-                if webView != nil {
-                    webView!.snp.remakeConstraints { (make) in
-                        make.left.right.equalTo(0)
-                        make.top.equalTo(0)
-                        make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
-                    }
-                }
+            } else {
+                navigationController?.toolbar.barTintColor = currentBackgroudColor()
+            }
             
-                // Fix problem of WebView content height not fitting WebViews frame height
-                self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
+            if webView != nil {
+                webView!.snp.remakeConstraints { (make) in
+                    make.left.right.equalTo(0)
+                    make.top.equalTo(0)
+                    make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
+                }
+            }
+        
+            // Fix problem of WebView content height not fitting WebViews frame height
+            self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
+            
+            if needUpdate {
                 if webView != nil {
                     UIView.animate(withDuration: 0.75) {
                         self.webView!.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView!.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
@@ -489,7 +490,6 @@ extension  NKWebViewController {
                         }
                     }
                 }
-               
             }
         }
     }
