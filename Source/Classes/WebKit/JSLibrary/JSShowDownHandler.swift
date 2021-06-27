@@ -26,6 +26,9 @@ extension JSShowDownHandler: WKNavigationDelegate {
     }
 }
 
+/*
+ JSContext 内无法使用 document 或者 window 等对象
+ */
 public class JSShowDownHandler: NSObject {
     
     public static let shared = JSShowDownHandler()

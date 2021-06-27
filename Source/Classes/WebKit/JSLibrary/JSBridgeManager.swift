@@ -38,6 +38,9 @@ extension JSBridgeManager: WKNavigationDelegate {
 }
 
 
+/*
+ WKNavigationDelegate 内可以使用 document \ window 等对象
+ */
 public class JSBridgeManager: NSObject {
     
     public static let shared = JSBridgeManager()
