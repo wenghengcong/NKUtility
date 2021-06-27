@@ -13,7 +13,16 @@ import SwiftSoup
 extension JSShowDownHandler: WKNavigationDelegate {
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-
+        webView.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { (html: Any?, error: Error?) in
+            print(html)
+            do {
+                let doc = try? SwiftSoup.parse(html as! String)
+                guard let body = try? doc?.body()?.text() else { return }
+                self.convertHTMLToMarkdown(htmlString: body)
+            } catch let error {
+                print("Error: \(error)")
+            }
+        })
     }
 }
 
@@ -22,7 +31,6 @@ public class JSShowDownHandler: NSObject {
     public static let shared = JSShowDownHandler()
     
     let webView = WKWebView(frame: CGRect(), configuration: WKWebViewConfiguration())
-
 
     public static var markdownToHTMLNotificationName = NSNotification.Name("markdownToHTMLNotification")
     public static var HTMLToMarkdownNotificationName = NSNotification.Name("HTMLTomarkdownNotification")
@@ -156,31 +164,27 @@ public class JSShowDownHandler: NSObject {
     
     
     // MARK: - Html To Markdown
-    public func convertHTMLToMarkdown(_ htmlString: String) {
-        
-        let myURLString = "https://www.raywenderlich.com/1227-javascriptcore-tutorial-for-ios-getting-started"
-        guard let myURL = URL(string: myURLString) else {
-            print("Error: \(myURLString) doesn't seem to be a valid URL")
+    public func convertHTMLToMarkdown(url: String) {
+        guard let myURL = URL(string: url) else {
+            print("Error: \(url) doesn't seem to be a valid URL")
             return
         }
-        do {
-            var myHTMLString = try String(contentsOf: myURL, encoding: .utf8)
-            let doc = try? SwiftSoup.parse(myHTMLString)
-            if let html = try doc?.html(), let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
-                var cleanHtml = myHTMLString.trim().lowercased().replacing("<!doctype html>", with: "")
-                print("HTML : \(cleanHtml)")
-                _ = functionConvertHTMLToMarkdown.call(withArguments: [cleanHtml])
-            }
-        } catch let error {
-            print("Error: \(error)")
+        self.webView.loadURL(myURL)
+    }
+    
+    public func convertHTMLToMarkdown(htmlString: String) {
+        var html = htmlString
+        if let functionConvertHTMLToMarkdown = self.jsContext.objectForKeyedSubscript("convertHTMLToMarkdown") {
+            var cleanHtml = html.trim().lowercased().replacing("<!doctype html>", with: "")
+            print("HTML : \(cleanHtml)")
+            _ = functionConvertHTMLToMarkdown.call(withArguments: [cleanHtml])
         }
-        
     }
     
     
     @objc func handleHTMLToMarkdownNotification(notification: Notification) {
         if let markdown = notification.object as? String {
-            
+            print("html to markdown: \(markdown)")
         }
     }
     
