@@ -664,6 +664,23 @@ public extension String {
         return String(self[lowerIndex..<upperIndex])
     }
     
+    /* https://stackoverflow.com/a/46133083/4124634
+     let s = "hello"
+     s[0..<3] // "hel"
+     s[3...]  // "lo"
+     */
+    subscript(_ range: CountableRange<Int>) -> String {
+          let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+          let end = index(start, offsetBy: min(self.count - range.lowerBound,
+                                               range.upperBound - range.lowerBound))
+          return String(self[start..<end])
+      }
+
+      subscript(_ range: CountablePartialRangeFrom<Int>) -> String {
+          let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+           return String(self[start...])
+      }
+    
     #if os(iOS) || os(macOS)
     /// SwifterSwift: Copy string to global pasteboard.
     ///
