@@ -62,7 +62,7 @@ public extension UIView {
 
 public extension UIView {
     /// SwifterSwift: Border color of view; also inspectable from Storyboard.
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable open var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }
             return UIColor(cgColor: color)
@@ -79,7 +79,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Border width of view; also inspectable from Storyboard.
-    @IBInspectable var borderWidth: CGFloat {
+    @IBInspectable open var borderWidth: CGFloat {
         get {
             return layer.borderWidth
         }
@@ -89,7 +89,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Corner radius of view; also inspectable from Storyboard.
-    @IBInspectable var cornerRadius: CGFloat {
+    @IBInspectable open var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
@@ -101,7 +101,7 @@ public extension UIView {
     
     
     /// SwifterSwift: Check if view is in RTL format.
-    var isRightToLeft: Bool {
+    open var isRightToLeft: Bool {
         if #available(iOS 10.0, macCatalyst 13.0, tvOS 10.0, *) {
             return effectiveUserInterfaceLayoutDirection == .rightToLeft
         } else {
@@ -110,7 +110,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Take screenshot of view (if applicable).
-    var screenshot: UIImage? {
+    open var screenshot: UIImage? {
         UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
         defer {
             UIGraphicsEndImageContext()
@@ -121,7 +121,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow color of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowColor: UIColor? {
+    @IBInspectable open var layerShadowColor: UIColor? {
         get {
             guard let color = layer.shadowColor else { return nil }
             return UIColor(cgColor: color)
@@ -132,7 +132,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow offset of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowOffset: CGSize {
+    @IBInspectable open var layerShadowOffset: CGSize {
         get {
             return layer.shadowOffset
         }
@@ -142,7 +142,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow opacity of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowOpacity: Float {
+    @IBInspectable open var layerShadowOpacity: Float {
         get {
             return layer.shadowOpacity
         }
@@ -152,7 +152,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow radius of view; also inspectable from Storyboard.
-    @IBInspectable var layerShadowRadius: CGFloat {
+    @IBInspectable open var layerShadowRadius: CGFloat {
         get {
             return layer.shadowRadius
         }
@@ -162,7 +162,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Masks to bounds of view; also inspectable from Storyboard.
-    @IBInspectable var masksToBounds: Bool {
+    @IBInspectable open var masksToBounds: Bool {
         get {
             return layer.masksToBounds
         }
@@ -172,7 +172,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Get view's parent view controller
-    var parentViewController: UIViewController? {
+    open var parentViewController: UIViewController? {
         weak var parentResponder: UIResponder? = self
         while parentResponder != nil {
             parentResponder = parentResponder!.next
@@ -592,32 +592,32 @@ public extension UIView {
     }
     
     /// SwifterSwift: First width constraint for this view
-    var widthConstraint: NSLayoutConstraint? {
+    open var widthConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .width, for: self)
     }
     
     /// SwifterSwift: First height constraint for this view
-    var heightConstraint: NSLayoutConstraint? {
+    open var heightConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .height, for: self)
     }
     
     /// SwifterSwift: First leading constraint for this view
-    var leadingConstraint: NSLayoutConstraint? {
+    open var leadingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .leading, for: self)
     }
     
     /// SwifterSwift: First trailing constraint for this view
-    var trailingConstraint: NSLayoutConstraint? {
+    open var trailingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .trailing, for: self)
     }
     
     /// SwifterSwift: First top constraint for this view
-    var topConstraint: NSLayoutConstraint? {
+    open var topConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .top, for: self)
     }
     
     /// SwifterSwift: First bottom constraint for this view
-    var bottomConstraint: NSLayoutConstraint? {
+    open var bottomConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .bottom, for: self)
     }
 }
@@ -626,7 +626,7 @@ public extension UIView {
 public extension UIView {
     
     // MARK: - 位置
-    var left: CGFloat {
+    open var left: CGFloat {
         get {
             return frame.origin.x
         }
@@ -637,7 +637,7 @@ public extension UIView {
         }
     }
     
-    var x: CGFloat {
+    open var x: CGFloat {
         get {
             return frame.origin.x
         }
@@ -648,7 +648,7 @@ public extension UIView {
         }
     }
     
-    var top: CGFloat {
+    open var top: CGFloat {
         get {
             return frame.origin.y
         }
@@ -660,7 +660,7 @@ public extension UIView {
         }
     }
     
-    var y: CGFloat {
+    open var y: CGFloat {
         get {
             return frame.origin.y
         }
@@ -671,7 +671,7 @@ public extension UIView {
         }
     }
     
-    var width: CGFloat {
+    open var width: CGFloat {
         get {
             return self.frame.size.width
         }
@@ -683,7 +683,7 @@ public extension UIView {
         }
     }
     
-    var height: CGFloat {
+    open var height: CGFloat {
         get {
             return self.frame.size.height
         }
@@ -695,19 +695,19 @@ public extension UIView {
         }
     }
     
-    var right: CGFloat {
+    open var right: CGFloat {
         get {
             return self.left + self.width
         }
     }
     
-    var bottom: CGFloat {
+    open var bottom: CGFloat {
         get {
             return self.top + self.height
         }
     }
     
-    var centerX: CGFloat {
+    open var centerX: CGFloat {
         get {
             return self.center.x
         }
@@ -719,7 +719,7 @@ public extension UIView {
         }
     }
     
-    var centerY: CGFloat {
+    open var centerY: CGFloat {
         get {
             return self.center.y
         }
@@ -731,7 +731,7 @@ public extension UIView {
         }
     }
     
-    var origin: CGPoint {
+    open var origin: CGPoint {
         get {
             return self.frame.origin
         }
@@ -743,7 +743,7 @@ public extension UIView {
         }
     }
     
-    var size: CGSize {
+    open var size: CGSize {
         get {
             return self.frame.size
         }
@@ -757,28 +757,28 @@ public extension UIView {
 
 public extension UIView {
     
-    var safeTopAnchor: NSLayoutYAxisAnchor {
+    open var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.topAnchor
         }
         return self.topAnchor
     }
     
-    var safeLeftAnchor: NSLayoutXAxisAnchor {
+    open var safeLeftAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *){
             return self.safeAreaLayoutGuide.leftAnchor
         }
         return self.leftAnchor
     }
     
-    var safeRightAnchor: NSLayoutXAxisAnchor {
+    open var safeRightAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *){
             return self.safeAreaLayoutGuide.rightAnchor
         }
         return self.rightAnchor
     }
     
-    var safeBottomAnchor: NSLayoutYAxisAnchor {
+    open var safeBottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.bottomAnchor
         }
