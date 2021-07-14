@@ -223,7 +223,12 @@ open class   NKWebViewController: UIViewController {
         if !urlString.hasPrefix("https://") && !urlString.hasPrefix("http://") {
             urlString = "https://"+urlString
         }
-        self.init(pageURL: URL(string: urlString)!, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
+        if let pageURL = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)) {
+            self.init(pageURL: pageURL, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
+        } else {
+            let emptyURL =  URL(string: "https://www.baidu.com")
+            self.init(pageURL: emptyURL!, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
+        }
     }
     
     public convenience init(pageURL: URL,

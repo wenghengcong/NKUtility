@@ -67,7 +67,9 @@ public extension NKCookieStore {
                 cookieString.append(newEntry)
             }
             // 移除最后一个分号
-            cookieString.removeLast()
+            if cookieString.isNotEmpty {
+                cookieString.removeLast()
+            }
         }
         return cookieString
     }
