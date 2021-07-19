@@ -10,7 +10,7 @@ import UIKit
 
 @objc
 public protocol NKTreeViewDataSource : NSObjectProtocol{
-    func treeView(_ treeView:NKTreeView, atIndexPath indexPath:IndexPath, withTreeViewNode treeViewNode:NKTreeViewNode) -> UITableViewCell
+    func treeView(_ treeView:NKUITreeView, atIndexPath indexPath:IndexPath, withTreeViewNode treeViewNode:NKTreeViewNode) -> UITableViewCell
     func treeViewSelectedNodeChildren(for treeViewNodeItem:AnyObject) -> [AnyObject]
     func treeViewDataArray() -> [AnyObject]
 }
@@ -18,9 +18,9 @@ public protocol NKTreeViewDataSource : NSObjectProtocol{
 @objc
 public protocol NKTreeViewDelegate : NSObjectProtocol{
     
-    func treeView(_ treeView: NKTreeView, heightForRowAt indexPath: IndexPath, withTreeViewNode treeViewNode:NKTreeViewNode) -> CGFloat
-    func treeView(_ treeView: NKTreeView, didSelectRowAt treeViewNode:NKTreeViewNode, atIndexPath indexPath:IndexPath)
-    func treeView(_ treeView: NKTreeView, didDeselectRowAt treeViewNode:NKTreeViewNode, atIndexPath indexPath: IndexPath)
+    func treeView(_ treeView: NKUITreeView, heightForRowAt indexPath: IndexPath, withTreeViewNode treeViewNode:NKTreeViewNode) -> CGFloat
+    func treeView(_ treeView: NKUITreeView, didSelectRowAt treeViewNode:NKTreeViewNode, atIndexPath indexPath:IndexPath)
+    func treeView(_ treeView: NKUITreeView, didDeselectRowAt treeViewNode:NKTreeViewNode, atIndexPath indexPath: IndexPath)
     func willExpandTreeViewNode(treeViewNode:NKTreeViewNode, atIndexPath: IndexPath)
     func didExpandTreeViewNode(treeViewNode:NKTreeViewNode, atIndexPath: IndexPath)
     func willCollapseTreeViewNode(treeViewNode:NKTreeViewNode, atIndexPath: IndexPath)
@@ -28,7 +28,7 @@ public protocol NKTreeViewDelegate : NSObjectProtocol{
     
 }
 
-public class NKTreeView: UITableView {
+public class NKUITreeView: UITableView {
     
     @IBOutlet open weak var treeViewDataSource:NKTreeViewDataSource?
     @IBOutlet open weak var treeViewDelegate: NKTreeViewDelegate?
@@ -171,11 +171,11 @@ public class NKTreeView: UITableView {
     }
 }
 
-extension NKTreeView : UITableViewDelegate {
+extension NKUITreeView : UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let treeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
-        return (self.treeViewDelegate?.treeView(tableView as! NKTreeView,heightForRowAt: indexPath,withTreeViewNode :treeViewNode))!
+        return (self.treeViewDelegate?.treeView(tableView as! NKUITreeView,heightForRowAt: indexPath,withTreeViewNode :treeViewNode))!
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -183,7 +183,7 @@ extension NKTreeView : UITableViewDelegate {
         guard let treeViewDelegate = self.treeViewDelegate else { return }
         
         if let justSelectedTreeViewNode = selectedTreeViewNode {
-            treeViewDelegate.treeView(tableView as! NKTreeView, didSelectRowAt: justSelectedTreeViewNode, atIndexPath: indexPath)
+            treeViewDelegate.treeView(tableView as! NKUITreeView, didSelectRowAt: justSelectedTreeViewNode, atIndexPath: indexPath)
             var willExpandIndexPath = indexPath
             if justSelectedTreeViewNode.expand {
                 treeViewController.collapseRows(for: justSelectedTreeViewNode, atIndexPath: indexPath)
@@ -215,18 +215,18 @@ extension NKTreeView : UITableViewDelegate {
     }
 }
 
-extension NKTreeView : UITableViewDataSource {
+extension NKUITreeView : UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return treeViewController.treeViewNodes.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let treeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
-        return (self.treeViewDataSource?.treeView(tableView as! NKTreeView, atIndexPath: indexPath, withTreeViewNode: treeViewNode))!
+        return (self.treeViewDataSource?.treeView(tableView as! NKUITreeView, atIndexPath: indexPath, withTreeViewNode: treeViewNode))!
     }
 }
 
-extension NKTreeView : NKTreeViewControllerDelegate {
+extension NKUITreeView : NKTreeViewControllerDelegate {
     public func getChildren(forTreeViewNodeItem item: AnyObject, with indexPath: IndexPath) -> [AnyObject] {
         return (self.treeViewDataSource?.treeViewSelectedNodeChildren(for: item))!
     }
