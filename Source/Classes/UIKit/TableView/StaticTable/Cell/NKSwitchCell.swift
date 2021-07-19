@@ -13,11 +13,11 @@ open class NKSwitchCell: NKStaticCell {
     
     @IBOutlet weak var backView: UIView!
     
-    @IBOutlet weak var iconImageView: UIImageView!
+     @IBOutlet public weak var iconImageView: UIImageView!
     
-    @IBOutlet weak var titleLabel: UILabel!
+     @IBOutlet public weak var titleLabel: UILabel!
     
-    @IBOutlet weak var switchControl: UISwitch!
+     @IBOutlet public weak var switchControl: UISwitch!
         
     public override var data: NKCommonCellData? {
         didSet {
