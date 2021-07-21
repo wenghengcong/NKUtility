@@ -41,10 +41,11 @@ public class NKTreeViewController:NSObject  {
         return treeViewNodes.firstIndex(of: treeViewNode)
     }
     
-    func insertTreeViewNode(parent parentTreeViewNode:NKTreeViewNode, with item:AnyObject, to index : Int)
+    func insertTreeViewNode(parent parentTreeViewNode:NKTreeViewNode, with item:AnyObject, to index : Int, expand: Bool)
     {
         let treeViewNode = NKTreeViewNode(item: item)
         treeViewNode.parentNode = parentTreeViewNode
+        treeViewNode.expand = expand
         treeViewNodes.insert(treeViewNode, at: index)
     }
     
@@ -86,7 +87,7 @@ public class NKTreeViewController:NSObject  {
         
         for item in children!{
             addIndexPath(withRow: row)
-            insertTreeViewNode(parent: selectedTreeViewNode, with: item, to: row)
+            insertTreeViewNode(parent: selectedTreeViewNode, with: item, to: row, expand: true)
             setLevelTreeViewNode(atIndex: row, to: selectedTreeViewNode.level)
             row += 1
         }
@@ -126,9 +127,7 @@ public class NKTreeViewController:NSObject  {
         if indexPathsArray.count > 0 {
             removeTreeViewNodesAtRange(from: (indexPathsArray.first?.row)!, to: (indexPathsArray.last?.row)!)
         }
-        
     }
-    
     
     @discardableResult func collapseAllRowsExceptOne() -> NKTreeViewNode?{
         indexPathsArray = [IndexPath]()
@@ -155,7 +154,7 @@ public class NKTreeViewController:NSObject  {
             treeViewControllerDelegate.willExpandTreeViewNode(treeViewNode: selectedTreeViewNode, atIndexPath: indexPath)
             for item in treeViewNodeChildren{
                 addIndexPath(withRow: row)
-                insertTreeViewNode(parent: selectedTreeViewNode, with: item, to: row)
+                insertTreeViewNode(parent: selectedTreeViewNode, with: item, to: row, expand: openWithChildrens)
                 setLevelTreeViewNode(atIndex: row, to: selectedTreeViewNode.level)
                 if openWithChildrens {
                     let treeViewNode = getTreeViewNode(atIndex: row)
@@ -188,9 +187,9 @@ public class NKTreeViewController:NSObject  {
         indexPathsArray = [IndexPath]()
         var indexPath = IndexPath(row: 0, section: 0)
         for treeViewNode in treeViewNodes {
-//            if !treeViewNode.expand {
-//                
-//            }
+            //            if !treeViewNode.expand {
+            //                
+            //            }
             indexPath = getIndexPathOfTreeViewNode(treeViewNode: treeViewNode)
             indexPath.row = expandRows(atIndexPath: indexPath, with: treeViewNode, openWithChildrens: true)
         }

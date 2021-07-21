@@ -71,7 +71,7 @@ public class NKUITreeView: UITableView {
         
         super.reloadData()
     }
-
+    
     public func reloadDataWithoutChangingRowStates() {
         
         guard let treeViewDataSource = self.treeViewDataSource else {
@@ -192,9 +192,9 @@ extension NKUITreeView : UITableViewDelegate {
             else
             {
                 if collapseNoneSelectedRows,
-                    selectedTreeViewNode?.level == 0,
-                    let collapsedTreeViewNode = treeViewController.collapseAllRowsExceptOne(),
-                    treeViewController.indexPathsArray.count > 0 {
+                   selectedTreeViewNode?.level == 0,
+                   let collapsedTreeViewNode = treeViewController.collapseAllRowsExceptOne(),
+                   treeViewController.indexPathsArray.count > 0 {
                     
                     collapseRows(for: collapsedTreeViewNode, atIndexPath: indexPath){
                         for (index, treeViewNode) in self.mainDataArray.enumerated() {
