@@ -48,6 +48,7 @@ Pod::Spec.new do |s|
   s.dependency 'XCGLogger'
   s.dependency 'SwiftyJSON'
   s.dependency 'GCDWebServer'
+  s.dependency 'SVGKit'
   s.dependency 'GCDWebServer/WebUploader'
   s.dependency 'GCDWebServer/WebDAV'
   # HTML Parser https://github.com/scinfu/SwiftSoup

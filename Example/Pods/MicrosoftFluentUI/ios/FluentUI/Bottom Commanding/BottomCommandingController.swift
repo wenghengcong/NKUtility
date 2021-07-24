@@ -5,6 +5,13 @@
 
 import UIKit
 
+@objc(MSFBottomCommandingControllerDelegate)
+public protocol BottomCommandingControllerDelegate: AnyObject {
+
+    /// Called when `collapsedHeightInSafeArea` changes.
+    @objc optional func bottomCommandingControllerCollapsedHeightInSafeAreaDidChange(_ bottomCommandingController: BottomCommandingController)
+}
+
 /// Persistent commanding surface displayed at the bottom of the available area.
 ///
 /// The presentation style automatically varies depending on the current horizontal `UIUserInterfaceSizeClass`:
@@ -19,19 +26,38 @@ import UIKit
 @objc(MSFBottomCommandingController)
 open class BottomCommandingController: UIViewController {
 
+    /// View controller that will be displayed below the bottom commanding UI.
+    @objc public var contentViewController: UIViewController? {
+        didSet {
+            guard isViewLoaded, oldValue != contentViewController else {
+                return
+            }
+
+            if let oldViewController = oldValue {
+                oldViewController.willMove(toParent: nil)
+                oldViewController.view.removeFromSuperview()
+                oldViewController.removeFromParent()
+            }
+
+            if let newContentViewController = contentViewController {
+                addChildContentViewController(newContentViewController)
+            }
+        }
+    }
+
     /// Items to be displayed in an area that's always visible. This is either the top of the the sheet,
     /// or the main bottom bar area, depending on current horizontal UIUserInterfaceSizeClass.
     ///
     /// At most 5 hero items are supported.
     @objc open var heroItems: [CommandingItem] = [] {
         willSet {
-            clearAllItemViews(in: .heroSet)
+            heroItems.forEach { removeBinding(for: $0) }
         }
         didSet {
             precondition(heroItems.count <= 5, "At most 5 hero commands are supported.")
 
-            if isHeroCommandStackLoaded {
-                heroItems.forEach { heroCommandStack.addArrangedSubview(createAndBindHeroCommandView(with: $0)) }
+            if isViewLoaded {
+                reloadHeroCommandStack()
             }
         }
     }
@@ -39,7 +65,9 @@ open class BottomCommandingController: UIViewController {
     /// Sections with items to be displayed in the list area.
     @objc open var expandedListSections: [CommandingSection] = [] {
         willSet {
-            clearAllItemViews(in: .list)
+            expandedListSections.forEach { section in
+                section.items.forEach { item in removeBinding(for: item) }
+            }
         }
         didSet {
             expandedListSections.forEach { section in
@@ -49,7 +77,11 @@ open class BottomCommandingController: UIViewController {
                 // Item views and bindings will be lazily created during UITableView cellForRowAt
                 tableView.reloadData()
             }
-            updateExpandability()
+            if isViewLoaded {
+                reloadHeroCommandStack()
+                updateSheetExpandedContentHeight()
+                updateExpandabilityConstraints()
+            }
         }
     }
 
@@ -89,41 +121,92 @@ open class BottomCommandingController: UIViewController {
         }
     }
 
+    /// Indicates whether a more button is visible in the sheet style when `expandedListSections` is non-empty.
+    /// Tapping the button will expand or collapse the sheet.
+    @objc open var prefersSheetMoreButtonVisible: Bool = true {
+        didSet {
+            reloadHeroCommandStack()
+        }
+    }
+
+    /// A layout guide that covers the on-screen portion of the current commanding view.
+    @objc public let commandingLayoutGuide = UILayoutGuide()
+
+    /// Height of the portion of the collapsed commanding UI that's in the safe area.
+    /// When using the bottom bar style, this will include the entire height of the bottom bar.
+    ///
+    /// Valid after the root view is loaded.
+    ///
+    /// Use this to adjust `contentInsets` on your scroll views. This height won't change when the commanding UI is hidden or expanded.
+    @objc public var collapsedHeightInSafeArea: CGFloat {
+        var height: CGFloat
+        if isInSheetMode, let bottomSheetController = bottomSheetController {
+            height = bottomSheetController.collapsedHeightInSafeArea
+        } else {
+            height = bottomBarHeight + Constants.BottomBar.bottomOffset
+        }
+        return height
+    }
+
+    /// The object that acts as the delegate of this controller.
+    @objc open weak var delegate: BottomCommandingControllerDelegate?
+
+    /// Initializes the bottom commanding controller with a given content view controller.
+    /// - Parameter contentViewController: View controller that will be displayed below the bottom commanding UI.
+    @objc public init(with contentViewController: UIViewController?) {
+        self.contentViewController = contentViewController
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        preconditionFailure("init(coder:) has not been implemented")
+    }
+
     // MARK: - View building and layout
 
     public override func loadView() {
-        view = BottomSheetPassthroughView()
+        view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.addLayoutGuide(commandingLayoutGuide)
 
         if traitCollection.horizontalSizeClass == .regular {
             setupBottomBarLayout()
         } else {
             setupBottomSheetLayout()
         }
+
+        if let contentViewController = contentViewController {
+            addChildContentViewController(contentViewController)
+        }
+        delegate?.bottomCommandingControllerCollapsedHeightInSafeAreaDidChange?(self)
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        guard previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass else {
-            return
+        if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
+            // On a horizontal size class change the top level sheet / bar surfaces get recreated,
+            // but the item views, containers and bindings persist and are rearranged during the individual setup functions.
+            if let bottomSheetController = bottomSheetController {
+                bottomSheetController.willMove(toParent: nil)
+                bottomSheetController.removeFromParent()
+                bottomSheetController.view.removeFromSuperview()
+            }
+            bottomSheetController = nil
+            bottomBarView?.removeFromSuperview()
+            bottomBarView = nil
+
+            if traitCollection.horizontalSizeClass == .regular {
+                setupBottomBarLayout()
+            } else {
+                setupBottomSheetLayout()
+            }
+            delegate?.bottomCommandingControllerCollapsedHeightInSafeAreaDidChange?(self)
         }
 
-        // On a horizontal size class change the top level sheet / bar surfaces get recreated,
-        // but the item views, containers and bindings persist and are rearranged during the individual setup functions.
-        if let bottomSheetController = bottomSheetController {
-            bottomSheetController.willMove(toParent: nil)
-            bottomSheetController.removeFromParent()
-            bottomSheetController.view.removeFromSuperview()
-        }
-        bottomSheetController = nil
-        bottomBarView?.removeFromSuperview()
-        bottomBarView = nil
-
-        if traitCollection.horizontalSizeClass == .regular {
-            setupBottomBarLayout()
-        } else {
-            setupBottomSheetLayout()
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            updateSheetExpandedContentHeight()
         }
     }
 
@@ -135,15 +218,11 @@ open class BottomCommandingController: UIViewController {
     }
 
     private func setupBottomBarLayout() {
+        NSLayoutConstraint.deactivate(layoutGuideConstraints)
         NSLayoutConstraint.activate(heroCommandWidthConstraints)
         heroCommandStack.distribution = .equalSpacing
 
-        let commandContainer = UIStackView()
-        commandContainer.translatesAutoresizingMaskIntoConstraints = false
-        commandContainer.addArrangedSubview(heroCommandStack)
-        commandContainer.addArrangedSubview(moreButtonView)
-
-        let bottomBarView = makeBottomBarByEmbedding(contentView: commandContainer)
+        let bottomBarView = makeBottomBarByEmbedding(contentView: heroCommandStack)
         bottomBarView.translatesAutoresizingMaskIntoConstraints = false
         bottomBarView.isHidden = isHidden
         view.addSubview(bottomBarView)
@@ -155,12 +234,17 @@ open class BottomCommandingController: UIViewController {
             bottomConstraint
         ])
 
+        layoutGuideConstraints = makeBottomBarLayoutGuideConstraints(with: bottomBarView)
+        NSLayoutConstraint.activate(layoutGuideConstraints)
+
         bottomBarViewBottomConstraint = bottomConstraint
         self.bottomBarView = bottomBarView
-        updateExpandability()
+        updateExpandabilityConstraints()
+        reloadHeroCommandStack()
     }
 
     private func setupBottomSheetLayout() {
+        NSLayoutConstraint.deactivate(layoutGuideConstraints)
         NSLayoutConstraint.deactivate(heroCommandWidthConstraints)
         heroCommandStack.distribution = .fillEqually
 
@@ -169,7 +253,6 @@ open class BottomCommandingController: UIViewController {
 
         let sheetController = BottomSheetController(headerContentView: commandStackContainer, expandedContentView: makeSheetExpandedContent(with: tableView))
         sheetController.hostedScrollView = tableView
-        sheetController.expandedHeightFraction = Constants.BottomSheet.expandedFraction
         sheetController.isHidden = isHidden
 
         addChild(sheetController)
@@ -191,8 +274,19 @@ open class BottomCommandingController: UIViewController {
             heroStackTopConstraint
         ])
 
+        layoutGuideConstraints = [
+            commandingLayoutGuide.leadingAnchor.constraint(equalTo: sheetController.sheetLayoutGuide.leadingAnchor),
+            commandingLayoutGuide.topAnchor.constraint(equalTo: sheetController.sheetLayoutGuide.topAnchor),
+            commandingLayoutGuide.trailingAnchor.constraint(equalTo: sheetController.sheetLayoutGuide.trailingAnchor),
+            commandingLayoutGuide.bottomAnchor.constraint(equalTo: sheetController.sheetLayoutGuide.bottomAnchor)
+        ]
+        NSLayoutConstraint.activate(layoutGuideConstraints)
+
         bottomSheetController = sheetController
-        updateExpandability()
+
+        updateExpandabilityConstraints()
+        updateSheetExpandedContentHeight()
+        reloadHeroCommandStack()
     }
 
     private func makeBottomBarByEmbedding(contentView: UIView) -> UIView {
@@ -246,42 +340,51 @@ open class BottomCommandingController: UIViewController {
         return view
     }
 
-    private func updateExpandability() {
+    private func addChildContentViewController(_ contentViewController: UIViewController) {
+        guard let rootCommandingView = rootCommandingView else {
+            return
+        }
+
+        addChild(contentViewController)
+        let newContentView: UIView = contentViewController.view
+        view.insertSubview(newContentView, belowSubview: rootCommandingView)
+        contentViewController.didMove(toParent: self)
+
+        newContentView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            newContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            newContentView.topAnchor.constraint(equalTo: view.topAnchor),
+            newContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            newContentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func reloadHeroCommandStack() {
+        let heroViews = extendedHeroItems.map { createAndBindHeroCommandView(with: $0) }
+        heroCommandStack.removeAllSubviews()
+        heroViews.forEach {heroCommandStack.addArrangedSubview($0) }
+    }
+
+    private func updateExpandabilityConstraints() {
         if isInSheetMode,
            let bottomSheetController = bottomSheetController,
            let heroStackTopConstraint = bottomSheetHeroStackTopConstraint {
-            bottomSheetController.isExpandable = isExpandable
             bottomSheetController.collapsedContentHeight = bottomSheetHeroStackHeight
             heroStackTopConstraint.constant = bottomSheetHeroStackTopMargin
-        } else {
-            moreButtonView.isHidden = !isExpandable
+
+            if bottomSheetController.isExpandable != isExpandable {
+                bottomSheetController.isExpandable = isExpandable
+                delegate?.bottomCommandingControllerCollapsedHeightInSafeAreaDidChange?(self)
+            }
         }
     }
 
-    private lazy var moreButtonView: UIView = {
-        let moreButtonItem = TabBarItem(title: Constants.BottomBar.moreButtonTitle, image: Constants.BottomBar.moreButtonIcon ?? UIImage())
-        let moreButtonView = TabBarItemView(item: moreButtonItem, showsTitle: true)
-        moreButtonView.alwaysShowTitleBelowImage = true
-        moreButtonView.accessibilityTraits.insert(.button)
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMoreButtonTap(_:)))
-        moreButtonView.addGestureRecognizer(tapGesture)
-
-        NSLayoutConstraint.activate([
-            moreButtonView.widthAnchor.constraint(equalToConstant: Constants.heroButtonWidth),
-            moreButtonView.heightAnchor.constraint(equalToConstant: Constants.heroButtonHeight)
-        ])
-
-        return moreButtonView
-    }()
+    private lazy var moreHeroItem: CommandingItem = CommandingItem(title: Constants.BottomBar.moreButtonTitle, image: Constants.BottomBar.moreButtonIcon ?? UIImage(), action: handleMoreCommandTap)
 
     private lazy var heroCommandStack: UIStackView = {
-        let itemViews = heroItems.map { createAndBindHeroCommandView(with: $0) }
-        let stackView = UIStackView(arrangedSubviews: itemViews)
+        let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.addInteraction(UILargeContentViewerInteraction())
-
-        isHeroCommandStackLoaded = true
         return stackView
     }()
 
@@ -313,29 +416,39 @@ open class BottomCommandingController: UIViewController {
             tabBarItemView.isSelected.toggle()
             item.isOn = tabBarItemView.isSelected
         }
-        item.action(binding.item)
+        item.action?(binding.item)
     }
 
-    @objc private func handleMoreButtonTap(_ sender: UITapGestureRecognizer) {
-        let popoverContentViewController = UIViewController()
-        popoverContentViewController.view.addSubview(tableView)
-        popoverContentViewController.modalPresentationStyle = .popover
-        popoverContentViewController.popoverPresentationController?.sourceView = sender.view
+    @objc private func handleMoreCommandTap(_ sender: CommandingItem) {
+        if isInSheetMode,
+           let sheetController = bottomSheetController {
+            sheetController.isExpanded.toggle()
+        } else if let binding = itemToBindingMap[sender] {
+            let moreButtonView = binding.view
+            let popoverContentViewController = UIViewController()
+            popoverContentViewController.view.addSubview(tableView)
+            popoverContentViewController.modalPresentationStyle = .popover
+            popoverContentViewController.popoverPresentationController?.sourceView = moreButtonView
+            popoverContentViewController.preferredContentSize.height = estimatedTableViewHeight
 
-        NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: popoverContentViewController.view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: popoverContentViewController.view.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: popoverContentViewController.view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: popoverContentViewController.view.bottomAnchor)
-        ])
-
-        present(popoverContentViewController, animated: true)
+            NSLayoutConstraint.activate([
+                tableView.leadingAnchor.constraint(equalTo: popoverContentViewController.view.leadingAnchor),
+                tableView.trailingAnchor.constraint(equalTo: popoverContentViewController.view.trailingAnchor),
+                tableView.topAnchor.constraint(equalTo: popoverContentViewController.view.topAnchor),
+                tableView.bottomAnchor.constraint(equalTo: popoverContentViewController.view.bottomAnchor)
+            ])
+            present(popoverContentViewController, animated: true)
+        }
     }
 
     // MARK: - Item <-> View Binding
 
     private func addBinding(_ binding: ItemBindingInfo) {
-        itemToBindingMap[binding.item] = binding
+        let item = binding.item
+        if itemToBindingMap[item] != nil {
+            removeBinding(for: item)
+        }
+        itemToBindingMap[item] = binding
         viewToBindingMap[binding.view] = binding
     }
 
@@ -344,40 +457,27 @@ open class BottomCommandingController: UIViewController {
         viewToBindingMap.removeValue(forKey: binding.view)
     }
 
-    private func clearAllItemViews(in location: ItemLocation) {
-        switch location {
-        case .heroSet:
-            heroItems.forEach {
-                if let binding = itemToBindingMap[$0] {
-                    removeBinding(binding)
-                }
-            }
-            heroCommandStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        case .list:
-            expandedListSections.forEach {
-                $0.items.forEach {
-                    if let binding = itemToBindingMap[$0] {
-                        removeBinding(binding)
-                    }
-                }
-            }
+    private func removeBinding(for item: CommandingItem) {
+        if let binding = itemToBindingMap[item] {
+            removeBinding(binding)
         }
     }
 
     private func createAndBindHeroCommandView(with item: CommandingItem) -> UIView {
-        let tabItem = TabBarItem(title: item.title, image: item.image, selectedImage: item.selectedImage, largeContentImage: item.largeImage)
-        let itemView = TabBarItemView(item: tabItem, showsTitle: true)
+        let itemImage = item.image ?? UIImage()
+        let itemTitle = item.title ?? ""
+        let tabItem = TabBarItem(title: itemTitle, image: itemImage, selectedImage: item.selectedImage, largeContentImage: item.largeImage)
+        let itemView = TabBarItemView(item: tabItem, showsTitle: itemTitle != "")
         itemView.alwaysShowTitleBelowImage = true
         itemView.numberOfTitleLines = 1
         itemView.isSelected = item.isOn
+        itemView.isEnabled = item.isEnabled
         itemView.accessibilityTraits.insert(.button)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleHeroCommandTap(_:)))
         itemView.addGestureRecognizer(tapGesture)
 
-        NSLayoutConstraint.activate([
-            itemView.heightAnchor.constraint(equalToConstant: Constants.heroButtonHeight)
-        ])
+        itemView.heightAnchor.constraint(equalToConstant: Constants.heroButtonHeight).isActive = true
         let widthConstraint = itemView.widthAnchor.constraint(equalToConstant: Constants.heroButtonWidth)
         widthConstraint.isActive = !isInSheetMode
 
@@ -393,13 +493,13 @@ open class BottomCommandingController: UIViewController {
         iconView.tintColor = Constants.tableViewIconTintColor
 
         if item.isToggleable, let booleanCell = cell as? BooleanCell {
-            booleanCell.setup(title: item.title, customView: iconView, isOn: item.isOn)
+            booleanCell.setup(title: item.title ?? "", customView: iconView, isOn: item.isOn)
             booleanCell.onValueChanged = {
                 item.isOn = booleanCell.isOn
-                item.action(item)
+                item.action?(item)
             }
         } else {
-            cell.setup(title: item.title, customView: iconView)
+            cell.setup(title: item.title ?? "", customView: iconView)
         }
         cell.isEnabled = item.isEnabled
         cell.backgroundColor = Constants.tableViewBackgroundColor
@@ -432,6 +532,43 @@ open class BottomCommandingController: UIViewController {
         }
     }
 
+    private func updateSheetExpandedContentHeight() {
+        if let bottomSheetController = bottomSheetController {
+            bottomSheetController.preferredExpandedContentHeight = estimatedTableViewHeight + Constants.BottomSheet.expandedContentTopMargin
+        }
+    }
+
+    private func makeBottomBarLayoutGuideConstraints(with bottomBarView: UIView) -> [NSLayoutConstraint] {
+        let requiredConstraints = [
+            commandingLayoutGuide.leadingAnchor.constraint(equalTo: bottomBarView.leadingAnchor),
+            commandingLayoutGuide.trailingAnchor.constraint(equalTo: bottomBarView.trailingAnchor),
+            commandingLayoutGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            commandingLayoutGuide.topAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor)
+        ]
+
+        // bottomBarView will go off-screen when it's hidden, so this constraint is not always required.
+        let breakableTopConstraint = commandingLayoutGuide.topAnchor.constraint(equalTo: bottomBarView.topAnchor)
+        breakableTopConstraint.priority = .defaultHigh
+
+        return requiredConstraints + [breakableTopConstraint]
+    }
+
+    // Estimated fitting height of `tableView`.
+    private var estimatedTableViewHeight: CGFloat {
+        var totalHeight: CGFloat = 0
+        for section in expandedListSections {
+            totalHeight += TableViewHeaderFooterView.height(style: .header, title: section.title ?? "")
+            for item in section.items {
+                totalHeight += TableViewCell.height(title: item.title ?? "")
+            }
+        }
+        return totalHeight
+    }
+
+    private var bottomBarHeight: CGFloat {
+        return Constants.heroButtonHeight + 2 * Constants.BottomBar.heroStackTopBottomMargin
+    }
+
     private var itemToBindingMap: [CommandingItem: ItemBindingInfo] = [:]
 
     private var viewToBindingMap: [UIView: ItemBindingInfo] = [:]
@@ -442,7 +579,9 @@ open class BottomCommandingController: UIViewController {
 
     private var bottomSheetController: BottomSheetController?
 
-    private var isHeroCommandStackLoaded: Bool = false
+    private var rootCommandingView: UIView? {
+        isInSheetMode ? bottomSheetController?.view : bottomBarView
+    }
 
     private var isTableViewLoaded: Bool = false
 
@@ -458,11 +597,20 @@ open class BottomCommandingController: UIViewController {
 
     private var bottomSheetHeroStackHeight: CGFloat { Constants.heroButtonHeight + bottomSheetHeroStackTopMargin }
 
+    // Hero items that include the more button if it should be shown
+    private var extendedHeroItems: [CommandingItem] {
+        let shouldShowMoreButton = isExpandable && (prefersSheetMoreButtonVisible || !isInSheetMode)
+        return heroItems + (shouldShowMoreButton ? [moreHeroItem] : [])
+    }
+
     private var heroCommandWidthConstraints: [NSLayoutConstraint] {
-        heroItems.compactMap { (itemToBindingMap[$0] as? HeroItemBindingInfo)?.widthConstraint }
+        extendedHeroItems.compactMap { (itemToBindingMap[$0] as? HeroItemBindingInfo)?.widthConstraint }
     }
 
     private var bottomBarHidingAnimator: UIViewPropertyAnimator?
+
+    // Constraints attaching self.layoutGuide to the current commanding surface (bar or a sheet)
+    private var layoutGuideConstraints = [NSLayoutConstraint]()
 
     private enum ItemLocation {
         case heroSet
@@ -571,6 +719,11 @@ extension BottomCommandingController: UITableViewDataSource {
 }
 
 extension BottomCommandingController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        // This gets rid of a 20pt margin after the last section which UITableView adds automatically.
+        return CGFloat.leastNormalMagnitude
+    }
+
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TableViewHeaderFooterView.identifier) as? TableViewHeaderFooterView else {
             return nil
@@ -595,18 +748,18 @@ extension BottomCommandingController: UITableViewDelegate {
             if presentedViewController != nil {
                 dismiss(animated: true)
             }
-            binding.item.action(binding.item)
+            binding.item.action?(binding.item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
 extension BottomCommandingController: CommandingItemDelegate {
-    func commandingItem(_ item: CommandingItem, didChangeTitleTo value: String) {
+    func commandingItem(_ item: CommandingItem, didChangeTitleTo value: String?) {
         reloadView(from: item)
     }
 
-    func commandingItem(_ item: CommandingItem, didChangeImageTo value: UIImage) {
+    func commandingItem(_ item: CommandingItem, didChangeImageTo value: UIImage?) {
         reloadView(from: item)
     }
 
