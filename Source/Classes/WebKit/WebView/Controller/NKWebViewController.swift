@@ -441,9 +441,7 @@ extension  NKWebViewController {
         if (NKDevice.isIPad()) {
             ipadToolbar.isHidden = toolBarHidden
             if webView != nil {
-                webView!.snp.remakeConstraints { (make) in
-                    make.left.right.equalTo(0)
-                    make.top.equalTo(0)
+                webView!.snp.updateConstraints { (make) in
                     make.bottom.equalTo(0)
                 }
             }
@@ -477,9 +475,7 @@ extension  NKWebViewController {
             }
             
             if webView != nil {
-                webView!.snp.remakeConstraints { (make) in
-                    make.left.right.equalTo(0)
-                    make.top.equalTo(0)
+                webView!.snp.updateConstraints { (make) in
                     make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
                 }
             }
@@ -528,6 +524,10 @@ extension  NKWebViewController {
         if let web = webView {
             view.insertSubview(webView!, at: 0)
             webView!.frame = view.bounds
+            
+            webView!.snp.remakeConstraints { make in
+                make.top.bottom.left.right.equalTo(0)
+            }
         }
     }
     

@@ -8,3 +8,6 @@ https://github.com/phimage/Prephirences
 # 目前存储采取该方案
 SwiftyUserDefaults
 https://github.com/sunshinejr/SwiftyUserDefaults
+
+// iCloud 同步
+https://github.com/sunshinejr/SwiftyUserDefaults/pull/229
