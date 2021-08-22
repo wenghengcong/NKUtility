@@ -44,6 +44,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         guard let url = navigationAction.request.url else {
             return
         }
+        
         let hostAddress = navigationAction.request.url?.host
         
         // 1.To connnect app store

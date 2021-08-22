@@ -474,22 +474,24 @@ extension  NKWebViewController {
                 navigationController?.toolbar.barTintColor = currentBackgroudColor()
             }
             
-            if webView != nil {
-                webView!.snp.updateConstraints { (make) in
-                    make.bottom.equalToSuperview().offset(-curerntToolBarHeght)
-                }
-            }
-        
             // Fix problem of WebView content height not fitting WebViews frame height
             self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
             
             if needUpdate {
-                if webView != nil {
-                    UIView.animate(withDuration: 0.75) {
-                        self.webView!.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView!.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
-    //                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
-                        }
-                    }
+               repositionDocumentWebBottomBar(toolBarHeight: curerntToolBarHeght)
+            }
+        }
+    }
+    
+    private func repositionDocumentWebBottomBar(toolBarHeight: CGFloat) {
+        if webView != nil {
+            webView!.snp.updateConstraints { (make) in
+                make.bottom.equalToSuperview().offset(-toolBarHeight)
+            }
+            
+            UIView.animate(withDuration: 0.75) {
+                self.webView!.evaluateJavaScript("document.documentElement.scrollHeight = \(self.webView!.height); var toobar = document.getElementsByClassName('H5DocReader-module_toolbar_wpMQA')[0]; toobar.style.bottom = '0';") { (response, error) in
+//                        NKlogger.debug("update done now! webview height: \(self.webView.height)")
                 }
             }
         }
@@ -632,6 +634,11 @@ extension  NKWebViewController {
  DidEndDecelerating
  */
 extension  NKWebViewController: UIScrollViewDelegate {
+    
+    func scrollALitterOnYAxis() {
+        let scrollPoint = CGPoint(x: 0, y: 0.3)
+        webView?.scrollView.setContentOffset(scrollPoint, animated: false)
+    }
     
     func scrollToUp() {
         if NKDevice.isIPhone() && scrollToolBarHidden {
