@@ -296,9 +296,6 @@ open class   NKWebViewController: UIViewController {
     ////////////////////////////////////////////////
     // MARK: - Toolbar
     public func updateToolbarItems() {
-        if toolBarHidden {
-            return
-        }
         backForwardListChanged()
         let refreshStopBarButtonItem: UIBarButtonItem = (webView?.isLoading ?? false) ? stopBarButtonItem : refreshBarButtonItem
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
@@ -356,11 +353,19 @@ open class   NKWebViewController: UIViewController {
 
     // MARK: - Target Actions
     open func goBack() {
-        webView?.goBack()
+        if let web = webView, web.canGoBack {
+            webView?.goBack()
+        } else {
+            backForwardListChanged()
+        }
     }
     
     open func goForward() {
-        webView?.goBack()
+        if let web = webView, web.canGoForward {
+            webView?.goForward()
+        } else {
+            backForwardListChanged()
+        }
     }
     
     open func reload() {

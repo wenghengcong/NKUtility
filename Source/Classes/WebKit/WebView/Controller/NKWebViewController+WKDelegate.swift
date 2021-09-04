@@ -163,6 +163,8 @@ extension  NKWebViewController: WKNavigationDelegate {
                     self.updateToolbarItems()
                 }
             }
+        } else {
+            updateToolbarItems()
         }
     }
     
@@ -176,16 +178,16 @@ extension  NKWebViewController: WKNavigationDelegate {
         showLoading(false)
         refreshControl.endRefreshing()
         
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
         updateToolbarItems()
+        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
     }
     
     open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         showLoading(false)
         refreshControl.endRefreshing()
         
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
         updateToolbarItems()
+        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
     }
     
     open func openCustomApp(urlScheme: String, additional_info:String){
