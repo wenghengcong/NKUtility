@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import SkeletonView
 
 open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
-
+    
+    /// 先要将 backView 赋值该 tag
+    public let backViewTag = 10223932842
+    
     open weak var commonDelegate: NKCommonCellProtocol?
 
     open override func awakeFromNib() {
@@ -32,7 +36,24 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
-        
+        isSkeletonable = true
+        contentView.isSkeletonable = true
+    }
+    
+    
+    public func showSkeletonInCell() {
+        let backView = contentView.viewWithTag(backViewTag)
+        backView?.subviews.forEach { view in
+            view.isSkeletonable = true
+            view.showAnimatedGradientSkeleton()
+        }
+    }
+    
+    public func hiddenSkeletonInCell() {
+        let backView = contentView.viewWithTag(backViewTag)
+        backView?.subviews.forEach { view in
+            view.hideSkeleton()
+        }
     }
     
     open override func layoutSubviews() {
