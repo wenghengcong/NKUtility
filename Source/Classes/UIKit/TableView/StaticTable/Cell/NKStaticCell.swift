@@ -14,12 +14,13 @@ open class NKStaticCell: NKUITableViewCell {
     
     public var data: NKCommonCellData? {
         didSet {
-            fillData()
+            qingFillData()
         }
     }
     
-    open func fillData() {
-
+    open override func qingFillData() {
+        super.qingFillData()
+        
     }
     
     open override func awakeFromNib() {

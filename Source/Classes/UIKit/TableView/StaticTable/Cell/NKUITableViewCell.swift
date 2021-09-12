@@ -12,6 +12,7 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     /// 先要将 backView 赋值该 tag
     public let backViewTag = 10223932842
+    public var shouldShowSkeleton = true
     
     open weak var commonDelegate: NKCommonCellProtocol?
 
@@ -30,18 +31,25 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         super.init(coder: coder)
     }
     
-    func setupBaseCell() {
+    open func setupBaseCell() {
+        shouldShowSkeleton = true
         selectedBackgroundView = nil
         selectionStyle = .none
+        isSkeletonable = true
+
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
-        isSkeletonable = true
-        contentView.isSkeletonable = true
+//        contentView.isSkeletonable = true
     }
     
+    open func qingFillData() {
+        hiddenSkeletonInCell()
+        
+    }
     
-    public func showSkeletonInCell() {
+    open func showSkeletonInCell() {
+        layoutIfNeeded()
         let backView = contentView.viewWithTag(backViewTag)
         backView?.subviews.forEach { view in
             view.isSkeletonable = true
@@ -49,11 +57,12 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         }
     }
     
-    public func hiddenSkeletonInCell() {
+    open func hiddenSkeletonInCell() {
         let backView = contentView.viewWithTag(backViewTag)
         backView?.subviews.forEach { view in
             view.hideSkeleton()
         }
+        shouldShowSkeleton = false
     }
     
     open override func layoutSubviews() {

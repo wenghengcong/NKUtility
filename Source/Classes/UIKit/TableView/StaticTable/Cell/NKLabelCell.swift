@@ -20,7 +20,7 @@ open class NKLabelCell: NKStaticCell {
     open var desc: String? {
         didSet {
             data?.desc = desc
-            fillData()
+            qingFillData()
         }
     }
 
@@ -28,7 +28,7 @@ open class NKLabelCell: NKStaticCell {
         didSet {
             if let titleString = title {
                 data?.title = titleString
-                fillData()
+                qingFillData()
             }
         }
     }
@@ -37,11 +37,12 @@ open class NKLabelCell: NKStaticCell {
     
     public override var data: NKCommonCellData? {
         didSet {
-            fillData()
+            qingFillData()
         }
     }
     
-    open override func fillData() {
+    open override func qingFillData() {
+        super.qingFillData()
         if let realData = data {
             if let iconString = realData.icon, iconString.isNotEmpty {
                 if let image = UIImage(named: iconString) {

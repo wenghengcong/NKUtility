@@ -21,11 +21,12 @@ open class NKSwitchCell: NKStaticCell {
         
     public override var data: NKCommonCellData? {
         didSet {
-            fillData()
+            qingFillData()
         }
     }
     
-    public override func fillData() {
+    open override func qingFillData() {
+        super.qingFillData()
         setup(icon: data!.icon, title: data!.title, on: data!.on)
     }
     

@@ -27,11 +27,11 @@ open class NKCheckmarkCell: NKStaticCell {
     
     public override var data: NKCommonCellData? {
         didSet {
-            fillData()
+            qingFillData()
         }
     }
     
-    open override func fillData() {
+    open override func qingFillData() {
         setup(icon: data!.icon, title: data!.title, check: data!.on)
         
     }

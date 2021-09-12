@@ -18,7 +18,7 @@ open class NKUICollectionViewCell: UICollectionViewCell, NKUINibReusable {
         setupBaseCell()
     }
     
-    public func showSkeletonInCell() {
+    open func showSkeletonInCell() {
         let backView = contentView.viewWithTag(backViewTag)
         backView?.subviews.forEach { view in
             view.isSkeletonable = true
@@ -26,14 +26,19 @@ open class NKUICollectionViewCell: UICollectionViewCell, NKUINibReusable {
         }
     }
     
-    public func hiddenSkeletonInCell() {
+    open func hiddenSkeletonInCell() {
         let backView = contentView.viewWithTag(backViewTag)
         backView?.subviews.forEach { view in
             view.hideSkeleton()
         }
     }
+    
+    open func qingFillData() {
+        hiddenSkeletonInCell()
+        
+    }
 
-    func setupBaseCell() {
+    open func setupBaseCell() {
         selectedBackgroundView = nil
     }
     
