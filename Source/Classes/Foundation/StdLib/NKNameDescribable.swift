@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol NKNameDescribable {
+public protocol NKNameDescribable {
     var typeName: String { get }
     static var typeName: String { get }
 }
 
-extension NKNameDescribable {
+public extension NKNameDescribable {
     var typeName: String {
         return String(describing: type(of: self))
     }
