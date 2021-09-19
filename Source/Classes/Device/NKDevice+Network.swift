@@ -18,10 +18,6 @@ extension NKDevice {
     public var connectivity: NKDeviceConnectivity {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return .wiFi
-        case .iPodTouch2: return .wiFi
-        case .iPodTouch3: return .wiFi
-        case .iPodTouch4: return .wiFi
         case .iPodTouch5: return .wiFi
         case .iPodTouch6: return .wiFi
         case .iPodTouch7: return .wiFi
@@ -51,6 +47,10 @@ extension NKDevice {
         case .iPhone12Mini: return .wiFi5G
         case .iPhone12Pro: return .wiFi5G
         case .iPhone12ProMax: return .wiFi5G
+        case .iPhone13: return .wiFi5G
+        case .iPhone13Mini: return .wiFi5G
+        case .iPhone13Pro: return .wiFi5G
+        case .iPhone13ProMax: return .wiFi5G
             
         case .iPad2: return .wiFi3G
         case .iPad3: return .wiFi3G
@@ -79,9 +79,18 @@ extension NKDevice {
         case .iPadPro12Inch3: return .wiFi4G
         case .iPadPro11Inch2: return .wiFi4G
         case .iPadPro12Inch4: return .wiFi4G
+        case .iPad9:
+            return .wiFi4G
+        case .iPadMini6:
+            return .wiFi4G
+        case .iPadPro11Inch3:
+            return .wiFi4G
+        case .iPadPro12Inch5:
+            return .wiFi4G
         case .homePod: return .unknown
         case .simulator(let model): return model.connectivity
         case .unknown: return .unknown
+     
         }
         #elseif os(watchOS)
         switch self {

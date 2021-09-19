@@ -82,7 +82,7 @@ extension NKDevice {
     public static var modelIdentifier: String {
         return identifier
     }
-
+    
     public static var modelName: String {
         switch modelIdentifier {
         case "iPod1,1":                                 return "iPod Touch 1"
@@ -124,6 +124,10 @@ extension NKDevice {
         case "iPhone13,2":                              return "iPhone 12"
         case "iPhone13,3":                              return "iPhone 12 Pro"
         case "iPhone13,4":                              return "iPhone 12 Pro Max"
+        case "iPhone14,4":                              return "iPhone 13 mini"
+        case "iPhone14,5":                              return "iPhone 13"
+        case "iPhone14,2":                              return "iPhone 13 Pro"
+        case "iPhone14,3":                              return "iPhone 13 Pro Max"
             
         case "iPad1,1":                                 return "iPad 1"
         case "iPad2,1":                                 return "iPad 2 (WiFi)"
@@ -143,12 +147,15 @@ extension NKDevice {
         case "iPad7,6":                                 return "iPad 6 (Cellular)"
         case "iPad7,11":                                return "iPad 7 (WiFi)"
         case "iPad7,12":                                return "iPad 7 (Cellular)"
+        case "iPad11,6", "iPad11,7":                    return "iPad 8"
+        case "iPad12,1", "iPad12,2":                    return "iPad 9"
             
         case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad Mini"
         case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad Mini 2"
         case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad Mini 3"
         case "iPad5,1", "iPad5,2":                      return "iPad Mini 4"
         case "iPad11,1","iPad11,2":                     return "iPad Mini 5"
+        case "iPad14,1","iPad14,2":                     return "iPad Mini 6"
             
         case "iPad6,3", "iPad6,4":                      return "iPad Pro 9.7 Inch"
         case "iPad6,7", "iPad6,8":                      return "iPad Pro 12.9 Inch"
@@ -161,7 +168,8 @@ extension NKDevice {
         case "i386":                                    return "Simulator x86"
         case "x86_64":                                  return "Simulator x64"
         case "":                                        return ""
-
+            
+        // watch 、tv系列没更新完
         case "Watch1,1":                                return "Apple Watch 38mm"
         case "Watch1,2":                                return "Apple Watch 42mm"
         case "Watch2,3":                                return "Apple Watch Series 2 38mm"
@@ -231,6 +239,10 @@ extension NKDevice {
         case "iPhone13,1": return iPhone12Mini
         case "iPhone13,3": return iPhone12Pro
         case "iPhone13,4": return iPhone12ProMax
+        case "iPhone14,5": return iPhone13
+        case "iPhone14,4": return iPhone13Mini
+        case "iPhone14,2": return iPhone13Pro
+        case "iPhone14,3": return iPhone13ProMax
         case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4": return iPad2
         case "iPad3,1", "iPad3,2", "iPad3,3": return iPad3
         case "iPad3,4", "iPad3,5", "iPad3,6": return iPad4
@@ -241,12 +253,14 @@ extension NKDevice {
         case "iPad11,3", "iPad11,4": return iPadAir3
         case "iPad7,11", "iPad7,12": return iPad7
         case "iPad11,6", "iPad11,7": return iPad8
+        case "iPad12,1", "iPad12,2": return iPad9
         case "iPad13,1", "iPad13,2": return iPadAir4
         case "iPad2,5", "iPad2,6", "iPad2,7": return iPadMini
         case "iPad4,4", "iPad4,5", "iPad4,6": return iPadMini2
         case "iPad4,7", "iPad4,8", "iPad4,9": return iPadMini3
         case "iPad5,1", "iPad5,2": return iPadMini4
         case "iPad11,1", "iPad11,2": return iPadMini5
+        case "iPad14,1", "iPad14,2": return iPadMini6
         case "iPad6,3", "iPad6,4": return iPadPro9Inch
         case "iPad6,7", "iPad6,8": return iPadPro12Inch
         case "iPad7,1", "iPad7,2": return iPadPro12Inch2
@@ -255,15 +269,18 @@ extension NKDevice {
         case "iPad8,5", "iPad8,6", "iPad8,7", "iPad8,8": return iPadPro12Inch3
         case "iPad8,9", "iPad8,10": return iPadPro11Inch2
         case "iPad8,11", "iPad8,12": return iPadPro12Inch4
+        case "iPad13,4", "iPad13,5", "iPad13,6", "iPad13,7": return iPadPro11Inch3
+        case "iPad13,8", "iPad13,9", "iPad13,10", "iPad13,11": return iPadPro12Inch5
         case "AudioAccessory1,1": return homePod
-        case "i386", "x86_64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "iOS"))
+        case "i386", "x86_64", "arm64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "iOS"))
         default: return unknown(identifier)
         }
         #elseif os(tvOS)
         switch identifier {
         case "AppleTV5,3": return appleTVHD
         case "AppleTV6,2": return appleTV4K
-        case "i386", "x86_64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "tvOS"))
+        case "AppleTV11,1": return appleTV4K2
+        case "i386", "x86_64", "arm64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "tvOS"))
         default: return unknown(identifier)
         }
         #elseif os(watchOS)
@@ -284,12 +301,12 @@ extension NKDevice {
         case "Watch6,2", "Watch6,4": return appleWatchSeries6_44mm
         case "Watch5,9", "Watch5,11": return appleWatchSE_40mm
         case "Watch5,10", "Watch5,12": return appleWatchSE_44mm
-        case "i386", "x86_64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "watchOS"))
+        case "i386", "x86_64", "arm64": return simulator(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "watchOS"))
         default: return unknown(identifier)
         }
         #endif
     }
-        
+    
     
     /// Get the real device from a device.
     /// If the device is a an iPhone8Plus simulator this function returns .iPhone8Plus (the real device).
@@ -315,27 +332,33 @@ extension NKDevice {
     
     /// All iPhones
     public static var allPhones: [NKDevice] {
-        return [.iPhone4, .iPhone4s, .iPhone5, .iPhone5c, .iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax]
+        return [.iPhone4, .iPhone4s, .iPhone5, .iPhone5c, .iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
     }
     
     /// All iPads
     public static var allPads: [NKDevice] {
-        return [.iPad2, .iPad3, .iPad4, .iPadAir, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPadAir4, .iPadMini, .iPadMini2, .iPadMini3, .iPadMini4, .iPadMini5, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPad2, .iPad3, .iPad4, .iPadAir, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPad9, .iPadAir4, .iPadMini, .iPadMini2, .iPadMini3, .iPadMini4, .iPadMini5, .iPadMini6, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
+    }
+    
+    /// All X-Series Devices
+    @available(*, deprecated, renamed: "allDevicesWithSensorHousing")
+    public static var allXSeriesDevices: [NKDevice] {
+        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
     }
     
     /// All Plus and Max-Sized Devices
     public static var allPlusSizedDevices: [NKDevice] {
-        return [.iPhone6Plus, .iPhone6sPlus, .iPhone7Plus, .iPhone8Plus, .iPhoneXSMax, .iPhone11ProMax, .iPhone12ProMax]
+        return [.iPhone6Plus, .iPhone6sPlus, .iPhone7Plus, .iPhone8Plus, .iPhoneXSMax, .iPhone11ProMax, .iPhone12ProMax, .iPhone13ProMax]
     }
     
     /// All Pro Devices
     public static var allProDevices: [NKDevice] {
-        return [.iPhone11Pro, .iPhone11ProMax, .iPhone12Pro, .iPhone12ProMax, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPhone11Pro, .iPhone11ProMax, .iPhone12Pro, .iPhone12ProMax, .iPhone13Pro, .iPhone13ProMax, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
     }
     
     /// All mini Devices
     public static var allMiniDevices: [NKDevice] {
-        return [.iPadMini, .iPadMini2, .iPadMini3, .iPadMini4, .iPadMini5]
+        return [.iPadMini, .iPadMini2, .iPadMini3, .iPadMini4, .iPadMini5, .iPadMini6]
     }
     
     /// All simulator iPods
@@ -356,6 +379,12 @@ extension NKDevice {
     /// All simulator iPad mini
     public static var allSimulatorMiniDevices: [NKDevice] {
         return allMiniDevices.map(NKDevice.simulator)
+    }
+    
+    /// All simulator X series Devices
+    @available(*, deprecated, renamed: "allSimulatorDevicesWithSensorHousing")
+    public static var allSimulatorXSeriesDevices: [NKDevice] {
+        return allDevicesWithSensorHousing.map(NKDevice.simulator)
     }
     
     /// All simulator Plus and Max-Sized Devices
@@ -411,17 +440,38 @@ extension NKDevice {
     
     /// All Touch ID Capable Devices
     public static var allTouchIDCapableDevices: [NKDevice] {
-        return [.iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneSE2, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPadAir4, .iPadMini3, .iPadMini4, .iPadMini5, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch]
+        return [.iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneSE2, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPad9, .iPadAir4, .iPadMini3, .iPadMini4, .iPadMini5, .iPadMini6, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch]
     }
     
     /// All Face ID Capable Devices
     public static var allFaceIDCapableDevices: [NKDevice] {
-        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
     }
     
     /// All Devices with Touch ID or Face ID
     public static var allBiometricAuthenticationCapableDevices: [NKDevice] {
-        return [.iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPadAir4, .iPadMini3, .iPadMini4, .iPadMini5, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPhone5s, .iPhone6, .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax, .iPadAir2, .iPad5, .iPad6, .iPadAir3, .iPad7, .iPad8, .iPad9, .iPadAir4, .iPadMini3, .iPadMini4, .iPadMini5, .iPadMini6, .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
+    }
+    
+    /// 震动马达: iPad 系列没有
+    public static var allTapticEngineCapableDevices: [NKDevice] {
+        return [.iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
+    }
+    
+    
+    /// 触觉反馈：iPad 系列没有
+    public static var allHapticFeedbackCapableDevices: [NKDevice] {
+        return [.iPhone7, .iPhone7Plus, .iPhoneSE, .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
+    }
+    
+    /// 是否有震动马达
+    public var isTapticEngineCapable: Bool {
+        return isOneOf(NKDevice.allTapticEngineCapableDevices) || isOneOf(NKDevice.allTapticEngineCapableDevices.map(NKDevice.simulator))
+    }
+    
+    /// 是否有触觉反馈
+    public var isHapticFeedbackCapable: Bool {
+        return isOneOf(NKDevice.allHapticFeedbackCapableDevices) || isOneOf(NKDevice.allHapticFeedbackCapableDevices.map(NKDevice.simulator))
     }
     
     /// Returns whether or not the device has Touch ID
@@ -441,7 +491,7 @@ extension NKDevice {
     
     /// All devices that feature a sensor housing in the screen
     public static var allDevicesWithSensorHousing: [NKDevice] {
-        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax]
+        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
     }
     
     /// All simulator devices that feature a sensor housing in the screen
@@ -456,7 +506,7 @@ extension NKDevice {
     
     /// All devices that feature a screen with rounded corners.
     public static var allDevicesWithRoundedDisplayCorners: [NKDevice] {
-        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPadAir4, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax, .iPadAir4, .iPadMini6, .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
     }
     
     /// Returns whether or not the device has a screen with rounded corners.
@@ -476,7 +526,7 @@ extension NKDevice {
     
     /// All devices that support wireless charging.
     public static var allDevicesWithWirelessChargingSupport: [NKDevice] {
-        return [.iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax]
+        return [.iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR, .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12, .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax, .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax]
     }
     
     /// Returns whether or not the device supports wireless charging.
@@ -486,7 +536,7 @@ extension NKDevice {
     
     /// All devices that have a LiDAR sensor.
     public static var allDevicesWithALidarSensor: [NKDevice] {
-        return [.iPhone12Pro, .iPhone12ProMax, .iPadPro11Inch2, .iPadPro12Inch4]
+        return [.iPhone12Pro, .iPhone12ProMax, .iPhone13Pro, .iPhone13ProMax, .iPadPro11Inch2, .iPadPro12Inch4, .iPadPro11Inch3, .iPadPro12Inch5]
     }
     
     /// Returns whether or not the device has a LiDAR sensor.
@@ -496,7 +546,7 @@ extension NKDevice {
     #elseif os(tvOS)
     /// All TVs
     public static var allTVs: [NKDevice] {
-        return [.appleTVHD, .appleTV4K]
+        return [.appleTVHD, .appleTV4K, .appleTV4K2]
     }
     
     /// All simulator TVs
@@ -621,7 +671,7 @@ extension NKDevice {
         return UIDevice.current.localizedModel
         #endif
     }
-
+    
     /// True when a Guided Access session is currently active; otherwise, false.
     public var isGuidedAccessSessionActive: Bool {
         #if os(iOS)
@@ -638,16 +688,12 @@ extension NKDevice {
 
 // MARK: CustomStringConvertible
 extension NKDevice: CustomStringConvertible {
-        
+    
     /// A textual representation of the device.
     public var description: String {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return "iPod Touch (1th generation)"
-        case .iPodTouch2: return "iPod Touch (2th generation)"
-        case .iPodTouch3: return "iPod Touch (3th generation)"
-        case .iPodTouch4: return "iPod Touch (4th generation)"
-        case .iPodTouch5: return "iPod Touch (5th generation)"
+        case .iPodTouch5: return "iPod touch (5th generation)"
         case .iPodTouch6: return "iPod touch (6th generation)"
         case .iPodTouch7: return "iPod touch (7th generation)"
         case .iPhone4: return "iPhone 4"
@@ -676,6 +722,10 @@ extension NKDevice: CustomStringConvertible {
         case .iPhone12Mini: return "iPhone 12 mini"
         case .iPhone12Pro: return "iPhone 12 Pro"
         case .iPhone12ProMax: return "iPhone 12 Pro Max"
+        case .iPhone13: return "iPhone 13"
+        case .iPhone13Mini: return "iPhone 13 mini"
+        case .iPhone13Pro: return "iPhone 13 Pro"
+        case .iPhone13ProMax: return "iPhone 13 Pro Max"
         case .iPad2: return "iPad 2"
         case .iPad3: return "iPad (3rd generation)"
         case .iPad4: return "iPad (4th generation)"
@@ -686,12 +736,14 @@ extension NKDevice: CustomStringConvertible {
         case .iPadAir3: return "iPad Air (3rd generation)"
         case .iPad7: return "iPad (7th generation)"
         case .iPad8: return "iPad (8th generation)"
+        case .iPad9: return "iPad (9th generation)"
         case .iPadAir4: return "iPad Air (4th generation)"
         case .iPadMini: return "iPad Mini"
         case .iPadMini2: return "iPad Mini 2"
         case .iPadMini3: return "iPad Mini 3"
         case .iPadMini4: return "iPad Mini 4"
         case .iPadMini5: return "iPad Mini (5th generation)"
+        case .iPadMini6: return "iPad Mini (6th generation)"
         case .iPadPro9Inch: return "iPad Pro (9.7-inch)"
         case .iPadPro12Inch: return "iPad Pro (12.9-inch)"
         case .iPadPro12Inch2: return "iPad Pro (12.9-inch) (2nd generation)"
@@ -700,6 +752,8 @@ extension NKDevice: CustomStringConvertible {
         case .iPadPro12Inch3: return "iPad Pro (12.9-inch) (3rd generation)"
         case .iPadPro11Inch2: return "iPad Pro (11-inch) (2nd generation)"
         case .iPadPro12Inch4: return "iPad Pro (12.9-inch) (4th generation)"
+        case .iPadPro11Inch3: return "iPad Pro (11-inch) (3rd generation)"
+        case .iPadPro12Inch5: return "iPad Pro (12.9-inch) (5th generation)"
         case .homePod: return "HomePod"
         case .simulator(let model): return "Simulator (\(model.description))"
         case .unknown(let identifier): return identifier
@@ -729,6 +783,7 @@ extension NKDevice: CustomStringConvertible {
         switch self {
         case .appleTVHD: return "Apple TV HD"
         case .appleTV4K: return "Apple TV 4K"
+        case .appleTV4K2: return "Apple TV 4K (2nd generation)"
         case .simulator(let model): return "Simulator (\(model.description))"
         case .unknown(let identifier): return identifier
         }
@@ -742,11 +797,7 @@ extension NKDevice: CustomStringConvertible {
     public var safeDescription: String {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return "iPod Touch (1th generation)"
-        case .iPodTouch2: return "iPod Touch (2th generation)"
-        case .iPodTouch3: return "iPod Touch (3th generation)"
-        case .iPodTouch4: return "iPod Touch (4th generation)"
-        case .iPodTouch5: return "iPod Touch (5th generation)"
+        case .iPodTouch5: return "iPod touch (5th generation)"
         case .iPodTouch6: return "iPod touch (6th generation)"
         case .iPodTouch7: return "iPod touch (7th generation)"
         case .iPhone4: return "iPhone 4"
@@ -775,6 +826,10 @@ extension NKDevice: CustomStringConvertible {
         case .iPhone12Mini: return "iPhone 12 mini"
         case .iPhone12Pro: return "iPhone 12 Pro"
         case .iPhone12ProMax: return "iPhone 12 Pro Max"
+        case .iPhone13: return "iPhone 13"
+        case .iPhone13Mini: return "iPhone 13 mini"
+        case .iPhone13Pro: return "iPhone 13 Pro"
+        case .iPhone13ProMax: return "iPhone 13 Pro Max"
         case .iPad2: return "iPad 2"
         case .iPad3: return "iPad (3rd generation)"
         case .iPad4: return "iPad (4th generation)"
@@ -785,12 +840,14 @@ extension NKDevice: CustomStringConvertible {
         case .iPadAir3: return "iPad Air (3rd generation)"
         case .iPad7: return "iPad (7th generation)"
         case .iPad8: return "iPad (8th generation)"
+        case .iPad9: return "iPad (9th generation)"
         case .iPadAir4: return "iPad Air (4th generation)"
         case .iPadMini: return "iPad Mini"
         case .iPadMini2: return "iPad Mini 2"
         case .iPadMini3: return "iPad Mini 3"
         case .iPadMini4: return "iPad Mini 4"
         case .iPadMini5: return "iPad Mini (5th generation)"
+        case .iPadMini6: return "iPad Mini (6th generation)"
         case .iPadPro9Inch: return "iPad Pro (9.7-inch)"
         case .iPadPro12Inch: return "iPad Pro (12.9-inch)"
         case .iPadPro12Inch2: return "iPad Pro (12.9-inch) (2nd generation)"
@@ -799,6 +856,8 @@ extension NKDevice: CustomStringConvertible {
         case .iPadPro12Inch3: return "iPad Pro (12.9-inch) (3rd generation)"
         case .iPadPro11Inch2: return "iPad Pro (11-inch) (2nd generation)"
         case .iPadPro12Inch4: return "iPad Pro (12.9-inch) (4th generation)"
+        case .iPadPro11Inch3: return "iPad Pro (11-inch) (3rd generation)"
+        case .iPadPro12Inch5: return "iPad Pro (12.9-inch) (5th generation)"
         case .homePod: return "HomePod"
         case .simulator(let model): return "Simulator (\(model.safeDescription))"
         case .unknown(let identifier): return identifier
@@ -828,6 +887,7 @@ extension NKDevice: CustomStringConvertible {
         switch self {
         case .appleTVHD: return "Apple TV HD"
         case .appleTV4K: return "Apple TV 4K"
+        case .appleTV4K2: return "Apple TV 4K (2nd generation)"
         case .simulator(let model): return "Simulator (\(model.safeDescription))"
         case .unknown(let identifier): return identifier
         }
@@ -855,7 +915,7 @@ extension NKDevice: Equatable {
 #if os(iOS) || os(watchOS)
 @available(iOS 8.0, watchOS 4.0, *)
 extension NKDevice {
-   
+    
 }
 #endif
 
