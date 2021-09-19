@@ -10,6 +10,9 @@ import SwiftTheme
 
 private let defaults = UserDefaults.standard
 
+public let NKThemeWillUpdateNotification = "NKThemeWillUpdateNotification"
+public let NKThemeDidUpdateNotification = "NKThemeDidUpdateNotification"
+
 public class NKThemeProvider {
     
     public static let shared = NKThemeProvider()
@@ -121,9 +124,29 @@ public class NKThemeProvider {
         lastTheme = themes[lastIndex]
         saveLastTheme()
 
+        // 发出更改前的通知
+        let updateBeforeTheme = currentTheme
+        let updateBeforeThemeInfo: [String : Any] = [
+            "name": updateBeforeTheme.name,
+            "isDark": (currentIndex == nightIndex)
+        ]
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: NKThemeWillUpdateNotification), object: updateBeforeThemeInfo)
+        
+        // 更改
         ThemeManager.setTheme(index: index)
         currentIndex = index        // 更新当前 index
         saveCurrentTheme()
+        
+        // 发出更改后的通知
+        let updateAfterTheme = currentTheme
+        let updateAfterThemeInfo: [String : Any] = [
+            "name": updateAfterTheme.name,
+            "isDark": (currentIndex == nightIndex)
+        ]
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: NKThemeDidUpdateNotification), object: updateAfterThemeInfo)
+        
     }
     
     public func switchToNext(withoutNight: Bool = false) {
