@@ -29,16 +29,16 @@ extension NKDevice {
         switch self {
        
         // MARK: - iPod
-        case .iPodTouch1, .iPodTouch2,.iPodTouch3 ,
-             .iPodTouch4,.iPodTouch5,.iPodTouch6, .iPodTouch7:
+        case .iPodTouch5,.iPodTouch6, .iPodTouch7:
             return .iPod
-        
+
         // MARK: - iPhone
         case .iPhone4, .iPhone4s, .iPhone5, .iPhone5c, .iPhone5s, .iPhone6,
              .iPhone6Plus, .iPhone6s, .iPhone6sPlus, .iPhone7, .iPhone7Plus, .iPhoneSE
             , .iPhone8, .iPhone8Plus, .iPhoneX, .iPhoneXS, .iPhoneXSMax, .iPhoneXR
             , .iPhone11, .iPhone11Pro, .iPhone11ProMax, .iPhoneSE2, .iPhone12,
-             .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax:
+             .iPhone12Mini, .iPhone12Pro, .iPhone12ProMax,
+             .iPhone13, .iPhone13Mini, .iPhone13Pro, .iPhone13ProMax:
             return .iPhone
             
         // MARK: - iPad
@@ -46,12 +46,14 @@ extension NKDevice {
              .iPadAir, .iPadAir2, .iPadAir3, .iPadAir4,
              .iPadMini, .iPadMini2, .iPadMini3, .iPadMini4, .iPadMini5
             , .iPadPro9Inch, .iPadPro12Inch, .iPadPro12Inch2, .iPadPro10Inch,
-             .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4:
+             .iPadPro11Inch, .iPadPro12Inch3, .iPadPro11Inch2, .iPadPro12Inch4,
+             .iPad9,.iPadMini6,.iPadPro11Inch3,.iPadPro12Inch5:
             return .iPad
             
         case .homePod: return .homePod
         case .simulator(let model): return model.series
         case .unknown: return .unknown
+
         }
         #elseif os(watchOS)
         switch self {
@@ -79,10 +81,6 @@ extension NKDevice {
         switch self {
        
         // MARK: - iPod
-        case .iPodTouch1: return 2007
-        case .iPodTouch2: return 2008
-        case .iPodTouch3: return 2008
-        case .iPodTouch4: return 2010
         case .iPodTouch5: return 2012
         case .iPodTouch6: return 2015
         case .iPodTouch7: return 2019
@@ -114,6 +112,10 @@ extension NKDevice {
         case .iPhone12Mini: return 2020
         case .iPhone12Pro: return 2020
         case .iPhone12ProMax: return 2020
+        case .iPhone13: return 2021
+        case .iPhone13Mini: return 2021
+        case .iPhone13Pro: return 2021
+        case .iPhone13ProMax: return 2021
             
         // MARK: - iPad
         case .iPad2: return 2011
@@ -123,6 +125,9 @@ extension NKDevice {
         case .iPad6: return 2018
         case .iPad7: return 2019
         case .iPad8: return 2020
+        case .iPad9:
+            return 2021
+    
             
         // MARK: - iPad Air
         case .iPadAir: return 2013
@@ -136,7 +141,9 @@ extension NKDevice {
         case .iPadMini3: return 2014
         case .iPadMini4: return 2015
         case .iPadMini5: return 2019
-            
+        case .iPadMini6:
+            return 2021
+    
         // MARK: - iPad Pro
         case .iPadPro9Inch: return 2016
         case .iPadPro12Inch: return 2015
@@ -146,9 +153,14 @@ extension NKDevice {
         case .iPadPro12Inch3: return 2018
         case .iPadPro11Inch2: return 2020
         case .iPadPro12Inch4: return 2020
+        case .iPadPro11Inch3:
+            return 2021
+        case .iPadPro12Inch5:
+            return 2021
         case .homePod: return -1
         case .simulator(let model): return model.ppi
         case .unknown: return nil
+      
         }
         #elseif os(watchOS)
         switch self {

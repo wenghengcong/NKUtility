@@ -162,10 +162,6 @@ extension NKDevice {
     public var ppi: Int? {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return 163
-        case .iPodTouch2: return 163
-        case .iPodTouch3: return 163
-        case .iPodTouch4: return 326
         case .iPodTouch5: return 326
         case .iPodTouch6: return 326
         case .iPodTouch7: return 326
@@ -195,6 +191,14 @@ extension NKDevice {
         case .iPhone12Mini: return 476
         case .iPhone12Pro: return 460
         case .iPhone12ProMax: return 458
+        case .iPhone13:
+            return 460
+        case .iPhone13Mini:
+            return 476
+        case .iPhone13Pro:
+            return 460
+        case .iPhone13ProMax:
+            return 458
         case .iPad2: return 132
         case .iPad3: return 264
         case .iPad4: return 264
@@ -222,6 +226,15 @@ extension NKDevice {
         case .homePod: return -1
         case .simulator(let model): return model.ppi
         case .unknown: return nil
+
+        case .iPad9:
+            return 264
+        case .iPadMini6:
+            return 264
+        case .iPadPro11Inch3:
+            return 264
+        case .iPadPro12Inch5:
+            return 264
         }
         #elseif os(watchOS)
         switch self {
@@ -255,10 +268,6 @@ extension NKDevice {
     public var screenDiagonal: NKDevice.Screen {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return .size3Dot5IN
-        case .iPodTouch2: return .size3Dot5IN
-        case .iPodTouch3: return .size3Dot5IN
-        case .iPodTouch4: return .size3Dot5IN
         case .iPodTouch5: return .size4IN
         case .iPodTouch6: return .size4IN
         case .iPodTouch7: return .size4IN
@@ -288,6 +297,10 @@ extension NKDevice {
         case .iPhone12Mini: return .size5Dot4IN
         case .iPhone12Pro: return .size6Dot1IN
         case .iPhone12ProMax: return .size6Dot7IN
+        case .iPhone13: return .size6Dot1IN
+        case .iPhone13Mini: return .size5Dot4IN
+        case .iPhone13Pro: return .size6Dot1IN
+        case .iPhone13ProMax: return .size6Dot7IN
         case .iPad2: return .size9Dot7IN
         case .iPad3: return .size9Dot7IN
         case .iPad4: return .size9Dot7IN
@@ -298,12 +311,15 @@ extension NKDevice {
         case .iPadAir3: return .size10Dot5IN
         case .iPad7: return .size10Dot2IN
         case .iPad8: return .size10Dot2IN
+        case .iPad9: return .size10Dot2IN
         case .iPadAir4: return .size10Dot9IN
         case .iPadMini: return .size7Dot9IN
         case .iPadMini2: return .size7Dot9IN
         case .iPadMini3: return .size7Dot9IN
         case .iPadMini4: return .size7Dot9IN
         case .iPadMini5: return .size7Dot9IN
+        case .iPadMini6: return .size7Dot9IN
+
         case .iPadPro9Inch: return .size9Dot7IN
         case .iPadPro12Inch: return .size12Dot9IN
         case .iPadPro12Inch2: return .size12Dot9IN
@@ -312,9 +328,14 @@ extension NKDevice {
         case .iPadPro12Inch3: return .size12Dot9IN
         case .iPadPro11Inch2: return .size11IN
         case .iPadPro12Inch4: return .size12Dot9IN
+        case .iPadPro11Inch3: return .size11IN
+        case .iPadPro12Inch5: return .size12Dot9IN
         case .homePod: return .sizeUnknown
         case .simulator(let model): return model.screenDiagonal
         case .unknown: return .sizeUnknown
+  
+            
+     
         }
         #elseif os(watchOS)
         switch self {
@@ -345,10 +366,6 @@ extension NKDevice {
     public var screenRatio: (width: Double, height: Double) {
         #if os(iOS)
         switch self {
-        case .iPodTouch1: return (width: 2, height: 3)
-        case .iPodTouch2: return (width: 2, height: 3)
-        case .iPodTouch3: return (width: 2, height: 3)
-        case .iPodTouch4: return (width: 2, height: 3)
         case .iPodTouch5: return (width: 9, height: 16)
         case .iPodTouch6: return (width: 9, height: 16)
         case .iPodTouch7: return (width: 9, height: 16)
@@ -378,6 +395,14 @@ extension NKDevice {
         case .iPhone12Mini: return (width: 9, height: 19.5)
         case .iPhone12Pro: return (width: 9, height: 19.5)
         case .iPhone12ProMax: return (width: 9, height: 19.5)
+        case .iPhone13:
+            return (width: 9, height: 19.5)
+        case .iPhone13Mini:
+            return (width: 9, height: 19.5)
+        case .iPhone13Pro:
+            return (width: 9, height: 19.5)
+        case .iPhone13ProMax:
+            return (width: 9, height: 19.5)
         case .iPad2: return (width: 3, height: 4)
         case .iPad3: return (width: 3, height: 4)
         case .iPad4: return (width: 3, height: 4)
@@ -388,12 +413,14 @@ extension NKDevice {
         case .iPadAir3: return (width: 3, height: 4)
         case .iPad7: return (width: 3, height: 4)
         case .iPad8: return (width: 3, height: 4)
+        case .iPad9: return (width: 3, height: 4)
         case .iPadAir4: return (width: 41, height: 59)
         case .iPadMini: return (width: 3, height: 4)
         case .iPadMini2: return (width: 3, height: 4)
         case .iPadMini3: return (width: 3, height: 4)
         case .iPadMini4: return (width: 3, height: 4)
         case .iPadMini5: return (width: 3, height: 4)
+        case .iPadMini6: return (width: 3, height: 4)
         case .iPadPro9Inch: return (width: 3, height: 4)
         case .iPadPro12Inch: return (width: 3, height: 4)
         case .iPadPro12Inch2: return (width: 3, height: 4)
@@ -402,6 +429,10 @@ extension NKDevice {
         case .iPadPro12Inch3: return (width: 512, height: 683)
         case .iPadPro11Inch2: return (width: 139, height: 199)
         case .iPadPro12Inch4: return (width: 512, height: 683)
+        case .iPadPro11Inch3:
+            return (width: 139, height: 199)
+        case .iPadPro12Inch5:
+            return (width: 512, height: 683)
         case .homePod: return (width: 4, height: 5)
         case .simulator(let model): return model.screenRatio
         case .unknown: return (width: -1, height: -1)
