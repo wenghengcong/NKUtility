@@ -98,13 +98,18 @@ open class NKCheckmarkCell: NKStaticCell {
             }
         }
         
+        checkMarkImageView.snp.remakeConstraints { make in
+            make.width.height.equalTo(30)
+            make.right.equalTo(backView.snp.right).offset(-10)
+            make.centerY.equalTo(backView.snp.centerY).offset(0)
+        }
+        
         let titleLeft = iconImageView.isHidden ? left : 5
         titleLabel.font = UIFont.systemFont(ofSize: 17.0)
         titleLabel.snp.remakeConstraints { make in
             make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
-            make.right.equalTo(backView.snp.right).offset(right)
-            make.top.equalTo(0)
-            make.height.equalTo(backView.height)
+            make.right.equalTo(checkMarkImageView.snp.left).offset(-10)
+            make.top.bottom.equalTo(0)
         }
     }
     
