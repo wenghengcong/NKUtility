@@ -12,6 +12,8 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
     
     public static var headerHeight: CGFloat = NKDesignByW375(44.0)
     
+    public static var font = NKSysFont17
+    
     open var titleLabel: UILabel = UILabel()
     open var descriptionLabel: UILabel = UILabel()
 
@@ -20,19 +22,14 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
         setupAllsubviews()
     }
     
-    open var title: String? {
+    open var data: NKStaticHeaderFooterData? {
         didSet {
-            titleLabel.text = title
+            titleLabel.text = data?.title
+            descriptionLabel.text = data?.desc
             setNeedsDisplay()
         }
     }
     
-    open var desc: String? {
-        didSet {
-            descriptionLabel.text = desc
-            setNeedsDisplay()
-        }
-    }
     
     public init() {
         super.init(reuseIdentifier: "nk_header_footer")
@@ -72,7 +69,7 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
         
         let left = NKDesignByW375(12.0)
         
-        if title != nil && desc != nil {
+        if data?.title != nil && data?.desc != nil {
             titleLabel.sizeToFit()
             let titleHeight = titleLabel.height
             
@@ -93,7 +90,7 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
                 make.height.equalTo(titleHeight)
             })
             
-        } else if title != nil {
+        } else if data?.title != nil {
             titleLabel.sizeToFit()
             let height = titleLabel.height
             titleLabel.snp.remakeConstraints({ (make) in

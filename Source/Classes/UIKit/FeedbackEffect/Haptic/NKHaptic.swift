@@ -64,6 +64,7 @@ public enum NKHapticNotificationType {
  NKHaptic.play([.haptic(.impact(.light)), .haptic(.impact(.heavy)), .wait(0.1), .haptic(.impact(.heavy)), .haptic(.impact(.light))])
  
  方法四：快捷方法
+ NKHaptic.lightImpact
  
  reference: https://github.com/efremidze/Haptica
  https://github.com/iSapozhnik/Haptico
@@ -82,7 +83,7 @@ public enum NKHaptic {
     // trigger
     public func feedback() {
         guard #available(iOS 10, *) else { return }
-        guard NKHapticConfig.enable else {
+        guard NKHaptic.enable else {
             return
         }
         switch self {
@@ -96,35 +97,60 @@ public enum NKHaptic {
     }
     
     // MARK: - Impact
-    public func lightImpact() {
+    public static func lightImpact() {
         NKHaptic.Impact.feedback(.light)
     }
     
-    public func mediumImpact() {
+    public static func mediumImpact() {
         NKHaptic.Impact.feedback(.medium)
     }
     
-    public func heavyImpact() {
+    public static func heavyImpact() {
         NKHaptic.Impact.feedback(.heavy)
     }
     
     // MARK: - Selection
-    public func selectionImpact() {
+    public static func selectionImpact() {
         NKHaptic.Selection.feedback()
     }
     
     // MARK: - Notification
-    public func errorNotification() {
+    public static func errorNotification() {
         NKHaptic.Notification.feedback(.error)
     }
     
-    public func successNotification() {
+    public static func successNotification() {
         NKHaptic.Notification.feedback(.success)
     }
     
-    public func warningNotification() {
+    public static func warningNotification() {
         NKHaptic.Notification.feedback(.warning)
     }
+    
+    ///  用户信息，用于区分不同用户的存储
+    public static var userinfo = "NKUtility"
+    
+    private static func generateKey() -> String {
+        let ori = "com.niki.taptic.enable"
+        let result = "\(NKHaptic.userinfo)_\(ori))"
+        return result
+    }
+    
+    /// 是否启用触感
+    public static var enable: Bool {
+        set {
+            // 取反存储
+            let defaults = UserDefaults.standard
+            defaults.setValue(!newValue, forKey: generateKey())
+            defaults.synchronize()
+        }
+        get {
+            let defaults = UserDefaults.standard
+            let isEnable = !defaults.bool(forKey: generateKey())
+            return isEnable
+        }
+    }
+    
 }
 
 /// Wrapper of `UIImpactFeedbackGenerator`
@@ -166,7 +192,7 @@ open class NKHapticImpact {
     public func feedback(_ style: NKHapticImpactStyle) {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable else { return }
+              NKHaptic.enable else { return }
         updateGeneratorIfNeeded(style)
         guard let generator = generator as? UIImpactFeedbackGenerator else { return }
         generator.impactOccurred()
@@ -179,7 +205,7 @@ open class NKHapticImpact {
     public func feedback(intensity: CGFloat) {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable else { return }
+              NKHaptic.enable else { return }
         guard let generator = generator as? UIImpactFeedbackGenerator else { return }
         generator.impactOccurred(intensity: intensity)
         generator.prepare()
@@ -188,7 +214,7 @@ open class NKHapticImpact {
     public func prepare(_ style: NKHapticImpactStyle) {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable else { return }
+              NKHaptic.enable else { return }
         updateGeneratorIfNeeded(style)
         guard let generator = generator as? UIImpactFeedbackGenerator else { return }
         generator.prepare()
@@ -207,7 +233,7 @@ open class NKHapticSelection {
     
     public func feedback() {
         guard #available(iOS 10.0, *),
-              NKHapticConfig.enable,
+              NKHaptic.enable,
               let generator = generator as? UISelectionFeedbackGenerator else { return }
         generator.selectionChanged()
         generator.prepare()
@@ -216,7 +242,7 @@ open class NKHapticSelection {
     public func prepare() {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable,
+              NKHaptic.enable,
               let generator = generator as? UISelectionFeedbackGenerator else { return }
         generator.prepare()
     }
@@ -236,7 +262,7 @@ open class NKHapticNotification {
     public func feedback(_ type: NKHapticNotificationType) {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable,
+              NKHaptic.enable,
               let generator = generator as? UINotificationFeedbackGenerator else { return }
         
         let feedbackType: UINotificationFeedbackGenerator.FeedbackType
@@ -255,7 +281,7 @@ open class NKHapticNotification {
     public func prepare() {
         guard #available(iOS 10.0, *),
               NKDevice.current.isHapticFeedbackCapable,
-              NKHapticConfig.enable,
+              NKHaptic.enable,
               let generator = generator as? UINotificationFeedbackGenerator else { return }
         generator.prepare()
     }

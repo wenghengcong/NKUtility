@@ -11,6 +11,24 @@ import Foundation
 /// 设计：https://developer.apple.com/design/human-interface-guidelines/ios/user-interaction/haptics/
 public class NKFeedback {
     
+    public static var hapticOpen: Bool {
+        set {
+            NKHaptic.enable = newValue
+        }
+        get {
+            return NKHaptic.enable
+        }
+    }
+    
+    public static var soundOpen: Bool {
+        set {
+            NKSound.enable = newValue
+        }
+        get {
+            return NKSound.enable
+        }
+    }
+    
     public static func feedback(_ file: String? = nil,
                                 haptic: NKHaptic? = nil) {
         if let fi = file {

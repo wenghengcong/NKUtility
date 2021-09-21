@@ -22,11 +22,41 @@ public enum NKCommonCellCellType {
     case label
 }
 
+public class NKStaticHeaderFooterData {
+    open var title: String?
+    open var desc: String?
+    open var icon: String?
+    
+    public convenience init(title: String?) {
+        self.init()
+        self.title = title
+    }
+    
+    public func height() -> CGFloat {
+        var height: CGFloat = NKStaticHeaderFooterView.headerHeight
+        var hasDesc = false
+        if let des = desc, des.isNotEmpty{
+            hasDesc = true
+        }
+        
+        if title != nil && desc != nil, let de = desc {
+            let left = NKDesignByW375(12.0)
+            let width = NKSCREEN_WIDTH-2*left
+            let descHeight = de.height(with: width, font: NKSysFont13) + 7
+            height = height + descHeight
+        }
+        else  if let t =  title, t.isNotEmpty, !hasDesc {
+            // 只有 title
+        }
+        return height
+    }
+}
+
 public class NKCommonSectionData {
     
     public var tag: Int?
-    public var header: String?
-    public var footer: String?
+    public var header: NKStaticHeaderFooterData?
+    public var footer: NKStaticHeaderFooterData?
     public var cells: [NKCommonCellData] = []
     public var count: Int {
         return cells.count
@@ -37,6 +67,16 @@ public class NKCommonSectionData {
     }
     
     public init(header: String?, footer: String?) {
+        if let tit = header, tit.isNotEmpty {
+            self.header = NKStaticHeaderFooterData(title: header)
+        }
+        if let tit = footer, tit.isNotEmpty {
+            self.footer = NKStaticHeaderFooterData(title: footer)
+        }
+    }
+    
+    public init(header: NKStaticHeaderFooterData?,
+                footer: NKStaticHeaderFooterData?) {
         self.header = header
         self.footer = footer
     }

@@ -32,8 +32,8 @@ import AVFoundation
  }
 
  配置：
- NKSound.enabled = true
- NKSound.enabled = false
+ NKSound.enable = true
+ NKSound.enable = false
  NKSound.category = .ambient
  */
 public enum NKSoundCategory {
@@ -114,14 +114,21 @@ open class NKSound {
     
     private static var sounds = [URL: NKSound]()
     
-    private static let defaultsKey = "com.moonlightapps.SwiftySound.enabled"
+    ///  用户信息，用于区分不同用户的存储
+    public static var userinfo = "NKUtility"
+        
+    private static func generateSoundEnableKey() -> String {
+        let ori = "com.niki.NKSound.enable"
+        let result = "\(NKSound.userinfo)_\(ori))"
+        return result
+    }
     
     /// Globally enable or disable sound. This setting value is stored in UserDefaults and will be loaded on app launch.
-    public static var enabled: Bool = {
-        return !UserDefaults.standard.bool(forKey: defaultsKey)
+    public static var enable: Bool = {
+        return !UserDefaults.standard.bool(forKey: generateSoundEnableKey())
     }() { didSet {
-        let value = !enabled
-        UserDefaults.standard.set(value, forKey: defaultsKey)
+        let value = !enable
+        UserDefaults.standard.set(value, forKey: generateSoundEnableKey())
         if value {
             stopAll()
         }
@@ -182,7 +189,7 @@ open class NKSound {
     /// - Parameter numberOfLoops: Number of loops. Specify a negative number for an infinite loop. Default value of 0 means that the sound will be played once.
     /// - Returns: If the sound was played successfully the return value will be true. It will be false if sounds are disabled or if system could not play the sound.
     @discardableResult public func play(numberOfLoops: Int = 0, completion: PlayerCompletion? = nil) -> Bool {
-        if !NKSound.enabled {
+        if !NKSound.enable {
             return false
         }
         paused = false
@@ -274,7 +281,7 @@ open class NKSound {
     ///   - numberOfLoops: Number of loops. Specify a negative number for an infinite loop. Default value of 0 means that the sound will be played once.
     /// - Returns: If the sound was played successfully the return value will be true. It will be false if sounds are disabled or if system could not play the sound.
     @discardableResult public static func play(url: URL, numberOfLoops: Int = 0) -> Bool {
-        if !NKSound.enabled {
+        if !NKSound.enable {
             return false
         }
         var sound = sounds[url]
