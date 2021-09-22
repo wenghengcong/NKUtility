@@ -109,6 +109,14 @@ public enum NKHaptic {
         NKHaptic.Impact.feedback(.heavy)
     }
     
+    public static func softImpact() {
+        NKHaptic.Impact.feedback(.soft)
+    }
+    
+    public static func rigidImpact() {
+        NKHaptic.Impact.feedback(.rigid)
+    }
+    
     // MARK: - Selection
     public static func selectionImpact() {
         NKHaptic.Selection.feedback()
