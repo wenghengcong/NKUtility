@@ -27,11 +27,7 @@ open class NKSwitchCell: NKStaticCell {
     
     open override func qingFillData() {
         super.qingFillData()
-        setup(icon: data!.icon, title: data!.title, on: data!.on)
-    }
-    
-    func setup(icon: String?, title: String, on: Bool?) {
-        if let iconString = icon, iconString.isNotEmpty {
+        if let iconString = data?.icon, iconString.isNotEmpty {
             if let image = UIImage(named: iconString) {
                 iconImageView.image = image
             } else {
@@ -41,14 +37,18 @@ open class NKSwitchCell: NKStaticCell {
             }
         }
         
-        titleLabel.text = title
+        titleLabel.text = data?.title
         
-        if let switchOn = on {
+        if let switchOn = data?.on {
             switchControl.isOn = switchOn
+        }
+        
+        if let enable = data?.enable {
+            switchControl.isEnabled = enable
         }
         setNeedsDisplay()
     }
-
+    
     open override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

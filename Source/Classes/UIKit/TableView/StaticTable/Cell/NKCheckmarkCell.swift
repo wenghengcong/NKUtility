@@ -32,12 +32,8 @@ open class NKCheckmarkCell: NKStaticCell {
     }
     
     open override func qingFillData() {
-        setup(icon: data!.icon, title: data!.title, check: data!.on)
-        
-    }
-    
-    func setup(icon: String?, title: String, check: Bool?) {
-        if let iconString = icon {
+        super.qingFillData()
+        if let iconString = data?.icon {
             if let image = UIImage(named: iconString) {
                 iconImageView.image = image
             } else {
@@ -47,11 +43,11 @@ open class NKCheckmarkCell: NKStaticCell {
             }
         }
         
-        titleLabel.text = title
-        
-        if let on = check {
+        titleLabel.text = data?.title
+        if let on = data?.on {
             checkMarkImageView.isHidden = !on
         }
+                
         setNeedsDisplay()
     }
     

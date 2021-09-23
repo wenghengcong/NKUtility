@@ -16,13 +16,13 @@ public protocol NKCommonCellProtocol: class {
     /// for switch value changed
     /// - Parameters:
     ///   - cell: <#cell description#>
-    ///   - value: <#value description#>
-    func switchUpdate(in cell:NKSwitchCell,with value: Bool)
+    ///   - isOn: 是否开启
+    func switchUpdate(in cell: NKSwitchCell, with isOn: Bool)
 }
 
 
 public extension NKCommonCellProtocol {
-    func switchUpdate(in cell:NKSwitchCell,with value: Bool) {
+    func switchUpdate(in cell: NKSwitchCell,with isOn: Bool) {
         
     }
 }

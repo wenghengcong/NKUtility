@@ -91,6 +91,8 @@ public class NKCommonCellData {
     public var indexPath: IndexPath?
     public var desc: String?
     
+    public var enable: Bool = true
+    
     /// 对应 url
     public var url: String?
     
@@ -113,12 +115,14 @@ public class NKCommonCellData {
                 title: String,
                 desc: String? = nil,
                 on: Bool? = false,
-                hasDetail: Bool = false) {
+                hasDetail: Bool = false,
+                enable: Bool = true) {
         self.type = type
         self.icon = icon
         self.title = title
         self.desc = desc
         self.on = on
         self.hasDetail = hasDetail
+        self.enable = enable
     }
 }
