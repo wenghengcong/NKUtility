@@ -345,6 +345,7 @@ open class   NKWebViewController: UIViewController {
                 toolbarItems = items as? [UIBarButtonItem]
             }
         }
+        updateToolbarHidden()
     }
 
     func refreshIphonToolbarItems() {
@@ -473,12 +474,7 @@ extension  NKWebViewController {
                 needUpdate = true
             }
 
-            if NKDevice.isIPad() {
-                
-            } else {
-                navigationController?.toolbar.barTintColor = currentBackgroudColor()
-            }
-            
+            navigationController?.toolbar.barTintColor = currentBackgroudColor()
             // Fix problem of WebView content height not fitting WebViews frame height
             self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
             
@@ -739,18 +735,10 @@ extension  NKWebViewController {
         navBarTitle.textAlignment = .center
         navigationItem.titleView = navBarTitle;
         super.viewWillAppear(true)
-        
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) {
-            self.navigationController?.setToolbarHidden(false, animated: false)
-        }
-        else if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
-            self.navigationController?.setToolbarHidden(true, animated: true)
-        }
     }
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        updateToolbarHidden()
         if let navVC = self.navigationController {
             if let gestureRecognizer = navVC.interactivePopGestureRecognizer {
                 navControllerUsesBackSwipe = gestureRecognizer.isEnabled

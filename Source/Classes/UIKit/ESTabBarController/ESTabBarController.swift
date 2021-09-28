@@ -90,9 +90,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     open var barBackgroundColor = NKThemeProvider.barBackgroundColorPicker
     {
         didSet {
-            // set tabbar back
-            self.tabBar.theme_barTintColor = barBackgroundColor
-            self.tabBar.isTranslucent = false
+            refresTabBarBackgroundColor()
         }
     }
     
@@ -112,6 +110,7 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
     open func refreshNewTabbar() {
         let tabBar = { () -> ESTabBar in
             let tabBar = ESTabBar()
+      
             tabBar.delegate = self
             tabBar.customDelegate = self
             tabBar.tabBarController = self
@@ -119,6 +118,22 @@ open class ESTabBarController: UITabBarController, ESTabBarDelegate {
         }()
         self.setValue(tabBar, forKey: "tabBar")
         tabBar.itemCustomPositioning = .automatic
+    }
+    
+    func refresTabBarBackgroundColor() {
+        // set tabbar back
+        self.tabBar.isTranslucent = false
+        if #available(iOS 15.0, *) {
+            let tabBarAppearance = UITabBarAppearance()
+            tabBarAppearance.theme_backgroundColor = barBackgroundColor
+            tabBarAppearance.shadowColor = .clear
+            tabBarAppearance.backgroundEffect = nil
+
+            self.tabBar.scrollEdgeAppearance = tabBarAppearance
+            self.tabBar.standardAppearance = tabBarAppearance
+        } else {
+            self.tabBar.theme_barTintColor = barBackgroundColor
+        }
     }
     
     // MARK: - Theme
