@@ -70,6 +70,9 @@
     ],
     "SkeletonView": [
 
+    ],
+    "SwiftyUserDefaults": [
+
     ]
   },
   "swift_version": "5.0"

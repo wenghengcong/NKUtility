@@ -36,7 +36,6 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         selectedBackgroundView = nil
         selectionStyle = .none
         isSkeletonable = true
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false

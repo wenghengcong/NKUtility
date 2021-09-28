@@ -6,10 +6,6 @@
 import UIKit
 
 // MARK: BadgeViewDataSource
-
-@available(*, deprecated, renamed: "BadgeViewDataSource")
-public typealias MSBadgeViewDataSource = BadgeViewDataSource
-
 @objc(MSFBadgeViewDataSource)
 open class BadgeViewDataSource: NSObject {
     @objc open var text: String
@@ -25,9 +21,6 @@ open class BadgeViewDataSource: NSObject {
 }
 
 // MARK: - BadgeViewDelegate
-@available(*, deprecated, renamed: "BadgeViewDelegate")
-public typealias MSBadgeViewDelegate = BadgeViewDelegate
-
 @objc(MSFBadgeViewDelegate)
 public protocol BadgeViewDelegate {
     func didSelectBadge(_ badge: BadgeView)
@@ -60,10 +53,6 @@ public extension Colors {
 
  `BadgeView` can be selected with a tap gesture and tapped again after entering a selected state for the purpose of displaying more details about the entity represented by the selected badge.
  */
-
-@available(*, deprecated, renamed: "BadgeView")
-public typealias MSBadgeView = BadgeView
-
 @objc(MSFBadgeView)
 open class BadgeView: UIView {
     @objc(MSFBadgeViewStyle)
@@ -143,7 +132,7 @@ open class BadgeView: UIView {
     }
 
     private var _labelTextColor: UIColor?
-    open var labelTextColor: UIColor? {
+    @objc open var labelTextColor: UIColor? {
         get {
             if let customLabelTextColor = _labelTextColor {
                 return customLabelTextColor
@@ -169,7 +158,7 @@ open class BadgeView: UIView {
     }
 
     private var _selectedLabelTextColor: UIColor?
-    open var selectedLabelTextColor: UIColor {
+    @objc open var selectedLabelTextColor: UIColor {
         get {
             if let customSelectedLabelTextColor = _selectedLabelTextColor {
                 return customSelectedLabelTextColor
@@ -193,7 +182,7 @@ open class BadgeView: UIView {
     }
 
     private var _disabledLabelTextColor: UIColor?
-    open var disabledLabelTextColor: UIColor? {
+    @objc open var disabledLabelTextColor: UIColor? {
         get {
             if let customDisabledLabelTextColor = _disabledLabelTextColor {
                 return customDisabledLabelTextColor
@@ -209,7 +198,7 @@ open class BadgeView: UIView {
     }
 
     private var _backgroundColor: UIColor?
-    open override var backgroundColor: UIColor? {
+    @objc open override var backgroundColor: UIColor? {
         get {
             if let customBackgroundColor = _backgroundColor {
                 return customBackgroundColor
@@ -235,7 +224,7 @@ open class BadgeView: UIView {
     }
 
     private var _selectedBackgroundColor: UIColor?
-    open var selectedBackgroundColor: UIColor? {
+    @objc open var selectedBackgroundColor: UIColor? {
         get {
             if let customSelectedBackgroundColor = _selectedBackgroundColor {
                 return customSelectedBackgroundColor

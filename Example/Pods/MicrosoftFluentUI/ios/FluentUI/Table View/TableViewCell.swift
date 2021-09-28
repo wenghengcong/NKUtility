@@ -7,9 +7,6 @@ import UIKit
 
 // MARK: TableViewCellAccessoryType
 
-@available(*, deprecated, renamed: "TableViewCellAccessoryType")
-public typealias MSTableViewCellAccessoryType = TableViewCellAccessoryType
-
 @objc(MSFTableViewCellAccessoryType)
 public enum TableViewCellAccessoryType: Int {
     case none
@@ -104,9 +101,6 @@ public extension Colors {
 }
 
 // MARK: - TableViewCell
-
-@available(*, deprecated, renamed: "TableViewCell")
-public typealias MSTableViewCell = TableViewCell
 
 /**
  `TableViewCell` is used to present a cell with one, two, or three lines of text with an optional custom view and an accessory.
@@ -666,7 +660,7 @@ open class TableViewCell: UITableViewCell {
     }
     private var _customViewSize: CustomViewSize = .default
 
-    @objc open private(set) var customAccessoryView: UIView? = nil {
+    @objc open private(set) var customAccessoryView: UIView? {
         didSet {
             oldValue?.removeFromSuperview()
             if let customAccessoryView = customAccessoryView {
