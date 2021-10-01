@@ -33,7 +33,7 @@ public enum NKWebViewControllerProgressIndicatorStyle {
 }
 
 
-open class   NKWebViewController: UIViewController {
+open class NKWebViewController: UIViewController {
     
     /** Boolean flag which indicates whether JavaScript alerts are allowed. Default is `true`. */
     open var allowJavaScriptAlerts = true
@@ -606,7 +606,11 @@ extension  NKWebViewController {
                 }
             }
         case "URL":
+            
+            // 有些请求，不会走对应的 decidePolicyFor navigationAction ，但是会经过这里
             delegate?.webViewController?(self, didChangeURL: webView?.url)
+            updateToolbarItems()
+            
         case "title":
             delegate?.webViewController?(self, didChangeTitle: webView?.title as NSString?)
         case "loading":

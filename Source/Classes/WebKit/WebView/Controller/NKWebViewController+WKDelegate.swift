@@ -40,6 +40,17 @@ extension  NKWebViewController: WKUIDelegate {
 extension  NKWebViewController: WKNavigationDelegate {
     
     // 1、4 在发送请求之前，决定是否跳转
+//    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+//                        preferences: WKWebpagePreferences,
+//                        decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+//        guard let url = navigationAction.request.url else {
+//            return
+//        }
+//
+//        let preferences = WKWebpagePreferences()
+//        decisionHandler(.allow, preferences)
+//    }
+    
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             return
@@ -189,6 +200,19 @@ extension  NKWebViewController: WKNavigationDelegate {
         updateToolbarItems()
         delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
     }
+    
+    
+//    open func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+//
+//    }
+//
+//    open func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+//
+//    }
+//
+//    open func webView(_ webView: WKWebView, respondTo challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+//
+//    }
     
     open func openCustomApp(urlScheme: String, additional_info:String){
         if let requestUrl: URL = URL(string:"\(urlScheme)"+"\(additional_info)") {
