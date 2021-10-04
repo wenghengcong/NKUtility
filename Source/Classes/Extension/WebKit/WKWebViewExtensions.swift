@@ -22,6 +22,13 @@ extension WKWebView {
         guard let url = URL(string: urlString) else { return nil }
         return load(URLRequest(url: url))
     }
+    
+    public func goBackToFirstItemInHistory() {
+         let script = "window.history.go(-(window.history.length - 1));"
+         evaluateJavaScript(script) { (_, error) in
+             print(error)
+         }
+     }
 }
 
 

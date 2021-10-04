@@ -361,6 +361,14 @@ open class NKWebViewController: UIViewController {
         }
     }
     
+    open func goBackStartpoint() {
+        if let web = webView, web.canGoBack {
+            webView?.goBackToFirstItemInHistory()
+        } else {
+            reload()
+        }
+    }
+    
     open func goForward() {
         if let web = webView, web.canGoForward {
             webView?.goForward()
@@ -371,6 +379,11 @@ open class NKWebViewController: UIViewController {
     
     open func reload() {
         webView?.reload()
+    }
+    
+    
+    open func reloadFromOrigin() {
+        webView?.reloadFromOrigin()
     }
     
     @objc func goBackTapped(_ sender: UIBarButtonItem) {
@@ -534,20 +547,6 @@ extension  NKWebViewController {
         }
     }
     
-    internal func progressChanged(_ newValue: NSNumber) {
-        progressView.progress = newValue.floatValue
-        if progressView.progress == 1 {
-            progressView.progress = 0
-            UIView.animate(withDuration: 0.2, animations: { () -> Void in
-                self.progressView.alpha = 0
-            })
-        } else if progressView.alpha == 0 {
-            UIView.animate(withDuration: 0.2, animations: { () -> Void in
-                self.progressView.alpha = 1
-            })
-        }
-    }
-    
     internal func showError(_ errorString: String?) {
         let alertView = UIAlertController(title: "Error", message: errorString, preferredStyle: .alert)
         alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -601,12 +600,24 @@ extension  NKWebViewController {
         switch keyPath {
         case "estimatedProgress":
             if (progressIndicatorStyle == .progressView) || (progressIndicatorStyle == .both) {
-                if let newValue = change?[NSKeyValueChangeKey.newKey] as? NSNumber {
-                    progressChanged(newValue)
+                // 将alpha设为1（显示）
+                self.progressView.alpha = 1.0
+                // estimatedProgress 更改进度条值
+                self.progressView.setProgress(Float(self.webView?.estimatedProgress ?? 0.0), animated: true)
+                // 当estimatedProgress为1.0时，使用动画隐藏，动画完成时设置0.0
+                if (self.webView?.estimatedProgress >= 1.0) {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.3,
+                                   options: [.curveEaseOut],
+                                   animations: { [weak self] in
+                        self?.progressView.alpha = 0.0
+                    }, completion: {
+                        (finished : Bool) in
+                        self.progressView.setProgress(0.0, animated: false)
+                    })
                 }
             }
         case "URL":
-            
             // 有些请求，不会走对应的 decidePolicyFor navigationAction ，但是会经过这里
             delegate?.webViewController?(self, didChangeURL: webView?.url)
             updateToolbarItems()
@@ -614,13 +625,14 @@ extension  NKWebViewController {
         case "title":
             delegate?.webViewController?(self, didChangeTitle: webView?.title as NSString?)
         case "loading":
-            if let val = change?[NSKeyValueChangeKey.newKey] as? Bool {
-                if !val {
-                    showLoading(false)
-                    updateToolbarItems()
-                    delegate?.webViewController?(self, didFinishLoading: webView?.url, success: false)
-                }
+            if let isLoading = self.webView?.isLoading, isLoading {
+                self.progressView.setProgress(0.1, animated: true)
+            } else {
+                self.progressView.setProgress(0.0, animated: false)
+                showLoading(false)
+                delegate?.webViewController?(self, didFinishLoading: webView?.url, success: false)
             }
+            updateToolbarItems()
         default:
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }

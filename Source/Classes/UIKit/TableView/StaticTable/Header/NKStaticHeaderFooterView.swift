@@ -33,7 +33,6 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
     
     public init() {
         super.init(reuseIdentifier: "nk_header_footer")
-        self.frame = CGRect(x: 0, y: 0, width: NKSCREEN_WIDTH, height: NKStaticHeaderFooterView.headerHeight)
         setupAllsubviews()
     }
     
@@ -48,8 +47,12 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
     }
      
     fileprivate func setupAllsubviews() {
+        self.frame = CGRect(x: 0, y: 0, width: NKSCREEN_WIDTH, height: NKStaticHeaderFooterView.headerHeight)
+        contentView.frame = self.bounds
+        
         theme_backgroundColor = .viewBackgroundColor
-        contentView.theme_backgroundColor = .viewBackgroundColor //Or any color you want
+        contentView.theme_backgroundColor = .viewBackgroundColor
+        contentView.translatesAutoresizingMaskIntoConstraints
         // 恶魔恶魔：存在导致Changing the translatesAutoresizingMaskIntoConstraints property of the contentView of a UITableViewCell is not supported and will result in undefined behavior, as this property is managed by the owning UITableViewCell. Cell
 //        contentView.snp.makeConstraints { (make) in
 //            make.edges.equalTo(UIEdgeInsets.zero)
@@ -62,8 +65,6 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
         descriptionLabel.theme_textColor = .subTitleColor
         descriptionLabel.font = NKSysFont13
         contentView.addSubview(descriptionLabel)
-        
-        contentView.snp
     }
     
     open override func layoutSubviews() {

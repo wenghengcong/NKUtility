@@ -162,7 +162,6 @@ extension  NKWebViewController: WKNavigationDelegate {
                 if error == nil {
                     self.navBarTitle.text = response as! String?
                     self.navBarTitle.sizeToFit()
-                    self.updateToolbarItems()
                 }
             })
             
@@ -171,17 +170,16 @@ extension  NKWebViewController: WKNavigationDelegate {
                     //                    NKlogger.debug(response)
                     self.navBarTitle.text = response as! String?
                     self.navBarTitle.sizeToFit()
-                    self.updateToolbarItems()
                 }
             }
         } else {
-            updateToolbarItems()
         }
+        updateToolbarItems()
     }
     
     /// 当内容开始返回时调用
     open func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        
+        updateToolbarItems()
     }
     
     // 页面加载失败时调用
