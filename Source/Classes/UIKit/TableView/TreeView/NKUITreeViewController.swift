@@ -142,6 +142,7 @@ public class NKTreeViewController:NSObject  {
         }
         return collapsedTreeViewNode
     }
+    
     @discardableResult
     func expandRows(atIndexPath indexPath:IndexPath, with selectedTreeViewNode:NKTreeViewNode, openWithChildrens:Bool) -> Int{
         guard let treeViewControllerDelegate = self.treeViewControllerDelegate else {return 0}
@@ -169,6 +170,43 @@ public class NKTreeViewController:NSObject  {
         return row
     }
     
+    @discardableResult
+    func expandRows(atIndexPath indexPath:IndexPath, with selectedTreeViewNode:NKTreeViewNode, showMaxLevel: Int) -> Int{
+        if showMaxLevel == 0 {
+            setCollapseTreeViewNode(atIndex: indexPath.row)
+            return 0
+        }
+        guard let treeViewControllerDelegate = self.treeViewControllerDelegate else {return 0}
+        var openWithChildrens = selectedTreeViewNode.level < showMaxLevel
+        if openWithChildrens {
+            let treeViewNodeChildren = treeViewControllerDelegate.getChildren(forTreeViewNodeItem: selectedTreeViewNode.item, with: indexPath)
+            var row = indexPath.row + 1
+            
+            indexPathsArray = [IndexPath]()
+            setExpandTreeViewNode(atIndex: indexPath.row)
+            
+            if treeViewNodeChildren.count > 0 {
+                treeViewControllerDelegate.willExpandTreeViewNode(treeViewNode: selectedTreeViewNode, atIndexPath: indexPath)
+                for item in treeViewNodeChildren {
+                    addIndexPath(withRow: row)
+                    insertTreeViewNode(parent: selectedTreeViewNode, with: item, to: row, expand: openWithChildrens)
+                    setLevelTreeViewNode(atIndex: row, to: selectedTreeViewNode.level)
+                    if openWithChildrens {
+                        let treeViewNode = getTreeViewNode(atIndex: row)
+                        let indexPath = IndexPath(row: row, section: 0)
+                        row = expandRows(atIndexPath: indexPath, with: treeViewNode, showMaxLevel: showMaxLevel)
+                    }else {
+                        row += 1
+                    }
+                }
+            }
+            return row
+        } else {
+            setCollapseTreeViewNode(atIndex: indexPath.row)
+        }
+        return indexPath.row
+    }
+    
     func collapseAllRows(){
         indexPathsArray = [IndexPath]()
         var indexPath = IndexPath(row: 0, section: 0)
@@ -188,10 +226,27 @@ public class NKTreeViewController:NSObject  {
         var indexPath = IndexPath(row: 0, section: 0)
         for treeViewNode in treeViewNodes {
             //            if !treeViewNode.expand {
-            //                
+            //
             //            }
             indexPath = getIndexPathOfTreeViewNode(treeViewNode: treeViewNode)
             indexPath.row = expandRows(atIndexPath: indexPath, with: treeViewNode, openWithChildrens: true)
+        }
+    }
+    
+    
+    /// 只展开到 level 级别
+    /// - Parameter level: 层级
+    func expandRows(level: Int) {
+        var checkLevel = level
+        if level <= 0 {
+            checkLevel = 0
+        }
+        indexPathsArray = [IndexPath]()
+        var indexPath = IndexPath(row: 0, section: 0)
+        for treeViewNode in treeViewNodes {
+            let needExpand = treeViewNode.level <= checkLevel
+            indexPath = getIndexPathOfTreeViewNode(treeViewNode: treeViewNode)
+            indexPath.row = expandRows(atIndexPath: indexPath, with: treeViewNode, showMaxLevel: level)
         }
     }
     

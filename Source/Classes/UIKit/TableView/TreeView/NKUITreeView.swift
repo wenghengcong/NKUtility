@@ -28,6 +28,18 @@ public protocol NKTreeViewDelegate : NSObjectProtocol{
     
 }
 
+///  点击 TreeView 的动作
+public enum NKUITreeViewSelectedAction {
+    /// 不执行
+    case none
+    /// 仅仅执行展开或收起的动作
+    case expand
+    /// 调用代理回调方法，不执行展开或者收起
+    case delegate
+    /// 既调用代理方法，又执行展开或收起的动作
+    case all
+}
+
 public class NKUITreeView: UITableView {
     
     @IBOutlet open weak var treeViewDataSource:NKTreeViewDataSource?
@@ -35,6 +47,10 @@ public class NKUITreeView: UITableView {
     fileprivate var treeViewController = NKTreeViewController(treeViewNodes: [])
     fileprivate var selectedTreeViewNode:NKTreeViewNode?
     public var collapseNoneSelectedRows = false
+    
+    /// 点击之后需要执行的操作
+    public var didSelectAction: NKUITreeViewSelectedAction = .all
+    
     fileprivate var mainDataArray:[NKTreeViewNode] = []
     
     
@@ -162,7 +178,11 @@ public class NKUITreeView: UITableView {
     public func expandAllRows() {
         treeViewController.expandAllRows()
         reloadDataWithoutChangingRowStates()
-        
+    }
+    
+    public func expandRows(level: Int) {
+        treeViewController.expandRows(level: level)
+        reloadDataWithoutChangingRowStates()
     }
     
     public func collapseAllRows() {
@@ -173,42 +193,60 @@ public class NKUITreeView: UITableView {
 
 extension NKUITreeView : UITableViewDelegate {
     
+    /// 仅仅调用展开动作，不会调用代理对应的回调方法
+    public func treeViewExpandOrCollapse(with treeViewNode: NKTreeViewNode) {
+        let indexPath = treeViewController.getIndexPathOfTreeViewNode(treeViewNode: treeViewNode)
+        self.treeViewExpandOrCollapse(self, didSelectRowAt: indexPath, action: .expand)
+    }
+    
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let treeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
         return (self.treeViewDelegate?.treeView(tableView as! NKUITreeView,heightForRowAt: indexPath,withTreeViewNode :treeViewNode))!
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedTreeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
-        guard let treeViewDelegate = self.treeViewDelegate else { return }
-        
-        if let justSelectedTreeViewNode = selectedTreeViewNode {
-            treeViewDelegate.treeView(tableView as! NKUITreeView, didSelectRowAt: justSelectedTreeViewNode, atIndexPath: indexPath)
-            var willExpandIndexPath = indexPath
-            if justSelectedTreeViewNode.expand {
-                treeViewController.collapseRows(for: justSelectedTreeViewNode, atIndexPath: indexPath)
-                collapseRows(for: justSelectedTreeViewNode, atIndexPath: indexPath){}
+        // delegate callback
+        if didSelectAction == .delegate || didSelectAction == .all {
+            selectedTreeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
+            if let justSelectedTreeViewNode = selectedTreeViewNode {
+                guard let treeViewDelegate = self.treeViewDelegate else { return }
+                treeViewDelegate.treeView(tableView as! NKUITreeView, didSelectRowAt: justSelectedTreeViewNode, atIndexPath: indexPath)
             }
-            else
-            {
-                if collapseNoneSelectedRows,
-                   selectedTreeViewNode?.level == 0,
-                   let collapsedTreeViewNode = treeViewController.collapseAllRowsExceptOne(),
-                   treeViewController.indexPathsArray.count > 0 {
-                    
-                    collapseRows(for: collapsedTreeViewNode, atIndexPath: indexPath){
-                        for (index, treeViewNode) in self.mainDataArray.enumerated() {
-                            if treeViewNode == justSelectedTreeViewNode {
-                                willExpandIndexPath.row = index
+        }
+        
+        self.treeViewExpandOrCollapse(tableView, didSelectRowAt: indexPath, action: didSelectAction)
+    }
+    
+    ///  tableview 的 select 的动作
+    private func treeViewExpandOrCollapse(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, action: NKUITreeViewSelectedAction) {
+        if action == .expand || action == .all {
+            selectedTreeViewNode = treeViewController.getTreeViewNode(atIndex: indexPath.row)
+            if let justSelectedTreeViewNode = selectedTreeViewNode {
+                var willExpandIndexPath = indexPath
+                if justSelectedTreeViewNode.expand {
+                    treeViewController.collapseRows(for: justSelectedTreeViewNode, atIndexPath: indexPath)
+                    collapseRows(for: justSelectedTreeViewNode, atIndexPath: indexPath){}
+                }
+                else
+                {
+                    if collapseNoneSelectedRows,
+                       selectedTreeViewNode?.level == 0,
+                       let collapsedTreeViewNode = treeViewController.collapseAllRowsExceptOne(),
+                       treeViewController.indexPathsArray.count > 0 {
+                        collapseRows(for: collapsedTreeViewNode, atIndexPath: indexPath){
+                            for (index, treeViewNode) in self.mainDataArray.enumerated() {
+                                if treeViewNode == justSelectedTreeViewNode {
+                                    willExpandIndexPath.row = index
+                                }
                             }
+                            self.treeViewController.expandRows(atIndexPath: willExpandIndexPath, with: justSelectedTreeViewNode, openWithChildrens: false)
+                            self.expandRows(for: justSelectedTreeViewNode, withSelected: indexPath)
                         }
-                        self.treeViewController.expandRows(atIndexPath: willExpandIndexPath, with: justSelectedTreeViewNode, openWithChildrens: false)
-                        self.expandRows(for: justSelectedTreeViewNode, withSelected: indexPath)
+                        
+                    }else{
+                        treeViewController.expandRows(atIndexPath: willExpandIndexPath, with: justSelectedTreeViewNode, openWithChildrens: false)
+                        expandRows(for: justSelectedTreeViewNode, withSelected: indexPath)
                     }
-                    
-                }else{
-                    treeViewController.expandRows(atIndexPath: willExpandIndexPath, with: justSelectedTreeViewNode, openWithChildrens: false)
-                    expandRows(for: justSelectedTreeViewNode, withSelected: indexPath)
                 }
             }
         }
