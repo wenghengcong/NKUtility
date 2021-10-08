@@ -25,7 +25,7 @@
     "Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md,css,html,js}"
   ],
   "resource_bundles": {
-    "NKUtility": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js,ttf,txt}"
+    "NKUtilityResource": "Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js,ttf,txt}"
   },
   "swift_versions": "5.0",
   "frameworks": [

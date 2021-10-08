@@ -12,9 +12,13 @@ public class NKBundleToken {}
 public class NKUtilityFramework: NSObject {
     @objc public static var bundle: Bundle { return Bundle(for: self) }
     @objc public static let resourceBundle: Bundle = {
-        guard let url = bundle.resourceURL?.appendingPathComponent("NKUtility.bundle", isDirectory: true), let bundle = Bundle(url: url) else {
-            preconditionFailure("NKUtility resource bundle is not found")
+#if SWIFT_PACKAGE
+        return Bundle.module
+#else
+        guard let url = bundle.resourceURL?.appendingPathComponent("NKUtilityResource.bundle", isDirectory: true), let bundle = Bundle(url: url) else {
+            preconditionFailure("FluentUI resource bundle is not found")
         }
         return bundle
+#endif
     }()
 }
