@@ -311,9 +311,9 @@ open class NKHapticNotification {
  特点：常用于下拉刷新和手势反馈；
  适配：只支持 iPhone 7 及以上机型且系统需 iOS 10 及以上，如果机型或系统不支持将不振动；
  案例：a.使用iOS 的时钟调节时间刻度、iOS 开关控件的开启和关闭；
- b.支付宝我的应用编辑页中长按某个应用；
+ b.我的应用编辑页中长按某个应用；
 
- c.支付宝首页长按功能区触发二级操作。Heavy 与 3D touch 振感中的 Peek 极为接近，使用Peek的案例换用 Heavy 也是可行的；
+ c.首页长按功能区触发二级操作。Heavy 与 3D touch 振感中的 Peek 极为接近，使用Peek的案例换用 Heavy 也是可行的；
 
 
  
