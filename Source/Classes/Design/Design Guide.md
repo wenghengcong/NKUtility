@@ -2,7 +2,6 @@
 # 设计规范
 #  icon
 
-手机淘宝
 https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=33
 
 
