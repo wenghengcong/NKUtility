@@ -24,17 +24,24 @@ extension NKWebViewController: WKScriptMessageHandler {
     }
     
     func addMessageJSScript() {
+        motionClickJSMessage()
+    }
+    
+    /// 监听 js 点击事件
+    func motionClickJSMessage() {
+        let motiorClickMessage = NKJavascriptMessageType.click.rawValue
         let messageJS = """
             window.onload = function() {
                 document.addEventListener("click", function(evt) {
                     var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
-                    window.webkit.messageHandlers.jsMessenger.postMessage(tagClicked.outerHTML.toString());
+                    window.webkit.messageHandlers.\(motiorClickMessage).postMessage(tagClicked.outerHTML.toString());
                 });
             }
             """
         // atDocumentStart: 意思是网页中的元素标签创建刚出来的时候，但是还没有内容。该时机适合通过注入脚本来添加元素标签等操作。（注意：此时<head>和<body>等标签都还没有出现）
         let messageUserScript:WKUserScript = WKUserScript(source: messageJS, injectionTime:.atDocumentStart, forMainFrameOnly: true)
-        webView?.configuration.userContentController.add(self, name: "jsMessenger")
+        
+        webView?.configuration.userContentController.add(self, name: motiorClickMessage)
         webView?.configuration.userContentController.addUserScript(messageUserScript)
     }
     
@@ -63,7 +70,7 @@ extension NKWebViewController: WKScriptMessageHandler {
     
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         //        NKlogger.debug("detect webview click ")
-        delegate?.userContentController?(userContentController, didReceive: message)
+        delegate?.nkuserContentController?(userContentController, didReceive: message)
     }
     
 }

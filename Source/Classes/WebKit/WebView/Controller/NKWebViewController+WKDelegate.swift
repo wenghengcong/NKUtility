@@ -127,7 +127,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     // 2 页面开始加载时调用
     open func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         showLoading(true)
-        delegate?.webViewController?(self, didStartLoading: webView.url)
+        delegate?.nkwebViewController?(self, didStartLoading: webView.url)
         updateToolbarItems()
     }
     
@@ -147,7 +147,7 @@ extension  NKWebViewController: WKNavigationDelegate {
                 }
             }
         }
-        delegate?.webViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
+        delegate?.nkwebViewController?(self, decidePolicyForNavigationResponse: navigationResponse, decisionHandler: decisionHandler)
         decisionHandler(.allow)
     }
     
@@ -155,7 +155,7 @@ extension  NKWebViewController: WKNavigationDelegate {
     open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         showLoading(false)
         refreshControl.endRefreshing()
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: true)
+        delegate?.nkwebViewController?(self, didFinishLoading: webView.url, success: true)
         
         if userDefinedTitle == nil {
             webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
@@ -188,7 +188,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         refreshControl.endRefreshing()
         
         updateToolbarItems()
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
+        delegate?.nkwebViewController?(self, didFinishLoading: webView.url, success: false)
     }
     
     open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -196,7 +196,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         refreshControl.endRefreshing()
         
         updateToolbarItems()
-        delegate?.webViewController?(self, didFinishLoading: webView.url, success: false)
+        delegate?.nkwebViewController?(self, didFinishLoading: webView.url, success: false)
     }
     
     

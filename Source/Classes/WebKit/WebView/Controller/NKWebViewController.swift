@@ -9,6 +9,12 @@
 import WebKit
 import SnapKit
 
+/// 监听 JS 中的消息
+public enum NKJavascriptMessageType: String {
+    // 点击
+    case click
+}
+
 public enum NKWebViewControllerProgressIndicatorStyle {
     case activityIndicator
     case progressView
@@ -17,19 +23,19 @@ public enum NKWebViewControllerProgressIndicatorStyle {
 }
 
 @objc public protocol NKWebViewControllerDelegate: class {
-    @objc optional func webViewController(_ webViewController: NKWebViewController, didChangeURL newURL: URL?)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, didChangeTitle newTitle: NSString?)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, didStartLoading loadedURL: URL?)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, didFinishLoading loadedURL: URL?, success: Bool)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationResponse navigationResponse: WKNavigationResponse, decisionHandler: (WKNavigationResponsePolicy) -> Void)
-    @objc optional func webViewController(_ webViewController: NKWebViewController, didReceiveAuthenticationChallenge challenge: URLAuthenticationChallenge, completionHandler: (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeURL newURL: URL?)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeTitle newTitle: NSString?)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didStartLoading loadedURL: URL?)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didFinishLoading loadedURL: URL?, success: Bool)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, decidePolicyForNavigationResponse navigationResponse: WKNavigationResponse, decisionHandler: (WKNavigationResponsePolicy) -> Void)
+    @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didReceiveAuthenticationChallenge challenge: URLAuthenticationChallenge, completionHandler: (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
     
     /// 监听 JS 的回调
     /// - Parameters:
     ///   - userContentController: <#userContentController description#>
     ///   - message: <#message description#>
-    @objc optional func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
+    @objc optional func nkuserContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
 }
 
 
@@ -51,6 +57,9 @@ open class NKWebViewController: UIViewController {
     open var isFirstLoading: Bool = false
     
     open var webView: WKWebView?
+    
+    /// 滑动的位置
+    open var scrollPoint: CGPoint = .zero
 
     open var userDefinedTitle: String? {
         didSet {
@@ -108,9 +117,6 @@ open class NKWebViewController: UIViewController {
     
     /// scroll hidden toolbar
     open var scrollToolBarHidden = false
-
-    open var lastOffsetY :CGFloat = 0
-
     
     ///  内容过滤，JSON 格式
     ///  参考：https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
@@ -533,6 +539,7 @@ extension  NKWebViewController {
         webView?.navigationDelegate = self
         webView?.backgroundColor = currentBackgroudColor()
         webView?.scrollView.delegate = self
+        webView?.scrollView.isScrollEnabled = true
         webView?.translatesAutoresizingMaskIntoConstraints = false
         // after done with setup the `webView`:
         refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
@@ -619,18 +626,18 @@ extension  NKWebViewController {
             }
         case "URL":
             // 有些请求，不会走对应的 decidePolicyFor navigationAction ，但是会经过这里
-            delegate?.webViewController?(self, didChangeURL: webView?.url)
+            delegate?.nkwebViewController?(self, didChangeURL: webView?.url)
             updateToolbarItems()
             
         case "title":
-            delegate?.webViewController?(self, didChangeTitle: webView?.title as NSString?)
+            delegate?.nkwebViewController?(self, didChangeTitle: webView?.title as NSString?)
         case "loading":
             if let isLoading = self.webView?.isLoading, isLoading {
                 self.progressView.setProgress(0.1, animated: true)
             } else {
                 self.progressView.setProgress(0.0, animated: false)
                 showLoading(false)
-                delegate?.webViewController?(self, didFinishLoading: webView?.url, success: false)
+                delegate?.nkwebViewController?(self, didFinishLoading: webView?.url, success: false)
             }
             updateToolbarItems()
         default:
@@ -653,8 +660,8 @@ extension  NKWebViewController {
 extension  NKWebViewController: UIScrollViewDelegate {
     
     func scrollALitterOnYAxis() {
-        let scrollPoint = CGPoint(x: 0, y: 0.3)
-        webView?.scrollView.setContentOffset(scrollPoint, animated: false)
+        let scrollLitterPoint = CGPoint(x: 0, y: 0.3)
+        webView?.scrollView.setContentOffset(scrollLitterPoint, animated: false)
     }
     
     func scrollToUp() {
@@ -682,7 +689,7 @@ extension  NKWebViewController: UIScrollViewDelegate {
 
     // 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        lastOffsetY = scrollView.contentOffset.y
+        scrollPoint = scrollView.contentOffset
     }
 
     // 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
@@ -699,8 +706,7 @@ extension  NKWebViewController: UIScrollViewDelegate {
 
     // 滑动减速时调用该方法。
     public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        let hide = scrollView.contentOffset.y > self.lastOffsetY
-
+        let hide = scrollView.contentOffset.y > self.scrollPoint.y
     }
 
     // 滚动视图减速完成，滚动将停止时，调用该方法。一次有效滑动，只执行一次。
