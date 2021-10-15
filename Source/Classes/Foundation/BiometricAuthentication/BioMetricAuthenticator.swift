@@ -76,13 +76,25 @@ public extension BioMetricAuthenticator {
         context.localizedFallbackTitle = fallbackTitle
         context.localizedCancelTitle = cancelTitle
         
-        // authenticate
-        BioMetricAuthenticator.shared.evaluate(
-            policy: .deviceOwnerAuthenticationWithBiometrics,
-            with: context,
-            reason: reasonString,
-            completion: completion
-        )
+        /*
+         In iOS 9.0 later Device; When too many failed attempts Touch ID, the passcode page can not present;
+         so we should Use deviceOwnerAuthentication not deviceOwnerAuthenticationWithBiometrics;
+         */
+        if #available(iOS 9.0, *) {
+            BioMetricAuthenticator.shared.evaluate(
+                policy: LAPolicy.deviceOwnerAuthentication,
+                with: context,
+                reason: reasonString,
+                completion: completion)
+        } else {
+            // Fallback on earlier versions
+            BioMetricAuthenticator.shared.evaluate(
+                policy: .deviceOwnerAuthenticationWithBiometrics,
+                with: context,
+                reason: reasonString,
+                completion: completion
+            )
+        }
     }
     
     /// Check for device passcode authentication
@@ -163,7 +175,6 @@ extension BioMetricAuthenticator {
         reason: String,
         completion: @escaping (Result<Bool, AuthenticationError>) -> ()
     ) {
-        
         context.evaluatePolicy(policy, localizedReason: reason) { (success, err) in
             DispatchQueue.main.async {
                 if success {

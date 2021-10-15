@@ -33,7 +33,7 @@ open class NKCheckmarkCell: NKStaticCell {
     
     open override func qingFillData() {
         super.qingFillData()
-        if let iconString = data?.icon {
+        if let iconString = data?.icon, iconString.isNotEmpty {
             if let image = UIImage(named: iconString) {
                 iconImageView.image = image
             } else {
