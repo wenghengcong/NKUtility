@@ -7,7 +7,7 @@
 
 import Foundation
 
-fileprivate extension String {
+public extension String {
     var localizedInCommonString: String {
         let outString = localizedInside(using: "NKCommonString")
         return outString
@@ -16,7 +16,6 @@ fileprivate extension String {
 
 public struct NKStringGlobal {
 
-    
     public struct Word {
         public static let `default` =  "default".localizedInCommonString
         public static let Success = "Success".localizedInCommonString

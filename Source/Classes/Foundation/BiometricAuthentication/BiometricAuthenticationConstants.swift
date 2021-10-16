@@ -9,24 +9,24 @@
 import Foundation
 import LocalAuthentication
 
-let kBiometryNotAvailableReason = "Biometric authentication is not available for this device."
+let kBiometryNotAvailableReason = "kBiometryNotAvailableReason".localizedInCommonString
 
 /// ****************  Touch ID  ****************** ///
 
-let kTouchIdAuthenticationReason = "Confirm your fingerprint to authenticate."
-let kTouchIdPasscodeAuthenticationReason = "Touch ID is locked now, because of too many failed attempts. Enter passcode to unlock Touch ID."
+let kTouchIdAuthenticationReason = "kTouchIdAuthenticationReason".localizedInCommonString
+let kTouchIdPasscodeAuthenticationReason = "kTouchIdPasscodeAuthenticationReason".localizedInCommonString
 
 /// Error Messages Touch ID
-let kSetPasscodeToUseTouchID = "Please set device passcode to use Touch ID for authentication."
-let kNoFingerprintEnrolled = "There are no fingerprints enrolled in the device. Please go to Device Settings -> Touch ID & Passcode and enroll your fingerprints."
-let kDefaultTouchIDAuthenticationFailedReason = "Touch ID does not recognize your fingerprint. Please try again with your enrolled fingerprint."
+let kSetPasscodeToUseTouchID = "kSetPasscodeToUseTouchID".localizedInCommonString
+let kNoFingerprintEnrolled = "kNoFingerprintEnrolled".localizedInCommonString
+let kDefaultTouchIDAuthenticationFailedReason = "kDefaultTouchIDAuthenticationFailedReason".localizedInCommonString
 
 /// ****************  Face ID  ****************** ///
 
-let kFaceIdAuthenticationReason = "Confirm your face to authenticate."
-let kFaceIdPasscodeAuthenticationReason = "Face ID is locked now, because of too many failed attempts. Enter passcode to unlock Face ID."
+let kFaceIdAuthenticationReason = "kFaceIdAuthenticationReason".localizedInCommonString
+let kFaceIdPasscodeAuthenticationReason = "kFaceIdPasscodeAuthenticationReason".localizedInCommonString
 
 /// Error Messages Face ID
-let kSetPasscodeToUseFaceID = "Please set device passcode to use Face ID for authentication."
-let kNoFaceIdentityEnrolled = "There is no face enrolled in the device. Please go to Device Settings -> Face ID & Passcode and enroll your face."
-let kDefaultFaceIDAuthenticationFailedReason = "Face ID does not recognize your face. Please try again with your enrolled face."
+let kSetPasscodeToUseFaceID = "kSetPasscodeToUseFaceID".localizedInCommonString
+let kNoFaceIdentityEnrolled = "kNoFaceIdentityEnrolled".localizedInCommonString
+let kDefaultFaceIDAuthenticationFailedReason = "kDefaultFaceIDAuthenticationFailedReason".localizedInCommonString

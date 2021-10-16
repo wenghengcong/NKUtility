@@ -51,3 +51,28 @@
 
 // 8.sentence
 "Loading..."="Loading...";
+
+
+/* 生物识别 */
+"kBiometryNotAvailableReason" = "Biometric authentication is not available for this device.";
+
+/// ****************  Touch ID  ****************** ///
+
+"kTouchIdAuthenticationReason" = "Confirm your fingerprint to authenticate.";
+"kTouchIdPasscodeAuthenticationReason" = "Touch ID is locked now, because of too many failed attempts. Enter passcode to unlock Touch ID.";
+
+/// Error Messages Touch ID
+"kSetPasscodeToUseTouchID" = "Please set device passcode to use Touch ID for authentication.";
+"kNoFingerprintEnrolled" = "There are no fingerprints enrolled in the device. Please go to Device Settings -> Touch ID & Passcode and enroll your fingerprints.";
+"kDefaultTouchIDAuthenticationFailedReason" = "Touch ID does not recognize your fingerprint. Please try again with your enrolled fingerprint.";
+
+/// ****************  Face ID  ****************** ///
+
+"kFaceIdAuthenticationReason" = "Confirm your face to authenticate.";
+"kFaceIdPasscodeAuthenticationReason" = "Face ID is locked now, because of too many failed attempts. Enter passcode to unlock Face ID.";
+
+/// Error Messages Face ID
+"kSetPasscodeToUseFaceID" = "Please set device passcode to use Face ID for authentication.";
+"kNoFaceIdentityEnrolled" = "There is no face enrolled in the device. Please go to Device Settings -> Face ID & Passcode and enroll your face.";
+"kDefaultFaceIDAuthenticationFailedReason" = "Face ID does not recognize your face. Please try again with your enrolled face.";
+

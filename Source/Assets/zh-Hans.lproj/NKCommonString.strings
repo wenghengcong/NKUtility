@@ -49,3 +49,25 @@
 
 // 8.sentence
 "Loading..."="正在加载...";
+
+/* 生物识别 */
+"kBiometryNotAvailableReason" = "此设备无法进行生物认证。";
+
+/// ****************  Touch ID  ****************** ///
+"kTouchIdAuthenticationReason" = "请使用您的指纹进行解锁。";
+"kTouchIdPasscodeAuthenticationReason" = "“指纹ID”因失败次数过多，已经被锁定，请输入密码解锁。";
+
+/// Error Messages Touch ID
+"kSetPasscodeToUseTouchID" = "请设置设备密码以启用“指纹ID”。";
+"kNoFingerprintEnrolled" = "当前设备没有指纹，请到“设置->触控ID与密码”添加您的指纹。";
+"kDefaultTouchIDAuthenticationFailedReason" = "当前“触控ID”未能识别您的指纹，请尝试在设置中添加该指纹。";
+
+/// ****************  Face ID  ****************** ///
+
+"kFaceIdAuthenticationReason" = "请使用您的面容进行解锁.";
+"kFaceIdPasscodeAuthenticationReason" = "“面容ID”因失败次数过多，已经被锁定，请输入密码解锁。";
+
+/// Error Messages Face ID
+"kSetPasscodeToUseFaceID" = "请设置设备密码以启用“面容ID”。";
+"kNoFaceIdentityEnrolled" = "当前设备没有面容，请到“设置->面容ID与密码”添加您的指纹。";
+"kDefaultFaceIDAuthenticationFailedReason" = "当前“面容ID”未能识别您的面容，请尝试在设置中添加该面容。";
