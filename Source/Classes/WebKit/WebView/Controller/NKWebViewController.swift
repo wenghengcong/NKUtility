@@ -541,6 +541,7 @@ extension  NKWebViewController {
         webView?.scrollView.delegate = self
         webView?.scrollView.isScrollEnabled = true
         webView?.translatesAutoresizingMaskIntoConstraints = false
+        webView?.allowsBackForwardNavigationGestures = true
         // after done with setup the `webView`:
         refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
         webView?.scrollView.addSubview(refreshControl)

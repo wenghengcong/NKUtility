@@ -54,7 +54,7 @@
 "kBiometryNotAvailableReason" = "此设备无法进行生物认证。";
 
 /// ****************  Touch ID  ****************** ///
-"kTouchIdAuthenticationReason" = "请使用您的指纹进行解锁。";
+"kTouchIdAuthenticationReason" = "确认您的指纹以进行身份​​验证。";
 "kTouchIdPasscodeAuthenticationReason" = "“指纹ID”因失败次数过多，已经被锁定，请输入密码解锁。";
 
 /// Error Messages Touch ID
@@ -64,7 +64,7 @@
 
 /// ****************  Face ID  ****************** ///
 
-"kFaceIdAuthenticationReason" = "请使用您的面容进行解锁.";
+"kFaceIdAuthenticationReason" = "确认您的面容以进行身份​​验证。";
 "kFaceIdPasscodeAuthenticationReason" = "“面容ID”因失败次数过多，已经被锁定，请输入密码解锁。";
 
 /// Error Messages Face ID
