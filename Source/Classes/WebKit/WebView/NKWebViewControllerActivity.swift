@@ -8,8 +8,7 @@
 
 import UIKit
 
-
-class  NKWebViewControllerActivity: UIActivity {
+class NKWebViewControllerActivity: UIActivity {
 
     var URLToOpen: URL?
     var schemePrefix: String?
@@ -24,11 +23,17 @@ class  NKWebViewControllerActivity: UIActivity {
     override var activityImage : UIImage {
         if let type = activityType?.rawValue {
             let name = type + "Icon"
-            let img = UIImage(nkBundleNamed: name)
-            return img!
+            if let img = UIImage(nkBundleNamed: name) {
+                return img
+            }
         }
-        else{
-            assert(false, "Unknow type")
+        return defatulActivityImage()
+    }
+    
+    func defatulActivityImage() -> UIImage {
+        if #available(iOS 13.0, *) {
+            return UIImage(symbolName: "safari") ?? UIImage()
+        } else {
             return UIImage()
         }
     }
