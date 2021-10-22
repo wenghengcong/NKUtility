@@ -169,7 +169,7 @@ open class NKSound {
             return nil
         }
         players = myPlayers
-        NotificationCenter.default.addObserver(self, selector: #selector(NKSound.stopNoteRcv), name: NKSound.stopNotificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopNoteRcv), name: NKSound.stopNotificationName, object: nil)
     }
     
     deinit {
