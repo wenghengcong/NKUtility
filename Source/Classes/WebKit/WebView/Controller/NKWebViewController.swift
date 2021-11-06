@@ -57,7 +57,7 @@ open class NKWebViewController: UIViewController {
     open var isFirstLoading: Bool = false
     
     open var webView: WKWebView?
-    
+        
     /// 滑动的位置
     open var scrollPoint: CGPoint = .zero
 
@@ -146,8 +146,8 @@ open class NKWebViewController: UIViewController {
     internal var ipadToolbar = UIToolbar()
     internal var toolbarContainer: NKWebViewToolbar!
     internal var toolbarHeightConstraint: NSLayoutConstraint!
-    internal var toolbarHeight: CGFloat = 44
-    internal var lastToolbarHeight: CGFloat = 44
+    internal var toolbarHeight: CGFloat = NKDevice.isIPad() ? 44 : 49
+    internal var lastToolbarHeight: CGFloat = NKDevice.isIPad() ? 44 : 49
     internal var navControllerUsesBackSwipe: Bool = false
     internal let refreshControl = UIRefreshControl()
     
@@ -471,18 +471,30 @@ extension  NKWebViewController {
                 }
             }
         } else if NKDevice.isIPhone() {
+            
+            navigationController?.toolbar.barTintColor = currentBackgroudColor()
+            // Fix problem of WebView content height not fitting WebViews frame height
+            self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
+            
             // 保留先前，用于比较
             let lastHeight = lastToolbarHeight
 
             var curerntToolBarHeght: CGFloat = 0
-            if !toolBarHidden {
-                curerntToolBarHeght = toolbarHeight
+
+            let screenHeight = UIScreen.main.bounds.size.height
+            var realToolBarHeight: CGFloat = (NKDevice.Screen.hasNotch ? 83.0 : 49.0)
+            if let toolbarTop = self.navigationController?.toolbar.frame.origin.y {
+                realToolBarHeight = screenHeight - toolbarTop
             }
-            if NKDevice.isIPad() {
+            
+            if !toolBarHidden {
+                curerntToolBarHeght = realToolBarHeight
+            } else {
                 curerntToolBarHeght = 0
             }
+            
             // 本来就是空数组
-            if NKDevice.isIPhone()  && toolbarItems == nil {
+            if NKDevice.isIPhone() && toolbarItems == nil {
                 curerntToolBarHeght = 0
             }
             lastToolbarHeight = curerntToolBarHeght
@@ -491,12 +503,12 @@ extension  NKWebViewController {
             if lastHeight != curerntToolBarHeght {
 //                NKlogger.debug("need update now!!!")
                 needUpdate = true
+            } else if let webv = webView, let bottomMargin = webv.bottomConstraint?.constant {
+                if bottomMargin != curerntToolBarHeght {
+                    needUpdate = true
+                }
             }
 
-            navigationController?.toolbar.barTintColor = currentBackgroudColor()
-            // Fix problem of WebView content height not fitting WebViews frame height
-            self.navigationController?.setToolbarHidden(self.toolBarHidden, animated: true)
-            
             if needUpdate {
                repositionDocumentWebBottomBar(toolBarHeight: curerntToolBarHeght)
             }
