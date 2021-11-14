@@ -27,6 +27,8 @@ public extension ThemeColorPicker {
 
     static let subTitleColor = NKThemeProvider.getColorPicker(name: "mainTextColor")
     
+    static let descriptionTextColor = NKThemeProvider.getColorPicker(name: "descriptionTextColor")
+
     static let linkColor = UIColor(hex: "#0000EE")
     
     /// 按钮
