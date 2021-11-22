@@ -23,13 +23,52 @@ extension  NKWebViewController: WKUIDelegate {
     
     
     open func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-        if !allowJavaScriptAlerts {
-            return
-        }
+        if !allowJavaScriptAlerts { return }
         
         let alertController: UIAlertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: {(action: UIAlertAction) -> Void in
+        
+//        alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: {(action: UIAlertAction) -> Void in
+//            completionHandler()
+//        }))
+        
+        alertController.addAction(UIAlertAction(title: "确定", style: .default, handler: {(action: UIAlertAction) -> Void in
             completionHandler()
+        }))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        if !allowJavaScriptAlerts { return }
+
+        let alertController: UIAlertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: {(action: UIAlertAction) -> Void in
+            completionHandler(false)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "确定", style: .default, handler: {(action: UIAlertAction) -> Void in
+            completionHandler(true)
+        }))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+        if !allowJavaScriptAlerts { return }
+
+        let alertController: UIAlertController = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+        
+        alertController.addTextField { (texfiled) in
+            texfiled.placeholder = defaultText
+        }
+        
+        alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: {(action: UIAlertAction) -> Void in
+            completionHandler("")
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "确定", style: .default, handler: {(action: UIAlertAction) -> Void in
+            completionHandler(alertController.textFields?.last?.text ?? "")
         }))
         
         self.present(alertController, animated: true, completion: nil)
@@ -62,7 +101,7 @@ extension  NKWebViewController: WKNavigationDelegate {
         if hostAddress == "itunes.apple.com" {
             if UIApplication.shared.canOpenURL(navigationAction.request.url!) {
                 UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
+                decisionHandler(.allow)
                 return
             }
         }

@@ -57,7 +57,6 @@ extension NKWebViewController: WKScriptMessageHandler {
         let readerMode = ReaderMode(web: self)
         readerMode.delegate = self
         self.addContentScript(readerMode, name: ReaderMode.name())
-        
     }
     
     func addContentScript(_ helper: TabContentScript, name: String) {
