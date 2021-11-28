@@ -55,7 +55,6 @@ public extension NKWebViewController {
         }
     }
     
-    
     internal func really_loadRequest(_ request: URLRequest?) {
         if let url = request!.url,
            url.absoluteString.contains("file:"),
