@@ -274,6 +274,18 @@ open class NKWebViewController: UIViewController {
         self.contentRules = contentRules
         self.nightMode = darkMode
     }
+    
+    func generalURLRequest(_ url: URL) -> URLRequest {
+        var urlRequestCache: URLRequest
+        if NKNetworkUtil.shared.isReachable {
+            urlRequestCache = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
+        }
+        else {
+            urlRequestCache = URLRequest(url: url, cachePolicy: .returnCacheDataDontLoad, timeoutInterval: 60)
+        }
+        return urlRequestCache
+    }
+    
 
     // MARK: - Init by html string
     public convenience init(htmlString: String?,
