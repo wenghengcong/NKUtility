@@ -52,10 +52,9 @@ override var prefersStatusBarHidden: Bool {
 
 
 # html 解析
-https://github.com/tid-kijyun/Kanna
-https://github.com/scinfu/SwiftSoup
-https://github.com/cezheng/Fuzi
-https://github.com/mattt/Ono
+https://github.com/scinfu/SwiftSoup     支持 css selector，可以使用和学习
+https://github.com/tid-kijyun/Kanna     支持 xpath
+https://github.com/mattt/Ono    matt开发，仅一个文件，可以阅读学习
 
 
 # 加速加载

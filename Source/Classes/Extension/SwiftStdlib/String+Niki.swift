@@ -1441,16 +1441,16 @@ public extension String {
      
      used filter to remove
      
-     - Parameter retainChars: the character set will be retain
+     - Parameter forbiddenChars: the character set will be remove
      - Returns: the result
      ~~~
      let character = "1Vi234s56a78l9"
-     let alphaNumericSet = character.removeCharacters(from: CharacterSet.decimalDigits.inverted)
-     NKlogger.debug(alphaNumericSet) // will NKlogger.debug: 123456789
+     let alphaCharacterSet = character.removeCharacters(in: CharacterSet.decimalDigits.inverted)
+     NKlogger.debug(alphaCharacterSet) // will NKlogger.debug: 123456789
      ~~~
      */
-    func removeCharacters(from retainChars: CharacterSet) -> String {
-        let passed = self.unicodeScalars.filter { !retainChars.contains($0) }
+    func removeCharacters(from forbiddenChars: CharacterSet) -> String {
+        let passed = self.unicodeScalars.filter { !forbiddenChars.contains($0) }
         return String(String.UnicodeScalarView(passed))
     }
     
@@ -1463,12 +1463,28 @@ public extension String {
      - Returns: the result
      ~~~
      let character = "1Vi234s56a78l9"
-     let alphaNumericCharacterSet = character.removeCharacters(from: "0123456789")
+     let alphaNumericCharacterSet = character.removeCharacters(in: "0123456789")
      NKlogger.debug("no digits",alphaNumericCharacterSet) // will NKlogger.debug: Vishal
      ~~~
      */
     func removeCharacters(from: String) -> String {
         return removeCharacters(from: CharacterSet(charactersIn: from))
+    }
+    
+    mutating func removeAtIndex(idx: Int) {
+        if let index = self.index(self.startIndex, offsetBy: idx, limitedBy: self.endIndex) {
+            self.remove(at: index)
+        }
+    }
+    
+    func removeCharacters(startIdx: Int, charLength: Int) -> String {
+        var newStr = self
+        for _ in 0..<charLength {
+            let idx0 = newStr.index(newStr.startIndex, offsetBy: startIdx)
+            newStr.remove(at: idx0)
+        }
+        
+        return newStr
     }
     
     /// 删除转义字符

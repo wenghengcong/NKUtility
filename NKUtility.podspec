@@ -53,6 +53,7 @@ Pod::Spec.new do |s|
   s.dependency 'GCDWebServer/WebDAV'
   # HTML Parser https://github.com/scinfu/SwiftSoup
   s.dependency 'SwiftSoup'
+  s.dependency 'Kanna'
   s.dependency 'SkeletonView'
   s.dependency 'SwiftyUserDefaults'
 #  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }

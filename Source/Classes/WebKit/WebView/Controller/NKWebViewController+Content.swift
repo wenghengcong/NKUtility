@@ -10,22 +10,52 @@ import WebKit
 
 public extension NKWebViewController {
     
-    // MARK: - load html or quest
-    func loadHtmlString() {
+    func loadWebContent() {
+        if NKNetworkUtil.shared.isReachable {
+            // 网络正常
+            if htmlString != nil && htmlString!.isNotEmpty {
+                loadContentType = .loadHTML
+            } else if request != nil {
+                loadContentType = .loadRequest
+            } else {
+                loadContentType = .loadEmpty
+            }
+            // cache
+            archiveWebContent()
+        } else {
+            if cacheEnable {
+                loadContentType = .loadCache
+            } else {
+                loadContentType = .loadError
+            }
+        }
+        
+        switch loadContentType {
+        case .none:
+            break
+        case .loadHTML:
+            loadHtmlWithContentRules()
+            break
+        case .loadRequest:
+            loadRequestWithContentRules()
+            break
+        case .loadCache:
+            loadArchiveCache()
+            break
+        case .loadEmpty:
+            loadEmptyContentView()
+            break
+        case .loadError:
+            loadErrorContentView()
+            break
+        }
+    }
+    
+    // MARK: - load webview content
+    func loadHtmlWithContentRules() {
         guard htmlString != nil else {
             return
         }
-        self.loadHtmlByContentRules()
-    }
-
-    func loadRequest(_ request: URLRequest?) {
-        guard request != nil else {
-            return
-        }
-        self.loadRequestByContentRules()
-    }
-    
-    func loadHtmlByContentRules() {
         if self.contentRules != nil, self.contentRules!.isNotEmpty {
             WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
                 guard let contentRuleList = list else { return }
@@ -37,13 +67,10 @@ public extension NKWebViewController {
         }
     }
     
-    internal func really_loadHtmlString() {
-        if let html = htmlString{
-            self.webView?.loadHTMLString(html, baseURL: nil)
+    func loadRequestWithContentRules() {
+        guard request != nil else {
+            return
         }
-    }
-    
-    func loadRequestByContentRules() {
         if self.contentRules != nil, self.contentRules!.isNotEmpty {
             WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "filterContent", encodedContentRuleList: self.contentRules) { (list, error) in
                 guard let contentRuleList = list else { return }
@@ -55,6 +82,28 @@ public extension NKWebViewController {
         }
     }
     
+    func loadArchiveCache() {
+        if unArchiveWebContent() {
+            
+        } else {
+            loadErrorContentView()
+        }
+    }
+    
+    func loadEmptyContentView() {
+        
+    }
+    
+    func loadErrorContentView() {
+        
+    }
+    
+    // MARK: - really do load action
+    internal func really_loadHtmlString() {
+        if let html = htmlString {
+            self.webView?.loadHTMLString(html, baseURL: nil)
+        }
+    }
     
     internal func really_loadRequest(_ request: URLRequest?) {
         if let url = request!.url,
@@ -65,7 +114,6 @@ public extension NKWebViewController {
             self.webView?.load(request!)
         }
     }
-    
     
     /// 添加屏蔽规则
     /// - Parameters:

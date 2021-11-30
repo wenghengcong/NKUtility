@@ -60,14 +60,15 @@ struct SkeletonLayer {
     func addTextLinesIfNeeded() {
         guard let textView = holderAsTextView else { return }
         let config = SkeletonMultilinesLayerConfig(lines: textView.numberOfLines,
-                                                   lineHeight: textView.lineHeight,
+                                                   lineHeight: textView.estimatedLineHeight,
                                                    type: type,
                                                    lastLineFillPercent: textView.lastLineFillingPercent,
                                                    multilineCornerRadius: textView.multilineCornerRadius,
                                                    multilineSpacing: textView.multilineSpacing,
                                                    paddingInsets: textView.paddingInsets,
                                                    alignment: textView.textAlignment,
-                                                   isRTL: holder?.isRTL ?? false)
+                                                   isRTL: holder?.isRTL ?? false,
+                                                   shouldCenterVertically: textView.shouldCenterTextVertically)
 
         maskLayer.addMultilinesLayers(for: config)
     }
@@ -75,14 +76,15 @@ struct SkeletonLayer {
     func updateLinesIfNeeded() {
         guard let textView = holderAsTextView else { return }
         let config = SkeletonMultilinesLayerConfig(lines: textView.numberOfLines,
-                                                   lineHeight: textView.lineHeight,
+                                                   lineHeight: textView.estimatedLineHeight,
                                                    type: type,
                                                    lastLineFillPercent: textView.lastLineFillingPercent,
                                                    multilineCornerRadius: textView.multilineCornerRadius,
                                                    multilineSpacing: textView.multilineSpacing,
                                                    paddingInsets: textView.paddingInsets,
                                                    alignment: textView.textAlignment,
-                                                   isRTL: holder?.isRTL ?? false)
+                                                   isRTL: holder?.isRTL ?? false,
+                                                   shouldCenterVertically: textView.shouldCenterTextVertically)
         
         maskLayer.updateMultilinesLayers(for: config)
     }

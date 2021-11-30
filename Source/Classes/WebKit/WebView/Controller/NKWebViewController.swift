@@ -22,6 +22,15 @@ public enum NKWebViewControllerProgressIndicatorStyle {
     case none
 }
 
+public enum NKWebViewControllerLoadContentType {
+    case none
+    case loadHTML
+    case loadRequest
+    case loadCache
+    case loadEmpty
+    case loadError
+}
+
 @objc public protocol NKWebViewControllerDelegate: class {
     @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeURL newURL: URL?)
     @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeTitle newTitle: NSString?)
@@ -49,12 +58,21 @@ open class NKWebViewController: UIViewController {
     open var titleColor: UIColor? = nil
     open var closing: Bool! = false
     open var request: URLRequest?
+    
+    /// web 地址
     open var weburl: String?
     open var htmlString: String?
     open var navBarTitle: UILabel! = UILabel()
     open var readerModeCache: ReaderModeCache?
     
     open var isFirstLoading: Bool = false
+
+    /// 是否需要支持 cache
+    open var cacheEnable = true
+    /// cache的状态
+    open var archiveState: NKWebArchiveState? = nil
+
+    open var loadContentType: NKWebViewControllerLoadContentType = .none
     
     open var webView: WKWebView?
         
@@ -273,11 +291,7 @@ open class NKWebViewController: UIViewController {
     //MARK: - load method
     func beginLoadWebView() {
         isFirstLoading = true
-        if htmlString != nil && htmlString!.isNotEmpty {
-            loadHtmlString()
-        } else {
-            loadRequest(request)
-        }
+        loadWebContent()
         execuDarkModeChanage()
     }
     
