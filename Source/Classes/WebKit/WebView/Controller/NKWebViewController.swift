@@ -343,7 +343,6 @@ open class NKWebViewController: UIViewController {
                     items.insert(contentsOf: addMore, at: 0)
                 }
             }
-            
             ipadToolbar.frame =  CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: toolbarHeight)
             if !closing {
                 ipadToolbar.items = items as? [UIBarButtonItem]
@@ -361,7 +360,7 @@ open class NKWebViewController: UIViewController {
                     ipadToolbar.barTintColor = barTintColor
                 }
             }
-            navigationItem.rightBarButtonItems = items
+            navigationItem.rightBarButtonItems = items as? [UIBarButtonItem]
         }
         else {
             let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
@@ -490,7 +489,10 @@ extension  NKWebViewController {
     
     internal func updateToolbarHidden() {
         if (NKDevice.isIPad()) {
-            ipadToolbar.isHidden = toolBarHidden
+//            self.navigationController?.setToolbarHidden(toolBarHidden, animated: true)
+            if toolBarHidden {
+                self.navigationItem.rightBarButtonItems = nil
+            }
             if webView != nil {
                 webView!.snp.updateConstraints { (make) in
                     make.bottom.equalTo(0)
@@ -704,14 +706,18 @@ extension  NKWebViewController: UIScrollViewDelegate {
     }
     
     func scrollToUp() {
-        if NKDevice.isIPhone() && scrollToolBarHidden {
+        if NKDevice.isIPad() {
+            
+        } else if NKDevice.isIPhone() && scrollToolBarHidden {
             toolBarHidden = false
             updateToolbarHidden()
         }
     }
 
     func scrollToDown() {
-        if NKDevice.isIPhone() && scrollToolBarHidden {
+        if NKDevice.isIPad() {
+            
+        } else if NKDevice.isIPhone() && scrollToolBarHidden {
             toolBarHidden = true
             updateToolbarHidden()
         }
