@@ -59,7 +59,7 @@ open class NKWebViewController: UIViewController {
     open var closing: Bool! = false
     open var request: URLRequest?
     
-    open var fullscreen: Bool = false
+//    open var fullscreen: Bool = false
 
     /// web 地址
     open var weburl: String?
