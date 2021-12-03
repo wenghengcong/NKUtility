@@ -59,6 +59,8 @@ open class NKWebViewController: UIViewController {
     open var closing: Bool! = false
     open var request: URLRequest?
     
+    open var fullscreen: Bool = false
+
     /// web 地址
     open var weburl: String?
     open var htmlString: String?
@@ -593,7 +595,21 @@ extension  NKWebViewController {
                 make.top.bottom.left.right.equalTo(0)
             }
         }
+        
+//        checkNeedFullScreen()
     }
+    
+//    func checkNeedFullScreen() {
+//        if fullscreen {
+//            navigationController?.setNavigationBarHidden(true, animated: true)
+//        } else {
+//            navigationController?.setNavigationBarHidden(false, animated: true)
+//        }
+//    }
+//
+//    open override var prefersStatusBarHidden: Bool {
+//        return fullscreen
+//    }
     
     internal func showError(_ errorString: String?) {
         let alertView = UIAlertController(title: "Error", message: errorString, preferredStyle: .alert)
