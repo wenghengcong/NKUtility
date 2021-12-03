@@ -47,6 +47,7 @@ public class NKCoreDataStack {
             container = NSPersistentCloudKitContainer(name: self.model.name)
         } else {
             // Fallback on earlier versions
+            container = NSPersistentContainer(name: self.model.name)
         }
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
