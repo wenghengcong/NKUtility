@@ -512,6 +512,14 @@ public extension Date {
         let millisecond = CLongLong(round(unixMilliTimestamp))
         return "\(millisecond)"
     }
+    
+    func startOfDay() -> Date {
+        return Calendar.current.startOfDay(for: self)
+    }
+    
+    func endOfDay() -> Date {
+        return Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: self) ?? self
+    }
 }
 
 // MARK: - Methods
