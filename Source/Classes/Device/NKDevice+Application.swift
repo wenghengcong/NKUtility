@@ -51,7 +51,7 @@ public extension NKDevice {
         }
         
         public static var current: ApplicationConfiguration {
-            if isDebug {
+            if isDebug || isSimulator {
                 return .Debug
             } else if isTestFlight {
                 return .TestFlight
