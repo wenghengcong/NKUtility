@@ -8,7 +8,58 @@
 import Foundation
 import UIKit
 
-extension NKDevice {
+public extension NKDevice {
+    
+    public enum ApplicationConfiguration {
+        case Debug
+        case TestFlight
+        case AppStore
+    }
+    
+    public struct Config {
+        
+        /// 是否是 TestFlight 版本
+        public static var isTestFlight: Bool {
+            let testFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+            return testFlight
+        }
+        
+        // 是否是 DEBUG
+        public static var isDebug: Bool {
+            #if DEBUG
+            return true
+            #else
+            return false
+            #endif
+        }
+        
+        /// 是否是模拟器配置
+        public static var isSimulator: Bool {
+            #if targetEnvironment(simulator)
+            return true
+            #else
+            return false
+            #endif
+        }
+        
+        /// 是否是发布版本
+        public static var isRelease: Bool {
+            if current == .AppStore {
+                return true
+            }
+            return false
+        }
+        
+        public static var current: ApplicationConfiguration {
+            if isDebug {
+                return .Debug
+            } else if isTestFlight {
+                return .TestFlight
+            } else {
+                return .AppStore
+            }
+        }
+    }
     
     // MARK: Application
     
@@ -33,7 +84,7 @@ extension NKDevice {
         public static  var bundleName: String? {
             return Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
         }
-                
+        
         /// The complete app version with build number (i.e. : "2.1.3 (343)").
         public static var completeAppVersion: String {
             return "\(Application.version) (\(Application.buildNumber))"
@@ -49,7 +100,7 @@ extension NKDevice {
         public static var bundleId: String? {
             return Bundle.main.infoDictionary!["CFBundleIdentifier"] as? String
         }
-
+        
     }
     
     ///  - UUID
