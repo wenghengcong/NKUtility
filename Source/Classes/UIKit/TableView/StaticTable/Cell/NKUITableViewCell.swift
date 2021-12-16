@@ -52,7 +52,7 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         let backView = contentView.viewWithTag(backViewTag)
         backView?.subviews.forEach { view in
             view.isSkeletonable = true
-            view.showAnimatedGradientSkeleton()
+            view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.25))
         }
     }
     
