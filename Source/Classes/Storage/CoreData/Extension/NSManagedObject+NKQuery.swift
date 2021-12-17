@@ -73,8 +73,10 @@ extension NSManagedObject {
     public static func findLimited(limit:Int, offset: Int, sortBy:[NSSortDescriptor]? = nil, context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> [Any] {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         request.predicate = w
-        request.fetchLimit = limit
-        request.fetchOffset = offset
+        if limit > 0 && offset >= 0 {
+            request.fetchLimit = limit
+            request.fetchOffset = offset
+        }
         request.sortDescriptors = sortBy
         do {
            let result = try moc.fetch(request)
