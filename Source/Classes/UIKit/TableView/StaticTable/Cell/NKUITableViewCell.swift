@@ -49,17 +49,21 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
     open func showSkeletonInCell() {
         layoutIfNeeded()
-        let backView = contentView.viewWithTag(backViewTag)
-        backView?.subviews.forEach { view in
-            view.isSkeletonable = true
-            view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.25))
+        if shouldShowSkeleton {
+            let backView = contentView.viewWithTag(backViewTag)
+            backView?.subviews.forEach { view in
+                view.isSkeletonable = true
+                view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.25))
+            }
         }
     }
     
     open func hiddenSkeletonInCell() {
-        let backView = contentView.viewWithTag(backViewTag)
-        backView?.subviews.forEach { view in
-            view.hideSkeleton()
+        if shouldShowSkeleton {
+            let backView = contentView.viewWithTag(backViewTag)
+            backView?.subviews.forEach { view in
+                view.hideSkeleton()
+            }
         }
         shouldShowSkeleton = false
     }

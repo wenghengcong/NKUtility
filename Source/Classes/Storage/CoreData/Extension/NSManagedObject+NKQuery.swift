@@ -48,8 +48,12 @@ extension NSManagedObject {
     /// - Returns: <#description#>
     public static func find(sortBy:[NSSortDescriptor]? = nil,context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> [NSManagedObject] {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.predicate = w
-        request.sortDescriptors = sortBy
+        if w != nil {
+            request.predicate = w
+        }
+        if sortBy != nil && sortBy!.isNotEmpty {
+            request.sortDescriptors = sortBy
+        }
         do {
             let result = try moc.fetch(request) as! [NSManagedObject]
             return result
@@ -72,12 +76,16 @@ extension NSManagedObject {
     
     public static func findLimited(limit:Int, offset: Int, sortBy:[NSSortDescriptor]? = nil, context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> [Any] {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.predicate = w
+        if w != nil {
+            request.predicate = w
+        }
         if limit > 0 && offset >= 0 {
             request.fetchLimit = limit
             request.fetchOffset = offset
         }
-        request.sortDescriptors = sortBy
+        if sortBy != nil && sortBy!.isNotEmpty {
+            request.sortDescriptors = sortBy
+        }
         do {
            let result = try moc.fetch(request)
             return result
@@ -116,8 +124,12 @@ extension NSManagedObject {
     public static func findOne(sortBy:[NSSortDescriptor]? = nil, context moc:NSManagedObjectContext, where w:NSPredicate? = nil) -> NSManagedObject? {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         request.fetchLimit = 1
-        request.predicate = w
-        request.sortDescriptors = sortBy
+        if w != nil {
+            request.predicate = w
+        }
+        if sortBy != nil && sortBy!.isNotEmpty {
+            request.sortDescriptors = sortBy
+        }
         var result: NSManagedObject?
         do {
             let ret = try moc.fetch(request)
