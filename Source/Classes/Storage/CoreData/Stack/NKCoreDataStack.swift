@@ -216,14 +216,14 @@ public class NKCoreDataStack {
     @objc
     private func _didReceiveBackgroundContextDidSave(notification: Notification) {
         mainContext.perform {
-            self.mainContext.mergeChanges(fromContextDidSave: notification)
+            self.backgroundContext.mergeChanges(fromContextDidSave: notification)
         }
     }
     
     @objc
     private func _didReceiveMainContextDidSave(notification: Notification) {
         backgroundContext.perform {
-            self.backgroundContext.mergeChanges(fromContextDidSave: notification)
+            self.mainContext.mergeChanges(fromContextDidSave: notification)
         }
     }
     
