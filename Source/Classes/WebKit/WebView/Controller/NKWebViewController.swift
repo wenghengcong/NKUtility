@@ -137,6 +137,9 @@ open class NKWebViewController: UIViewController {
     
     /// scroll hidden toolbar
     open var scrollToolBarHidden = false
+
+    /// 自定义工具栏按钮，key是按钮的index，value 是对应的按钮
+    open var customItemsMapper: [Int: UIBarButtonItem] = [:]
     
     ///  内容过滤，JSON 格式
     ///  参考：https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
@@ -243,6 +246,7 @@ open class NKWebViewController: UIViewController {
     // MARK: - Init by url
     public convenience init(urlString: String,
                             sharingEnabled: Bool = true,
+                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         var urlString = urlString
@@ -250,15 +254,16 @@ open class NKWebViewController: UIViewController {
             urlString = "https://"+urlString
         }
         if let pageURL = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)) {
-            self.init(pageURL: pageURL, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
+            self.init(pageURL: pageURL, sharingEnabled: sharingEnabled, customItemsMapper: customItemsMapper, darkMode: darkMode, contentRules: contentRules)
         } else {
             let emptyURL =  URL(string: "https://www.baidu.com")
-            self.init(pageURL: emptyURL!, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
+            self.init(pageURL: emptyURL!, sharingEnabled: sharingEnabled, customItemsMapper: customItemsMapper, darkMode: darkMode, contentRules: contentRules)
         }
     }
     
     public convenience init(pageURL: URL,
                             sharingEnabled: Bool = true,
+                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, darkMode:darkMode, contentRules: contentRules)
@@ -266,10 +271,12 @@ open class NKWebViewController: UIViewController {
     
     public convenience init(aRequest: URLRequest,
                             sharingEnabled: Bool = true,
+                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         self.init()
         self.sharingEnabled = sharingEnabled
+        self.customItemsMapper = customItemsMapper
         self.request = aRequest
         self.weburl = aRequest.url?.absoluteString
         self.readerModeCache = DiskReaderModeCache.sharedInstance
@@ -340,6 +347,19 @@ open class NKWebViewController: UIViewController {
             fixedSpace.width = 15.0
             
             var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace,forwardBarButtonItem  , fixedSpace,backBarButtonItem , fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, backBarButtonItem]
+            
+            if !customItemsMapper.isEmpty {
+                for (index, button) in customItemsMapper {
+                    var lastInsertIndex = index
+                    if index >= items.count {
+                        // 如果 index 大于 items，插入到最后
+                        lastInsertIndex = items.count
+                    } else if index < 0 {
+                        lastInsertIndex = 0
+                    }
+                    items.insert(button, at: index)
+                }
+            }
             if let addMore = self.navRightItems {
                 if addMore.count > 0 {
                     items.insert(contentsOf: addMore, at: 0)
@@ -362,11 +382,23 @@ open class NKWebViewController: UIViewController {
                     ipadToolbar.barTintColor = barTintColor
                 }
             }
+            ipadToolbar.items = items
             navigationItem.rightBarButtonItems = items as? [UIBarButtonItem]
         }
         else {
-            let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
-
+            var items = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
+            if !customItemsMapper.isEmpty {
+                for (index, button) in customItemsMapper {
+                    var lastInsertIndex = index
+                    if index >= items.count {
+                        // 如果 index 大于 items，插入到最后
+                        lastInsertIndex = items.count
+                    } else if index < 0 {
+                        lastInsertIndex = 0
+                    }
+                    items.insert(button, at: index)
+                }
+            }
             if let navigationController = navigationController, !closing {
                 if presentingViewController == nil {
                     navigationController.toolbar.barTintColor = navigationController.navigationBar.barTintColor
