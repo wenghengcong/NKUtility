@@ -139,7 +139,11 @@ open class NKWebViewController: UIViewController {
     open var scrollToolBarHidden = false
 
     /// 自定义工具栏按钮，key是按钮的index，value 是对应的按钮
-    open var customItemsMapper: [Int: UIBarButtonItem] = [:]
+    open var customItemsMapper: [Int: UIBarButtonItem] = [:] {
+        didSet {
+            updateToolbarItems()
+        }
+    }
     
     ///  内容过滤，JSON 格式
     ///  参考：https://developer.apple.com/documentation/safariservices/creating_a_content_blocker#//apple_ref/doc/uid/TP40016265-CH2-SW5
@@ -246,7 +250,6 @@ open class NKWebViewController: UIViewController {
     // MARK: - Init by url
     public convenience init(urlString: String,
                             sharingEnabled: Bool = true,
-                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         var urlString = urlString
@@ -254,16 +257,15 @@ open class NKWebViewController: UIViewController {
             urlString = "https://"+urlString
         }
         if let pageURL = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)) {
-            self.init(pageURL: pageURL, sharingEnabled: sharingEnabled, customItemsMapper: customItemsMapper, darkMode: darkMode, contentRules: contentRules)
+            self.init(pageURL: pageURL, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
         } else {
-            let emptyURL =  URL(string: "https://www.baidu.com")
-            self.init(pageURL: emptyURL!, sharingEnabled: sharingEnabled, customItemsMapper: customItemsMapper, darkMode: darkMode, contentRules: contentRules)
+            let emptyURL =  URL(string: "https://www.yuque.com")
+            self.init(pageURL: emptyURL!, sharingEnabled: sharingEnabled, darkMode: darkMode, contentRules: contentRules)
         }
     }
     
     public convenience init(pageURL: URL,
                             sharingEnabled: Bool = true,
-                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         self.init(aRequest: URLRequest(url: pageURL), sharingEnabled: sharingEnabled, darkMode:darkMode, contentRules: contentRules)
@@ -271,12 +273,10 @@ open class NKWebViewController: UIViewController {
     
     public convenience init(aRequest: URLRequest,
                             sharingEnabled: Bool = true,
-                            customItemsMapper: [Int: UIBarButtonItem] = [:],
                             darkMode: Bool = false,
                             contentRules: String?) {
         self.init()
         self.sharingEnabled = sharingEnabled
-        self.customItemsMapper = customItemsMapper
         self.request = aRequest
         self.weburl = aRequest.url?.absoluteString
         self.readerModeCache = DiskReaderModeCache.sharedInstance
@@ -295,6 +295,12 @@ open class NKWebViewController: UIViewController {
         return urlRequestCache
     }
     
+    public func bringWebViewToFront() {
+        if let web = webView {
+            self.view.bringSubviewToFront(webView)
+            self.view.insertSubview(self.progressView, aboveSubview: web)
+        }
+    }
 
     // MARK: - Init by html string
     public convenience init(htmlString: String?,
@@ -336,6 +342,10 @@ open class NKWebViewController: UIViewController {
     
     ////////////////////////////////////////////////
     // MARK: - Toolbar
+    public func inserBarItem(index: Int, item: UIBarButtonItem) {
+        customItemsMapper[index] = item
+    }
+    
     public func updateToolbarItems() {
         backForwardListChanged()
         let refreshStopBarButtonItem: UIBarButtonItem = (webView?.isLoading ?? false) ? stopBarButtonItem : refreshBarButtonItem
@@ -346,18 +356,25 @@ open class NKWebViewController: UIViewController {
             let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 15.0
             
-            var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace,forwardBarButtonItem  , fixedSpace,backBarButtonItem , fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, backBarButtonItem]
+            var items = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem,
+                                          fixedSpace,forwardBarButtonItem,
+                                          fixedSpace,backBarButtonItem,
+                                          fixedSpace, actionBarButtonItem] :
+            [fixedSpace, refreshStopBarButtonItem,
+             fixedSpace, forwardBarButtonItem,
+             fixedSpace, backBarButtonItem]
             
             if !customItemsMapper.isEmpty {
                 for (index, button) in customItemsMapper {
-                    var lastInsertIndex = index
-                    if index >= items.count {
+                    var insertItems = [fixedSpace, button]
+                    var willInsertIndex = index * 2
+                    if willInsertIndex >= items.count {
                         // 如果 index 大于 items，插入到最后
-                        lastInsertIndex = items.count
+                        willInsertIndex = items.count
                     } else if index < 0 {
-                        lastInsertIndex = 0
+                        willInsertIndex = 0
                     }
-                    items.insert(button, at: index)
+                    items.insert(contentsOf: insertItems, at: willInsertIndex)
                 }
             }
             if let addMore = self.navRightItems {
@@ -386,17 +403,29 @@ open class NKWebViewController: UIViewController {
             navigationItem.rightBarButtonItems = items as? [UIBarButtonItem]
         }
         else {
-            var items = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
+            let sharedItems = [fixedSpace, backBarButtonItem,
+                               flexibleSpace, forwardBarButtonItem,
+                               flexibleSpace, refreshStopBarButtonItem,
+                               flexibleSpace, actionBarButtonItem,
+                               fixedSpace]
+            let noSharedItems = [fixedSpace, backBarButtonItem,
+                                 flexibleSpace, forwardBarButtonItem,
+                                 flexibleSpace, refreshStopBarButtonItem,
+                                 fixedSpace]
+            var items = sharingEnabled ? sharedItems : noSharedItems
             if !customItemsMapper.isEmpty {
                 for (index, button) in customItemsMapper {
-                    var lastInsertIndex = index
-                    if index >= items.count {
+                    var insertItems = [flexibleSpace, button]
+                    var willInsertIndex = index * 2
+                    if willInsertIndex >= items.count {
+                        insertItems = [flexibleSpace, button]
                         // 如果 index 大于 items，插入到最后
-                        lastInsertIndex = items.count
+                        willInsertIndex = items.count
                     } else if index < 0 {
-                        lastInsertIndex = 0
+                        insertItems = [fixedSpace, button]
+                        willInsertIndex = 0
                     }
-                    items.insert(button, at: index)
+                    items.insert(contentsOf: insertItems, at: willInsertIndex)
                 }
             }
             if let navigationController = navigationController, !closing {
@@ -597,7 +626,9 @@ extension  NKWebViewController {
             progressView.tintColor = NKThemeProvider.shared.currentTheme.tintColor
             progressView.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(progressView)
-            
+            if let web = self.webView {
+                self.view.insertSubview(progressView, aboveSubview: web)
+            }
             let safeInsetTop = self.view.safeAreaInsets.top;
             progressView.snp.makeConstraints { (make) in
                 make.left.right.equalTo(0)
@@ -620,7 +651,8 @@ extension  NKWebViewController {
         refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
         webView?.scrollView.addSubview(refreshControl)
         if let web = webView {
-            view.insertSubview(webView!, at: 0)
+            view.addSubview(web)
+            view.bringSubviewToFront(web)
             webView!.frame = view.bounds
             
             webView!.snp.remakeConstraints { make in
