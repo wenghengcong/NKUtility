@@ -212,6 +212,14 @@ open class NKWebViewController: UIViewController {
         return tempBackBarButtonItem
     }()
     
+    public func setWebBacItemEnable(enable: Bool) {
+        backBarButtonItem.isEnabled = enable
+    }
+    
+    public func setWebForwardItemEnable(enable: Bool) {
+        forwardBarButtonItem.isEnabled = enable
+    }
+    
     lazy var forwardBarButtonItem: UIBarButtonItem =  {
         let image = UIImage(nkBundleNamed: "NKWCNextIcon")
         var tempForwardBarButtonItem = UIBarButtonItem(image: image,
@@ -296,9 +304,9 @@ open class NKWebViewController: UIViewController {
     }
     
     public func bringWebViewToFront() {
-        if let web = webView {
-            self.view.bringSubviewToFront(webView)
-            self.view.insertSubview(self.progressView, aboveSubview: web)
+        if let web = webView, progressView != nil {
+            self.view.bringSubviewToFront(web)
+            self.view.insertSubview(progressView, aboveSubview: web)
         }
     }
 
@@ -475,6 +483,9 @@ open class NKWebViewController: UIViewController {
         webView?.reload()
     }
     
+    open func stopLoading() {
+        _stopWebLoading()
+    }
     
     open func reloadFromOrigin() {
         webView?.reloadFromOrigin()
@@ -493,6 +504,10 @@ open class NKWebViewController: UIViewController {
     }
     
     @objc func stopTapped(_ sender: UIBarButtonItem) {
+        _stopWebLoading()
+    }
+    
+    private func _stopWebLoading() {
         webView?.stopLoading()
         updateToolbarItems()
     }
