@@ -352,6 +352,16 @@ open class NKWebViewController: UIViewController {
     }
     
     ////////////////////////////////////////////////
+    /// MARK: - Scroll
+    public func webViewScrollToUp() {
+        _scrollToUp()
+    }
+    
+    public func webViewScrollToDown() {
+        _scrollToDown()
+    }
+    
+    
     // MARK: - Toolbar
     public func inserBarItem(index: Int, item: UIBarButtonItem) {
         customItemsMapper[index] = item
@@ -665,6 +675,10 @@ extension  NKWebViewController {
         webView?.scrollView.isScrollEnabled = true
         webView?.translatesAutoresizingMaskIntoConstraints = false
         webView?.allowsBackForwardNavigationGestures = true
+        if #available(iOS 13.0, *) {
+            webView?.backgroundColor = UIColor.systemBackground
+            webView?.scrollView.backgroundColor = UIColor.systemBackground
+        }
         // after done with setup the `webView`:
         refreshControl.addTarget(self, action: #selector(reloadTapped(_:)), for: .valueChanged)
         webView?.scrollView.addSubview(refreshControl)
@@ -803,7 +817,7 @@ extension  NKWebViewController: UIScrollViewDelegate {
         webView?.scrollView.setContentOffset(scrollLitterPoint, animated: false)
     }
     
-    func scrollToUp() {
+    private func _scrollToUp() {
         if NKDevice.isIPad() {
             
         } else if NKDevice.isIPhone() && scrollToolBarHidden {
@@ -812,7 +826,7 @@ extension  NKWebViewController: UIScrollViewDelegate {
         }
     }
 
-    func scrollToDown() {
+    private func _scrollToDown() {
         if NKDevice.isIPad() {
             
         } else if NKDevice.isIPhone() && scrollToolBarHidden {
@@ -824,9 +838,9 @@ extension  NKWebViewController: UIScrollViewDelegate {
     //scrollView滚动时，就调用该方法。任何offset值改变都调用该方法。即滚动过程中，调用多次
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if(scrollView.panGestureRecognizer.translation(in: scrollView.superview).y > 0) {
-            scrollToUp()
+            _scrollToUp()
         }else {
-            scrollToDown()
+            _scrollToDown()
         }
     }
 
