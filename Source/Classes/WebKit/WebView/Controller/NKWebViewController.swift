@@ -304,8 +304,11 @@ open class NKWebViewController: UIViewController {
     }
     
     public func bringWebViewToFront() {
-        if let web = webView, progressView != nil {
+        if let web = webView {
             self.view.bringSubviewToFront(web)
+        }
+        
+        if let web = webView, progressView != nil {
             self.view.insertSubview(progressView, aboveSubview: web)
         }
     }
