@@ -7,6 +7,7 @@
 
 import UIKit
 import SkeletonView
+
 open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     
     /// 先要将 backView 赋值该 tag
@@ -32,9 +33,9 @@ open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     
     open func setupBaseCell() {
         shouldShowSkeleton = true
+
         selectedBackgroundView = nil
         selectionStyle = .none
-        isSkeletonable = true
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
@@ -43,28 +44,26 @@ open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     
     open func qingFillData() {
         hiddenSkeletonInCell()
-        
     }
     
     open func showSkeletonInCell() {
-        layoutIfNeeded()
+        return
         if shouldShowSkeleton {
             let backView = contentView.viewWithTag(backViewTag)
             backView?.subviews.forEach { view in
                 view.isSkeletonable = true
-                view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.25))
+                view.showSkeleton()
             }
         }
     }
     
     open func hiddenSkeletonInCell() {
-        if shouldShowSkeleton {
-            let backView = contentView.viewWithTag(backViewTag)
-            backView?.subviews.forEach { view in
-                view.hideSkeleton()
-            }
+        return
+        if self.shouldShowSkeleton {
+            let backView = self.contentView.viewWithTag(self.backViewTag)
+            backView?.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.0))
         }
-        shouldShowSkeleton = false
+        self.shouldShowSkeleton = false
     }
     
     open override func layoutSubviews() {
@@ -99,37 +98,37 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         shouldShowSkeleton = true
         selectedBackgroundView = nil
         selectionStyle = .none
-        isSkeletonable = true
+//        isSkeletonable = true
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
 //        contentView.isSkeletonable = true
+        
     }
     
     open func qingFillData() {
         hiddenSkeletonInCell()
         
     }
-    
+
     open func showSkeletonInCell() {
-        layoutIfNeeded()
+        return
         if shouldShowSkeleton {
             let backView = contentView.viewWithTag(backViewTag)
             backView?.subviews.forEach { view in
                 view.isSkeletonable = true
-                view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.25))
+                view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.5))
             }
         }
     }
     
     open func hiddenSkeletonInCell() {
-        if shouldShowSkeleton {
-            let backView = contentView.viewWithTag(backViewTag)
-            backView?.subviews.forEach { view in
-                view.hideSkeleton()
-            }
+        return
+        if self.shouldShowSkeleton {
+            let backView = self.contentView.viewWithTag(self.backViewTag)
+            backView?.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.0))
         }
-        shouldShowSkeleton = false
+        self.shouldShowSkeleton = false
     }
     
     open override func layoutSubviews() {
