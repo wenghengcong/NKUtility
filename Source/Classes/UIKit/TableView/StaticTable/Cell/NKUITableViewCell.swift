@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SkeletonView
+import FluentUI
 
 open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     
@@ -43,33 +43,60 @@ open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     }
     
     open func qingFillData() {
-        hiddenSkeletonInCell()
+        hiddenShimmerView()
     }
     
-    open func showSkeletonInCell() {
-        return
+    open func showShimmerView(synchronizer: AnimationSynchronizerProtocol) {
         if shouldShowSkeleton {
-            let backView = contentView.viewWithTag(backViewTag)
-            backView?.subviews.forEach { view in
-                view.isSkeletonable = true
-                view.showSkeleton()
-            }
+            _shimmer(synchronizer: synchronizer)
         }
     }
     
-    open func hiddenSkeletonInCell() {
-        return
-        if self.shouldShowSkeleton {
-            let backView = self.contentView.viewWithTag(self.backViewTag)
-            backView?.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.0))
-        }
-        self.shouldShowSkeleton = false
+    open func hiddenShimmerView() {
+        _removeShimmerView()
     }
+    
     
     open override func layoutSubviews() {
         super.layoutSubviews()
     }
 }
+
+extension NKUITableViewCodeCell {
+    /// associated object key for shimmer view
+    private static var shimmerViewKey: UInt8 = 0
+
+    var shimmerView: ShimmerView? {
+        get {
+            return objc_getAssociatedObject(self, &Self.shimmerViewKey) as? ShimmerView
+        }
+        set {
+            objc_setAssociatedObject(self, &Self.shimmerViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    private func _removeShimmerView() {
+        self.shimmerView?.removeFromSuperview()
+        self.shimmerView = nil
+    }
+
+    /// Start or reset the shimmer
+    private func _shimmer(synchronizer: AnimationSynchronizerProtocol) {
+        layoutIfNeeded()
+        
+        // because the cells have different layouts in this example, remove and re-add the shimmers
+        shimmerView?.removeFromSuperview()
+
+        if let backView = self.contentView.viewWithTag(self.backViewTag) {
+            let shimmerView = ShimmerView(containerView: backView, animationSynchronizer: synchronizer)
+            contentView.addSubview(shimmerView)
+            shimmerView.frame = backView.frame
+            shimmerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.shimmerView = shimmerView
+        }
+    }
+}
+
 
 open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
@@ -98,7 +125,6 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
         shouldShowSkeleton = true
         selectedBackgroundView = nil
         selectionStyle = .none
-//        isSkeletonable = true
 //        layoutMargins = UIEdgeInsets.zero
 //        separatorInset = UIEdgeInsets.zero
 //        preservesSuperviewLayoutMargins = false
@@ -107,31 +133,55 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     }
     
     open func qingFillData() {
-        hiddenSkeletonInCell()
-        
+        _removeShimmerView()
     }
 
-    open func showSkeletonInCell() {
-        return
+    open func showShimmerView(synchronizer: AnimationSynchronizerProtocol) {
         if shouldShowSkeleton {
-            let backView = contentView.viewWithTag(backViewTag)
-            backView?.subviews.forEach { view in
-                view.isSkeletonable = true
-                view.showAnimatedGradientSkeleton(usingGradient: SkeletonAppearance.default.gradient, animation: nil, transition: .crossDissolve(0.5))
-            }
+            _shimmer(synchronizer: synchronizer)
         }
     }
     
-    open func hiddenSkeletonInCell() {
-        return
-        if self.shouldShowSkeleton {
-            let backView = self.contentView.viewWithTag(self.backViewTag)
-            backView?.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.0))
-        }
-        self.shouldShowSkeleton = false
+    open func hiddenShimmerView() {
+        _removeShimmerView()
     }
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+    }
+}
+
+extension NKUITableViewCell {
+    /// associated object key for shimmer view
+    private static var shimmerViewKey: UInt8 = 0
+
+    var shimmerView: ShimmerView? {
+        get {
+            return objc_getAssociatedObject(self, &Self.shimmerViewKey) as? ShimmerView
+        }
+        set {
+            objc_setAssociatedObject(self, &Self.shimmerViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+    
+    private func _removeShimmerView() {
+        self.shimmerView?.removeFromSuperview()
+        self.shimmerView = nil
+    }
+
+    /// Start or reset the shimmer
+    private func _shimmer(synchronizer: AnimationSynchronizerProtocol) {
+        layoutIfNeeded()
+        
+        // because the cells have different layouts in this example, remove and re-add the shimmers
+        shimmerView?.removeFromSuperview()
+
+        if let backView = self.contentView.viewWithTag(self.backViewTag) {
+            let shimmerView = ShimmerView(containerView: backView, animationSynchronizer: synchronizer)
+            contentView.addSubview(shimmerView)
+            shimmerView.frame = backView.frame
+            shimmerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.shimmerView = shimmerView
+        }
     }
 }
