@@ -470,7 +470,7 @@ open class M13Checkbox: UIControl {
     }
     
     /// The corner radius of the box if the box type is square.
-    @IBInspectable open override var cornerRadius: CGFloat {
+    @IBInspectable open override var layerCornerRadius: CGFloat {
         get {
             return controller.pathGenerator.cornerRadius
         }

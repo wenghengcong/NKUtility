@@ -10,17 +10,16 @@ import FluentUI
 
 open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     
+    /// MARK: - 骨架图相关字段
+
     /// 先要将 backView 赋值该 tag
     public let backViewTag = 10223932842
     public var shouldShowSkeleton = true
     
+    public var excludedViews: [UIView] = []
+    public var shimmerStyle: ShimmerStyle = .revealing
+    
     open weak var commonDelegate: NKCommonCellProtocol?
-
-    open override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        setupBaseCell()
-    }
     
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -43,7 +42,10 @@ open class NKUITableViewCodeCell: UITableViewCell, NKUIReusable {
     }
     
     open func qingFillData() {
-        hiddenShimmerView()
+//        DispatchQueue.main.asyncAfter(delay: 5.0) {
+//            self.hiddenShimmerView()
+//        }
+        self.hiddenShimmerView()
     }
     
     open func showShimmerView(synchronizer: AnimationSynchronizerProtocol) {
@@ -88,11 +90,7 @@ extension NKUITableViewCodeCell {
         shimmerView?.removeFromSuperview()
 
         if let backView = self.contentView.viewWithTag(self.backViewTag) {
-            let shimmerView = ShimmerView(containerView: backView, animationSynchronizer: synchronizer)
-            contentView.addSubview(shimmerView)
-            shimmerView.frame = backView.frame
-            shimmerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.shimmerView = shimmerView
+            self.shimmerView = NKShimmerViewHelper.cellShimmerView(superView: contentView, shimmerOriginView: backView, excludedViews: excludedViews, animationSynchronizer: synchronizer, shimmerStyle: shimmerStyle)
         }
     }
 }
@@ -100,9 +98,14 @@ extension NKUITableViewCodeCell {
 
 open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     
+    /// MARK: - 骨架图相关字段
+
     /// 先要将 backView 赋值该 tag
     public let backViewTag = 10223932842
     public var shouldShowSkeleton = true
+    
+    public var excludedViews: [UIView] = []
+    public var shimmerStyle: ShimmerStyle = .revealing
     
     open weak var commonDelegate: NKCommonCellProtocol?
 
@@ -133,7 +136,10 @@ open class NKUITableViewCell: UITableViewCell, NKUINibReusable {
     }
     
     open func qingFillData() {
-        _removeShimmerView()
+//        DispatchQueue.main.asyncAfter(delay: 5.0) {
+//            self.hiddenShimmerView()
+//        }
+        self.hiddenShimmerView()
     }
 
     open func showShimmerView(synchronizer: AnimationSynchronizerProtocol) {
@@ -177,11 +183,7 @@ extension NKUITableViewCell {
         shimmerView?.removeFromSuperview()
 
         if let backView = self.contentView.viewWithTag(self.backViewTag) {
-            let shimmerView = ShimmerView(containerView: backView, animationSynchronizer: synchronizer)
-            contentView.addSubview(shimmerView)
-            shimmerView.frame = backView.frame
-            shimmerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.shimmerView = shimmerView
+            self.shimmerView = NKShimmerViewHelper.cellShimmerView(superView: contentView, shimmerOriginView: backView, excludedViews: excludedViews, animationSynchronizer: synchronizer, shimmerStyle: shimmerStyle)
         }
     }
 }

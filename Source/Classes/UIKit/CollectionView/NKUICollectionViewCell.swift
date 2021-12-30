@@ -10,9 +10,14 @@ import FluentUI
 
 open class NKUICollectionViewCell: UICollectionViewCell, NKUINibReusable {
     
+    /// MARK: - 骨架图相关字段
+
     /// 先要将 backView 赋值该 tag
     public let backViewTag = 10223932842
     public var shouldShowSkeleton = true
+    
+    public var excludedViews: [UIView] = []
+    public var shimmerStyle: ShimmerStyle = .revealing
 
     open override func awakeFromNib() {
         super.awakeFromNib()
@@ -69,11 +74,7 @@ extension NKUICollectionViewCell {
         shimmerView?.removeFromSuperview()
 
         if let backView = self.contentView.viewWithTag(self.backViewTag) {
-            let shimmerView = ShimmerView(containerView: backView, animationSynchronizer: synchronizer)
-            contentView.addSubview(shimmerView)
-            shimmerView.frame = backView.frame
-            shimmerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.shimmerView = shimmerView
+            self.shimmerView = NKShimmerViewHelper.cellShimmerView(superView: contentView, shimmerOriginView: backView, excludedViews: excludedViews, animationSynchronizer: synchronizer, shimmerStyle: shimmerStyle)
         }
     }
 }
