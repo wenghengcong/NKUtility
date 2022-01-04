@@ -9,6 +9,11 @@ import Foundation
 import WebKit
 import UIKit
 
+/*
+ Source: https://github.com/bernikovich/WebViewWarmUper
+ */
+
+
 public protocol NKWarmUpable {
     func warmUp()
 }
@@ -62,7 +67,6 @@ extension WKWebView: NKWarmUpable {
     public func warmUp() {
         loadHTMLString("", baseURL: nil)
     }
-    
     /*
     问题说明：在使用WKWebview时遇到一个问题，在h5页面A中存储的数据，在h5页面B中拿不到这个存储的数据。
 

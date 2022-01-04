@@ -12,7 +12,6 @@ extension NKWebViewController: WKScriptMessageHandler {
     
     func addUserScript() {
         removeAllScript()
-        NKUserScriptManager.shared
         NKUserScriptManager.shared.injectUserScriptsIntoTab(self.webView, nightMode: nightMode, noImageMode: noImageMode)
         addMessageJSScript()
         addScaleTextScript()
