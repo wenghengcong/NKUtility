@@ -70,5 +70,4 @@ extension NKWebViewController: WKScriptMessageHandler {
         //        NKlogger.debug("detect webview click ")
         delegate?.nkuserContentController?(userContentController, didReceive: message)
     }
-    
 }
