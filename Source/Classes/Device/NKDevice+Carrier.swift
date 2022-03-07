@@ -8,6 +8,7 @@
 import CoreTelephony
 import Foundation
 
+#if !targetEnvironment(macCatalyst)
 
 extension NKDevice {
     
@@ -84,3 +85,5 @@ extension NKDevice {
         }
     }
 }
+
+#endif

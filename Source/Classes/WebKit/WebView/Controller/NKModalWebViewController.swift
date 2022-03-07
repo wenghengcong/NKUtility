@@ -17,7 +17,9 @@ public class NKModalWebViewController: UINavigationController {
         case arrow, cross
     }
     
+#if !targetEnvironment(macCatalyst)
     weak var webViewDelegate: UIWebViewDelegate? = nil
+#endif
     
     public convenience init(urlString: String, sharingEnabled: Bool = true, contentRules: String?) {
         var urlString = urlString

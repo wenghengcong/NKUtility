@@ -134,6 +134,8 @@ extension NKDevice {
             return NKNetworkUtil.shared.isReachable
         }
         
+#if !targetEnvironment(macCatalyst)
+
         /// Get the network SSID (doesn't work in the Simulator). Empty string if not available.
         /// This property is deprecated since version 2 of NKDevice as iOS 13 does not allow access to
         /// `CNCopySupportedInterfaces`.
@@ -160,5 +162,6 @@ extension NKDevice {
             
             return currentSSID
         }
+#endif
     }
 }
