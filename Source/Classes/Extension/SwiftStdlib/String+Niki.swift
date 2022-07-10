@@ -482,6 +482,16 @@ public extension String {
         return misspelledRange.location == NSNotFound
     }
     #endif
+    
+    var length: Int {
+        return lengthOfBytes(using: String.Encoding.utf8)
+    }
+
+    func size(font: UIFont, preferredMaxLayoutWidth: CGFloat) -> CGSize {
+        let str = self as NSString
+        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine]
+        return str.boundingRect(with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: [NSAttributedString.Key.font: font], context: nil).size
+    }
 }
 
 // MARK: - Methods

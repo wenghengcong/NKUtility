@@ -62,7 +62,7 @@ public extension UIView {
 
 public extension UIView {
     /// SwifterSwift: Border color of view; also inspectable from Storyboard.
-    @IBInspectable open var borderColor: UIColor? {
+    @IBInspectable var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }
             return UIColor(cgColor: color)
@@ -79,7 +79,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Border width of view; also inspectable from Storyboard.
-    @IBInspectable open var borderWidth: CGFloat {
+    @IBInspectable var borderWidth: CGFloat {
         get {
             return layer.borderWidth
         }
@@ -89,7 +89,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Corner radius of view; also inspectable from Storyboard.
-    @IBInspectable open var layerCornerRadius: CGFloat {
+    @IBInspectable var layerCornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
@@ -101,7 +101,7 @@ public extension UIView {
     
     
     /// SwifterSwift: Check if view is in RTL format.
-    open var isRightToLeft: Bool {
+    var isRightToLeft: Bool {
         if #available(iOS 10.0, macCatalyst 13.0, tvOS 10.0, *) {
             return effectiveUserInterfaceLayoutDirection == .rightToLeft
         } else {
@@ -110,7 +110,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Take screenshot of view (if applicable).
-    open var screenshot: UIImage? {
+    var screenshot: UIImage? {
         UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
         defer {
             UIGraphicsEndImageContext()
@@ -121,7 +121,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow color of view; also inspectable from Storyboard.
-    @IBInspectable open var layerShadowColor: UIColor? {
+    @IBInspectable var layerShadowColor: UIColor? {
         get {
             guard let color = layer.shadowColor else { return nil }
             return UIColor(cgColor: color)
@@ -132,7 +132,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow offset of view; also inspectable from Storyboard.
-    @IBInspectable open var layerShadowOffset: CGSize {
+    @IBInspectable var layerShadowOffset: CGSize {
         get {
             return layer.shadowOffset
         }
@@ -142,7 +142,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow opacity of view; also inspectable from Storyboard.
-    @IBInspectable open var layerShadowOpacity: Float {
+    @IBInspectable var layerShadowOpacity: Float {
         get {
             return layer.shadowOpacity
         }
@@ -152,7 +152,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Shadow radius of view; also inspectable from Storyboard.
-    @IBInspectable open var layerShadowRadius: CGFloat {
+    @IBInspectable var layerShadowRadius: CGFloat {
         get {
             return layer.shadowRadius
         }
@@ -162,7 +162,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Masks to bounds of view; also inspectable from Storyboard.
-    @IBInspectable open var masksToBounds: Bool {
+    @IBInspectable var masksToBounds: Bool {
         get {
             return layer.masksToBounds
         }
@@ -172,7 +172,7 @@ public extension UIView {
     }
     
     /// SwifterSwift: Get view's parent view controller
-    open var parentViewController: UIViewController? {
+    var parentViewController: UIViewController? {
         weak var parentResponder: UIResponder? = self
         while parentResponder != nil {
             parentResponder = parentResponder!.next
