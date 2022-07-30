@@ -150,7 +150,7 @@ public class NKThemeProvider {
     }
     
     public func switchToNext(withoutNight: Bool = false) {
-        var next = nextIndex(withoutNight: withoutNight)
+        let next = nextIndex(withoutNight: withoutNight)
         switchTo(index: next)
     }
     
@@ -213,7 +213,7 @@ public extension NKThemeProvider {
     /// 获取所有对应的属性
     /// - Parameter property: 属性名
     /// - Returns: 返回所有主题的该属性值数组
-    public static func allElement<T>(name property: String,
+    static func allElement<T>(name property: String,
                                      type: T.Type)  -> [T] {
         var propertys: [T] = []
         for theme in shared.themes {
@@ -234,7 +234,7 @@ public extension NKThemeProvider {
 // MARK: - generator theme picker
 public extension NKThemeProvider {
     
-    public static func themeColors(name property: String)  -> [String] {
+    static func themeColors(name property: String)  -> [String] {
         var colors: [String] = []
         for theme in shared.themes {
             if let color = theme.value(forKey: property) as? UIColor {
@@ -244,13 +244,13 @@ public extension NKThemeProvider {
         return colors
     }
     
-    public static func getColorPicker(name property: String)  -> ThemeColorPicker {
+    static func getColorPicker(name property: String)  -> ThemeColorPicker {
         let colors = themeColors(name: property)
         let colorpickier: ThemeColorPicker = ThemeColorPicker.pickerWithColors(colors)
         return colorpickier
     }
     
-    public static func getCGColorPicker(name property: String)  -> ThemeCGColorPicker {
+    static func getCGColorPicker(name property: String)  -> ThemeCGColorPicker {
         let colors = themeColors(name: property)
         let colorpickier: ThemeCGColorPicker = ThemeCGColorPicker.pickerWithColors(colors)
         return colorpickier
@@ -262,50 +262,50 @@ public extension NKThemeProvider {
     
     /// 返回主题下状态栏样式
     /// - Returns:
-    public static var viewControllerStatusBar: UIStatusBarStyle {
+    static var viewControllerStatusBar: UIStatusBarStyle {
         let style: UIStatusBarStyle = NKThemeProvider.shared.isNight() ? .lightContent : .darkContent
         return style
     }
     
-    public static var barBackgroundColor: [String] {
+    static var barBackgroundColor: [String] {
         return themeColors(name: "barBackgroundColor")
     }
 }
 
 // MARK: - text
 public extension NKThemeProvider {
-    public static var titleTextColor: [String] {
+    static var titleTextColor: [String] {
         return themeColors(name: "titleTextColor")
     }
 }
 
 // MARK: - for tabbar
 public extension NKThemeProvider {
-    public static var barBackgroundColorPicker: ThemeColorPicker {
+    static var barBackgroundColorPicker: ThemeColorPicker {
         return getColorPicker(name: "barBackgroundColor")
     }
 
-    public static var tabBarItemBackgroundColorPicker: ThemeColorPicker {
+    static var tabBarItemBackgroundColorPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemBackgroundColor")
     }
     
-    public static var tabBarItemBackgroundColorHighlightPicker: ThemeColorPicker {
+    static var tabBarItemBackgroundColorHighlightPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemBackgroundColorHighlight")
     }
     
-    public static var tabBarItemTextColorPicker: ThemeColorPicker {
+    static var tabBarItemTextColorPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemTextColor")
     }
     
-    public static var tabBarItemIconColorPicker: ThemeColorPicker {
+    static var tabBarItemIconColorPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemIconColor")
     }
     
-    public static var tabBarItemTextColorHighlightPicker: ThemeColorPicker {
+    static var tabBarItemTextColorHighlightPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemTextColorHighlight")
     }
     
-    public static var tabBarItemIconColorHighlightPicker: ThemeColorPicker {
+    static var tabBarItemIconColorHighlightPicker: ThemeColorPicker {
         return getColorPicker(name: "tabBarItemIconColorHighlight")
     }
 }
