@@ -104,7 +104,7 @@ open class NKSwitchCell: NKStaticCell {
         }
         
         let titleLeft = iconImageView.isHidden ? left : 5
-        titleLabel.font = UIFont.systemFont(ofSize: 17.0)
+        titleLabel.font = NKRegularFont(ofSize: 17.0)
         titleLabel.snp.remakeConstraints { make in
             make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
             make.right.equalTo(backView.snp.right).offset(right)

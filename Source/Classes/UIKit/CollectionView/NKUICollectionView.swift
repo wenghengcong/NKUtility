@@ -15,7 +15,7 @@ open class NKUICollectionView: UICollectionView {
     }
     
     public init(direction: UICollectionView.ScrollDirection) {
-        let layout = NKUICollectionView.getLayout(direction: .vertical)
+        let layout = NKUICollectionView.getLayout(direction: direction)
         super.init(frame: .zero, collectionViewLayout: layout)
     }
     

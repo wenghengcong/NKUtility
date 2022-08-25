@@ -1257,7 +1257,7 @@ public extension String {
     var bold: NSAttributedString {
         return NSMutableAttributedString(
             string: self,
-            attributes: [.font: Font.boldSystemFont(ofSize: Font.systemFontSize)])
+            attributes: [.font: NKFont.boldSystemFont(ofSize: NKFont.systemFontSize)])
     }
     #endif
     
@@ -1636,7 +1636,7 @@ public extension String {
         return newString
     }
 
-    static func contentsOfFileWithResourceName(_ name: String, ofType type: String, fromBundle bundle: Bundle, encoding: String.Encoding, error: NSErrorPointer) -> String? {
+    static func contentsOfFile(_ name: String, ofType type: String, fromBundle bundle: Bundle, encoding: String.Encoding, error: NSErrorPointer) -> String? {
         return bundle.path(forResource: name, ofType: type).flatMap {
             try? String(contentsOfFile: $0, encoding: encoding)
         }

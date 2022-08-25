@@ -17,21 +17,21 @@ public struct NKPlaceholderStyle {
     /// The color of the placeholder title, the default value is darkText
     public var titleColor: UIColor = .darkText
     /// The font of the placeholder title, the default value is boldSystemFont 19
-    public var titleFont = UIFont.boldSystemFont(ofSize: 19)
+    public var titleFont = NKBoldFont(ofSize: 19)
     /// The text alignment of the placeholder title, the default value is  NSTextAlignment.center
     public var titleTextAlignment = NSTextAlignment.center
 
     /// The color of the placeholder subtitle, the default value is gray
     public var subtitleColor: UIColor = .gray
     /// The font of the placeholder subtitle, the default value is  systemFont 14
-    public var subtitleFont = UIFont.systemFont(ofSize: 14)
+    public var subtitleFont = NKRegularFont(ofSize: 14)
     /// The text alignment of the placeholder subtitle, the default value is  NSTextAlignment.center
     public var subtitleTextAlignment = NSTextAlignment.center
     
     /// The color of the action button title of the placeholder, the default value is white
     public var actionTitleColor: UIColor = .white
     /// The font of the placeholder subtitle, the default value is  boldSystemFont 17
-    public var actionTitleFont = UIFont.boldSystemFont(ofSize: 17)
+    public var actionTitleFont = NKBoldFont(ofSize: 17)
     
     /// The color of the action button background of the placeholder, the default value is the tint color
     public var actionBackgroundColor: UIColor?

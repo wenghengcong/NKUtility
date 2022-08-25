@@ -26,6 +26,8 @@ public extension UIScreen {
     /// 屏幕Size
     static let mainSize = mainBounds.size
 
+    static var devicePixel: CGFloat { return 1 / mainScale }
+
     /// 屏幕width
     static var mainWidth: CGFloat {
         if NKDevice.Screen.isLandscape() {

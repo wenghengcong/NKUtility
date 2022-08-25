@@ -1,5 +1,5 @@
 //
-//  NKUICollectionViewCell.swift
+//  NKUICollectionNibCell.swift
 //  Alamofire
 //
 //  Created by Hunt on 2021/3/25.
@@ -8,7 +8,7 @@
 import UIKit
 import FluentUI
 
-open class NKUICollectionViewCell: UICollectionViewCell, NKUINibReusable {
+open class NKUICollectionNibCell: UICollectionViewCell, NKUINibReusable {
     
     /// MARK: - 骨架图相关字段
 
@@ -48,7 +48,7 @@ open class NKUICollectionViewCell: UICollectionViewCell, NKUINibReusable {
     }
 }
 
-extension NKUICollectionViewCell {
+extension NKUICollectionNibCell {
     /// associated object key for shimmer view
     private static var shimmerViewKey: UInt8 = 0
 

@@ -49,11 +49,11 @@ Pod::Spec.new do |s|
   s.dependency 'SwiftyJSON'
   s.dependency 'GCDWebServer'
   s.dependency 'SVGKit'
-  s.dependency 'GCDWebServer/WebUploader'
-  s.dependency 'GCDWebServer/WebDAV'
+#  s.dependency 'GCDWebServer/WebUploader'
+#  s.dependency 'GCDWebServer/WebDAV'
   # HTML Parser https://github.com/scinfu/SwiftSoup
   s.dependency 'SwiftSoup'
-  s.dependency 'Kanna'
+#  s.dependency 'Kanna'
   s.dependency 'SwiftyUserDefaults'
 #  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/**' }
 end

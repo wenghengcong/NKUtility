@@ -16,7 +16,7 @@ public protocol NKSoundable {
 }
 
 public extension NKSound {
-    public static func play(sound: NKSoundable?) {
+    static func play(sound: NKSoundable?) {
         try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: .mixWithOthers)
         sound?.play({
             
@@ -25,7 +25,7 @@ public extension NKSound {
     
     /// 播放系统声音
     /// - Parameter sysSound: 系统声音
-    public static func play(sysSound: NKSystemSound) {
+    static func play(sysSound: NKSystemSound) {
         AudioServicesPlaySystemSound(sysSound.rawValue)
     }
 }

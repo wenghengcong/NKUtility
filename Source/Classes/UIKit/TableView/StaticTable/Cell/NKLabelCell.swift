@@ -132,8 +132,8 @@ open class NKLabelCell: NKStaticCell {
         let titleLeft = iconImageView.isHidden ? left : 5
         descLabel.isHidden = !hasDesc
         if hasDesc {
-            titleLabel.font = UIFont.systemFont(ofSize: 15.0)
-            descLabel.font =  UIFont.systemFont(ofSize: 12.0)
+            titleLabel.font = NKRegularFont(ofSize: 15.0)
+            descLabel.font =  NKRegularFont(ofSize: 12.0)
             titleLabel.snp.remakeConstraints { make in
                 make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
                 make.right.equalTo(detailImageView.snp.left).offset(-5)
@@ -141,7 +141,7 @@ open class NKLabelCell: NKStaticCell {
                 make.height.equalTo(20)
             }
         } else {
-            titleLabel.font =  UIFont.systemFont(ofSize: 17.0)
+            titleLabel.font =  NKRegularFont(ofSize: 17.0)
             titleLabel.snp.remakeConstraints { make in
                 make.left.equalTo(iconImageView.snp.right).offset(titleLeft)
                 make.right.equalTo(detailImageView.snp.left).offset(-5)

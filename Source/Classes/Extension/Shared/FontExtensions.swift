@@ -3,11 +3,11 @@
 #if canImport(UIKit)
 import UIKit
 /// SwifterSwift: Font
-public typealias Font = UIFont
+public typealias NKFont = UIFont
 #endif
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
 /// SwifterSwift: Font
-public typealias Font = NSFont
+public typealias NKFont = NSFont
 #endif

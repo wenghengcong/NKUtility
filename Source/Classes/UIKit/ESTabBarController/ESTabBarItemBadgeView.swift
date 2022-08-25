@@ -61,7 +61,7 @@ open class ESTabBarItemBadgeView: UIView {
         let badgeLabel = UILabel.init(frame: CGRect.zero)
         badgeLabel.backgroundColor = .clear
         badgeLabel.textColor = .white
-        badgeLabel.font = UIFont.systemFont(ofSize: 13.0)
+        badgeLabel.font = NKRegularFont(ofSize: 13.0)
         badgeLabel.textAlignment = .center
         return badgeLabel
     }()

@@ -10,16 +10,11 @@ PODS:
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
-  - GCDWebServer/WebDAV (3.5.4):
-    - GCDWebServer/Core
-  - GCDWebServer/WebUploader (3.5.4):
-    - GCDWebServer/Core
   - iOSSnapshotTestCase (8.0.0):
     - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
   - iOSSnapshotTestCase/Core (8.0.0)
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
-  - Kanna (5.2.7)
   - Kingfisher (7.1.2)
   - MicrosoftFluentUI (0.3.9):
     - MicrosoftFluentUI/ActivityIndicator_ios (= 0.3.9)
@@ -188,9 +183,6 @@ PODS:
     - Nimble
   - NKUtility (0.1.1):
     - GCDWebServer
-    - GCDWebServer/WebDAV
-    - GCDWebServer/WebUploader
-    - Kanna
     - Kingfisher
     - MicrosoftFluentUI
     - SnapKit
@@ -229,7 +221,6 @@ SPEC REPOS:
     - FBSnapshotTestCase
     - GCDWebServer
     - iOSSnapshotTestCase
-    - Kanna
     - Kingfisher
     - MicrosoftFluentUI
     - Nimble
@@ -253,12 +244,11 @@ SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
-  Kanna: 01cfbddc127f5ff0963692f285fcbc8a9d62d234
   Kingfisher: 44ed6a8504763f27bab46163adfac83f5deb240c
   MicrosoftFluentUI: a1e8f35e43e615a3522c53492f1bc52e9d2a191e
   Nimble: e7e615c0335ee4bf5b0d786685451e62746117d5
   Nimble-Snapshots: 97270cd48f0e6eebd6c80ccf7dd35d4e57fb9997
-  NKUtility: b862d4379912c14bd75a3db641533aa08aab92a3
+  NKUtility: e27999b77bef80215b6870a0dfff063b4d83fa3f
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
@@ -271,4 +261,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 16e4f78ad6f260fb5099538361b1aae924ef2958
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

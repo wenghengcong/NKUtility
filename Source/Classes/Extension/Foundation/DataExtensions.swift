@@ -50,6 +50,40 @@ public extension Data {
     func jsonObject(options: JSONSerialization.ReadingOptions = []) throws -> Any {
         return try JSONSerialization.jsonObject(with: self, options: options)
     }
+    
+    static func jsonObject(options: JSONSerialization.ReadingOptions = [], from file: String) throws -> Any? {
+        guard let data = readFile(file) else {
+            return nil
+        }
+        if let object = try? JSONSerialization.jsonObject(with: data, options: options) {
+            return object
+        }
+        return nil
+    }
+    
+    /// 读取 本地 文件
+    static func readFile(_ name: String, ofType type: String = ".json", fromBundle bundle: Bundle = .main, encoding: String.Encoding = .utf8, error: NSErrorPointer = nil) -> Data? {
+        do {
+            if let bundlePath = bundle.path(forResource: name, ofType: type),
+               let jsonData = try String(contentsOfFile: bundlePath).data(using: encoding) {
+                return jsonData
+            }
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+    
+    /// 获取 json decode 类型对象
+    static func jsonsObject<T: Codable>(of type: T.Type, from file: String) -> T?  {
+        guard let data = readFile(file) else {
+            return nil
+        }
+        if let object = try? JSONDecoder().decode(type, from: data) {
+            return object
+        }
+        return nil
+    }
 }
 
 #endif

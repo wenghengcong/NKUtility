@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Kanna
 
 public struct ArchivingResult {
     public let plistData: Data?
@@ -92,13 +91,16 @@ public class WebArchiver {
             throw ArchivingError.unsupportedEncoding
         }
         
-        let doc = try HTML(html: htmlString, encoding: .utf8)
+        //TODO: 解析
         var references: [String] = []
+        /*
+        let doc = try HTML(html: htmlString, encoding: .utf8)
         references += doc.xpath("//img[@src]").compactMap{ $0["src"] } // images
         references += doc.xpath("//link[@rel='stylesheet'][@href]").compactMap{ $0["href"] } // css
         if includeJavascript {
             references += doc.xpath("//script[@src]").compactMap{ $0["src"] } // javascript
         }
+         */
         
         return self.absoluteUniqueUrls(references: references, resource: resource)
     }
