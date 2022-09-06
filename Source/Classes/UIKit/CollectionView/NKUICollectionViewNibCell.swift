@@ -1,14 +1,14 @@
 //
-//  NKUICollectionCodeCell.swift
+//  NKUICollectionViewNibCell.swift
 //  NKUtility
 //
-//  Created by Nemo on 2022/8/24.
+//  Created by Nemo on 2022/9/6.
 //
 
-import UIKit
+import Foundation
 import FluentUI
 
-open class NKUICollectionCodeCell: UICollectionViewCell, NKUIReusable {
+open class NKUICollectionViewNibCell: UICollectionViewCell, NKUINibReusable {
     /// MARK: - 骨架图相关字段
 
     /// 先要将 backView 赋值该 tag
@@ -55,7 +55,7 @@ open class NKUICollectionCodeCell: UICollectionViewCell, NKUIReusable {
     }
 }
 
-extension NKUICollectionCodeCell {
+extension NKUICollectionViewNibCell {
     /// associated object key for shimmer view
     private static var shimmerViewKey: UInt8 = 0
 

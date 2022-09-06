@@ -29,7 +29,7 @@ open class NKUITableView: UITableView {
         
 //        theme_separatorColor = ThemeColorPicker.pickerWithUIColors([UIColor.clear, UIColor.clear])
 //        separatorStyle = .none
-        theme_backgroundColor = .viewBackgroundColor
+        theme_backgroundColor = .backgroundColor
     }
     
     func register() {

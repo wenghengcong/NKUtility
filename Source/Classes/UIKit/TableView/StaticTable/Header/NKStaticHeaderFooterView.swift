@@ -50,8 +50,8 @@ open class NKStaticHeaderFooterView: UITableViewHeaderFooterView, NKUIReusable {
         self.frame = CGRect(x: 0, y: 0, width: NKSCREEN_WIDTH, height: NKStaticHeaderFooterView.headerHeight)
         contentView.frame = self.bounds
         
-        theme_backgroundColor = .viewBackgroundColor
-        contentView.theme_backgroundColor = .viewBackgroundColor
+        theme_backgroundColor = .backgroundColor
+        contentView.theme_backgroundColor = .backgroundColor
         contentView.translatesAutoresizingMaskIntoConstraints
         // 恶魔恶魔：存在导致Changing the translatesAutoresizingMaskIntoConstraints property of the contentView of a UITableViewCell is not supported and will result in undefined behavior, as this property is managed by the owning UITableViewCell. Cell
 //        contentView.snp.makeConstraints { (make) in

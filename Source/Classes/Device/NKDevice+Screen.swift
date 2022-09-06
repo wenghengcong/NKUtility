@@ -129,6 +129,14 @@ extension NKDevice {
             return UIScreen.mainWidth
         }
         
+        public static var maxLength: CGFloat {
+            return UIScreen.mainMaxLength
+        }
+        
+        public static var minLength: CGFloat {
+            return UIScreen.mainMinLength
+        }
+        
         /// 顶部导航栏高度
         public static var topBarHeight: CGFloat {
             let topbarHeight = UIViewController.topViewController()?.topBarHeight ?? 0
@@ -509,7 +517,7 @@ extension NKDevice.Screen {
 extension NKDevice.Screen {
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
     public static func scaleBase320(_ x: CGFloat) -> CGFloat {
-        var scale = width/320
+        var scale = minLength/320
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)
@@ -517,7 +525,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone 12 Pro Max尺寸设计
     public static func scaleBase360(_ x: CGFloat) -> CGFloat {
-        var scale = width/360.0
+        var scale = minLength/360.0
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)
@@ -525,7 +533,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone XS Max， iPhone 11 Pro Max尺寸设计
     public static func scaleBase375(_ x: CGFloat) -> CGFloat {
-        var scale = width/375
+        var scale = minLength/375
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)
@@ -533,7 +541,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone 5尺寸设计
     public static func scaleBase390(_ x: CGFloat) -> CGFloat {
-        var scale = width/390
+        var scale = minLength/390
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)
@@ -541,7 +549,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone 6尺寸设计
     public static func scaleBase414(_ x: CGFloat) -> CGFloat {
-        var scale = width/414.0
+        var scale = minLength/414.0
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)
@@ -549,7 +557,7 @@ extension NKDevice.Screen {
     
     /// 设计稿全部以iPhone 6 Plus尺寸设计
     public static func scaleBase428(_ x: CGFloat) -> CGFloat {
-        var scale = width/428
+        var scale = minLength/428
         scale = scaleChangeInIPAD(scale)
         let result = scale * x
         return floor(result)

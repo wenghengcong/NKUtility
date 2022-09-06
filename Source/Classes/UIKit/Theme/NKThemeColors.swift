@@ -12,7 +12,10 @@ public extension ThemeColorPicker {
     static let logoColor = NKThemeProvider.getColorPicker(name: "tintColor")
     
     /// 背景色
-    static let viewBackgroundColor = NKThemeProvider.getColorPicker(name: "backgroundColor")
+    static let backgroundColor = NKThemeProvider.getColorPicker(name: "backgroundColor")
+    
+    /// 浅背景色，一般浅色时是白色，深色是略淡的黑色
+    static let backgroundColorLighten = NKThemeProvider.getColorPicker(name: "backgroundColorLighten")
     
     /// 内容背景色
     static let tableCellBackgroundColor = NKThemeProvider.getColorPicker(name: "tableCellBackgroundColor")

@@ -21,6 +21,12 @@ import CoreData
  See this [guide](https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/CoreData/IntegratingCoreData.html#//apple_ref/doc/uid/TP40001075-CH9-SW1) for more details.
  
  */
+
+public let AppTransactionAuthorName = "NemoApp"
+
+/// Core Data 栈
+/// 1. 初始化可以传入descriptions，否则将默认启用 cloutkit
+/// 2. 初始化可以传入 processHitory回调，可以处理上次的更改，也可以监听通知 didFindRelevantTransactions
 public class NKCoreDataStack {
     
     private let persistentContainerQueue = OperationQueue()
@@ -40,17 +46,94 @@ public class NKCoreDataStack {
      */
     public let descriptions: NKPersistentStoreDescriptions?
     
-    private lazy var storeContainer: NSPersistentContainer = {
+    
+    private var _privatePersistentStore: NSPersistentStore?
+    public var privatePersistentStore: NSPersistentStore {
+        return _privatePersistentStore!
+    }
+
+    private var _sharedPersistentStore: NSPersistentStore?
+    public var sharedPersistentStore: NSPersistentStore {
+        return _sharedPersistentStore!
+    }
+    
+    private var _publicPersistentStore: NSPersistentStore?
+    public var publicPersistentStore: NSPersistentStore {
+        return _publicPersistentStore!
+    }
+    
+    public typealias HistoryTransactionBlcok = ( (_ trans: [NSPersistentHistoryTransaction]) -> Void )?
+    /// 处理历史的更改，要么在该回调，要么监听 didFindRelevantTransactions 通知
+    public var processHistoryBlock: HistoryTransactionBlcok
+    
+    /**
+     A persistent container that can load cloud-backed and non-cloud stores.
+     */
+    public lazy var persistentContainer: NKTestPersistentCloudKitContainer = {
         assert(self.model.name.isNotEmpty, "model name can't be nil");
-        var container = NSPersistentContainer(name: self.model.name)
-        if #available(iOS 13.0, *) {
-            container = NSPersistentCloudKitContainer(name: self.model.name)
-        } else {
-            // Fallback on earlier versions
-            container = NSPersistentContainer(name: self.model.name)
+        var container = NKTestPersistentCloudKitContainer(name: self.model.name)
+
+        let cloudManager = NKCloudManager.shared
+        if cloudManager.testingEnabled {
+            prepareForTesting(container)
         }
-        container.loadPersistentStores { (storeDescription, error) in
-            if let error = error as NSError? {
+        
+        if let descs = descriptions, descs.count > 0 {
+            container.persistentStoreDescriptions = descs
+        } else {
+            let privateStoreDescription = container.persistentStoreDescriptions.first!
+            let storesURL = privateStoreDescription.url!.deletingLastPathComponent()
+            privateStoreDescription.url = storesURL.appendingPathComponent("private.sqlite")
+            privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+
+            //Add Shared Database
+            let sharedStoreURL = storesURL.appendingPathComponent("shared.sqlite")
+            guard let sharedStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
+                fatalError("Copying the private store description returned an unexpected value.")
+            }
+            sharedStoreDescription.url = sharedStoreURL
+            
+            // Add Public Database
+            let publicStoreURL = storesURL.appendingPathComponent("public.sqlite")
+            guard let publicStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
+                fatalError("Copying the private store description returned an unexpected value.")
+            }
+            publicStoreDescription.url = publicStoreURL
+            
+            if cloudManager.allowCloudKitSync {
+                let containerIdentifier = privateStoreDescription.cloudKitContainerOptions!.containerIdentifier
+                // share
+                let sharedStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
+                if #available(iOS 14.0, *) {
+                    sharedStoreOptions.databaseScope = .shared
+                } else {
+                    // Fallback on earlier versions
+                }
+                sharedStoreDescription.cloudKitContainerOptions = sharedStoreOptions
+                // publick
+                let publicStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
+                if #available(iOS 14.0, *) {
+                    publicStoreOptions.databaseScope = .public
+                } else {
+                    // Fallback on earlier versions
+                }
+                publicStoreDescription.cloudKitContainerOptions = publicStoreOptions
+                
+            } else {
+                privateStoreDescription.cloudKitContainerOptions = nil
+                sharedStoreDescription.cloudKitContainerOptions = nil
+                publicStoreDescription.cloudKitContainerOptions = nil
+            }
+            
+            //Load the persistent stores.
+            container.persistentStoreDescriptions.append(sharedStoreDescription)
+            container.persistentStoreDescriptions.append(publicStoreDescription)
+        }
+     
+        container.loadPersistentStores(completionHandler: { (loadedStoreDescription, error) in
+            if let loadError = error as NSError? {
+                fatalError("###\(#function): Failed to load persistent stores:\(loadError)")
                 /*
                  Typical reasons for an error here include:
                  * The parent directory does not exist, cannot be created, or disallows writing.
@@ -59,23 +142,95 @@ public class NKCoreDataStack {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
-                NKlogger.debug("Unresolved error \(error), \(error.userInfo)")
+                NKlogger.debug("Unresolved error \(loadError), \(loadError.userInfo)")
+            } else if let cloudKitContainerOptions = loadedStoreDescription.cloudKitContainerOptions {
+                if #available(iOS 14.0, *) {
+                    if .private == cloudKitContainerOptions.databaseScope {
+                        self._privatePersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                    } else if .shared == cloudKitContainerOptions.databaseScope {
+                        self._sharedPersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                    } else if .public == cloudKitContainerOptions.databaseScope {
+                        self._publicPersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                    }
+                } else {
+                    self._privatePersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                }
+            } else if cloudManager.testingEnabled {
+                if loadedStoreDescription.url!.lastPathComponent.hasSuffix("private.sqlite") {
+                    self._privatePersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                } else if loadedStoreDescription.url!.lastPathComponent.hasSuffix("shared.sqlite") {
+                    self._sharedPersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                } else if loadedStoreDescription.url!.lastPathComponent.hasSuffix("public.sqlite") {
+                    self._publicPersistentStore = container.persistentStoreCoordinator.persistentStore(for: loadedStoreDescription.url!)
+                }
             }
-        }
-        if let descs = descriptions, descs.count > 0 {
-            container.persistentStoreDescriptions = descs
-        }
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        })
         
-        // Pin the viewContext to the current generation token and set it to keep itself up to date with local changes.
+        
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        container.viewContext.transactionAuthor = AppTransactionAuthorName
+
+        // Pin the viewContext to the current generation token, and set it to keep itself up to date with local changes.
         container.viewContext.automaticallyMergesChangesFromParent = true
         do {
             try container.viewContext.setQueryGenerationFrom(.current)
         } catch {
             fatalError("###\(#function): Failed to pin viewContext to the current generation:\(error)")
         }
+        
+        // Observe Core Data remote change notifications.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(storeRemoteChange(_:)),
+                                               name: .NSPersistentStoreRemoteChange,
+                                               object: container.persistentStoreCoordinator)
+        
         return container
     }()
+    
+    
+    /**
+     Track the last history token processed for a store, and write its value to file.
+     
+     The historyQueue reads the token when executing operations and updates it after processing is complete.
+     */
+    private var lastHistoryToken: NSPersistentHistoryToken? = nil {
+        didSet {
+            guard let token = lastHistoryToken,
+                let data = try? NSKeyedArchiver.archivedData( withRootObject: token, requiringSecureCoding: true) else { return }
+            
+            do {
+                try data.write(to: tokenFile)
+            } catch {
+                print("###\(#function): Failed to write token data. Error = \(error)")
+            }
+        }
+    }
+    
+    /**
+     The file URL for persisting the persistent history token.
+    */
+    private lazy var tokenFile: URL = {
+        let url = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent(self.model.name, isDirectory: true)
+        if !FileManager.default.fileExists(atPath: url.path) {
+            do {
+                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("###\(#function): Failed to create persistent container URL. Error = \(error)")
+            }
+        }
+        return url.appendingPathComponent("token.data", isDirectory: false)
+    }()
+    
+    
+    /**
+     An operation queue for handling history processing tasks: watching changes, deduplicating tags, and triggering UI updates if needed.
+     */
+    private lazy var historyQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
+    
     
     // MARK: Initialization
     /**
@@ -87,10 +242,12 @@ public class NKCoreDataStack {
      - returns: A new `CoreDataStackProvider` instance.
      */
     public init(model: NKCoreDataModel,
-                descriptions: NKPersistentStoreDescriptions?) {
+                descriptions: NKPersistentStoreDescriptions?,
+                processHistoryBlock: HistoryTransactionBlcok) {
         self.model = model
         self.descriptions = descriptions
-        let _ = self.storeContainer
+        self.processHistoryBlock = processHistoryBlock
+        let _ = self.persistentContainer
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self,
                                        selector: #selector(_didReceiveMainContextDidSave(notification:)),
@@ -100,20 +257,31 @@ public class NKCoreDataStack {
                                        selector: #selector(_didReceiveBackgroundContextDidSave(notification:)),
                                        name: .NSManagedObjectContextDidSave,
                                        object: backgroundContext)
+        
+        // Load the last token from the token file.
+        if let tokenData = try? Data(contentsOf: tokenFile) {
+            do {
+                lastHistoryToken = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: tokenData)
+            } catch {
+                print("###\(#function): Failed to unarchive NSPersistentHistoryToken. Error = \(error)")
+            }
+        }
     }
     
     // MARK: - instance contexts
     public lazy var mainContext: NSManagedObjectContext = {
-        return self.storeContainer.viewContext
+        return self.persistentContainer.viewContext
     }()
     
     public lazy var backgroundContext: NSManagedObjectContext = {
-        let newBack = self.storeContainer.newBackgroundContext()
+        let newBack = self.persistentContainer.newBackgroundContext()
+        newBack.transactionAuthor = AppTransactionAuthorName
         return newBack
     }()
     
     public lazy var childContext: NSManagedObjectContext = {
         let newChild = newChildContext()
+        newChild.transactionAuthor = AppTransactionAuthorName
         return newChild
     }()
     
@@ -228,3 +396,57 @@ public class NKCoreDataStack {
     }
     
 }
+
+
+// MARK: - Notifications
+
+/**
+ Custom notifications in this sample.
+ */
+public extension Notification.Name {
+    static let didFindRelevantTransactions = Notification.Name("didFindRelevantTransactions")
+}
+
+extension NKCoreDataStack {
+    /**
+     Handle remote store change notifications (.NSPersistentStoreRemoteChange).
+     */
+    @objc
+    func storeRemoteChange(_ notification: Notification) {
+        // Process persistent history to merge changes from other coordinators.
+        historyQueue.addOperation {
+            self.processPersistentHistory()
+        }
+    }
+    
+    /**
+     Process persistent history, posting any relevant transactions to the current view.
+     */
+    func processPersistentHistory() {
+        let taskContext = persistentContainer.newBackgroundContext()
+        taskContext.performAndWait {
+            
+            // Fetch history received from outside the app since the last token
+            let historyFetchRequest = NSPersistentHistoryTransaction.fetchRequest!
+            historyFetchRequest.predicate = NSPredicate(format: "author != %@", AppTransactionAuthorName)
+            let request = NSPersistentHistoryChangeRequest.fetchHistory(after: lastHistoryToken)
+            request.fetchRequest = historyFetchRequest
+
+            let result = (try? taskContext.execute(request)) as? NSPersistentHistoryResult
+            guard let transactions = result?.result as? [NSPersistentHistoryTransaction],
+                  !transactions.isEmpty
+                else { return }
+
+            // Post transactions relevant to the current view.
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .didFindRelevantTransactions, object: self, userInfo: ["transactions": transactions])
+            }
+
+            processHistoryBlock?(transactions)
+            
+            // Update the history token using the last transaction.
+            lastHistoryToken = transactions.last!.token
+        }
+    }
+}
+

@@ -1676,3 +1676,99 @@ public extension String {
         return attributedString
     }
 }
+
+public extension String {
+    func utf8DecodedString()-> String {
+        let data = self.data(using: .utf8)
+        let message = String(data: data!, encoding: .nonLossyASCII) ?? ""
+        return message
+    }
+    
+    func utf8EncodedString()-> String {
+        let messageData = self.data(using: .nonLossyASCII)
+        let text = String(data: messageData!, encoding: .utf8) ?? ""
+        return text
+    }
+}
+
+/// range
+public extension String {
+    func indicesOf(string: String) -> [Int] {
+        var indices = [Int]()
+        var searchStartIndex = self.startIndex
+        
+        while searchStartIndex < self.endIndex,
+              let range = self.range(of: string, range: searchStartIndex..<self.endIndex),
+              !range.isEmpty
+        {
+            let index = distance(from: self.startIndex, to: range.lowerBound)
+            indices.append(index)
+            searchStartIndex = range.upperBound
+        }
+        
+        return indices
+    }
+    
+    func allRanges(
+        of aString: String,
+        options: String.CompareOptions = [],
+        range: Range<String.Index>? = nil,
+        locale: Locale? = nil
+    ) -> [Range<String.Index>] {
+        
+        // the slice within which to search
+        let slice = (range == nil) ? self[...] : self[range!]
+        
+        var previousEnd = self.startIndex
+        var ranges = [Range<String.Index>]()
+        
+        while let r = slice.range(
+            of: aString, options: options,
+            range: previousEnd ..< self.endIndex,
+            locale: locale
+        ) {
+            if previousEnd != self.endIndex { // don't increment past the end
+                previousEnd = self.index(after: r.lowerBound)
+            }
+            ranges.append(r)
+        }
+        
+        return ranges
+    }
+    
+    func allRanges(
+        of aString: String,
+        options: String.CompareOptions = [],
+        range: Range<String.Index>? = nil,
+        locale: Locale? = nil
+    ) -> [Range<Int>] {
+        return allRanges(of: aString, options: options, range: range, locale: locale)
+            .map(indexRangeToIntRange)
+    }
+    
+    
+    private func indexRangeToIntRange(_ range: Range<String.Index>) -> Range<Int> {
+        return indexToInt(range.lowerBound) ..< indexToInt(range.upperBound)
+    }
+    
+    private func indexToInt(_ index: String.Index) -> Int {
+        return self.distance(from: self.startIndex, to: index)
+    }
+    
+    func attributedStringWithColor(_ strings: [String], color: UIColor, characterSpacing: UInt? = nil) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: self)
+        for string in strings {
+            let indexes = self.indicesOf(string: string)
+            for index in indexes {
+                let range = NSRange(location: index, length: string.count)
+                attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+            }
+        }
+        
+        guard let characterSpacing = characterSpacing else {return attributedString}
+        
+        attributedString.addAttribute(NSAttributedString.Key.kern, value: characterSpacing, range: NSRange(location: 0, length: attributedString.length))
+        
+        return attributedString
+    }
+}
