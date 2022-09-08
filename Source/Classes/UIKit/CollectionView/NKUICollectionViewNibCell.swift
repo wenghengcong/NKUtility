@@ -17,15 +17,6 @@ open class NKUICollectionViewNibCell: UICollectionViewCell, NKUINibReusable {
     
     public var excludedViews: [UIView] = []
     public var shimmerStyle: ShimmerStyle = .revealing
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupBaseCell()
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     open override func awakeFromNib() {
         super.awakeFromNib()

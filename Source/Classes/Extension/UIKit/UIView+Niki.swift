@@ -592,32 +592,32 @@ public extension UIView {
     }
     
     /// SwifterSwift: First width constraint for this view
-    open var widthConstraint: NSLayoutConstraint? {
+    var widthConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .width, for: self)
     }
     
     /// SwifterSwift: First height constraint for this view
-    open var heightConstraint: NSLayoutConstraint? {
+    var heightConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .height, for: self)
     }
     
     /// SwifterSwift: First leading constraint for this view
-    open var leadingConstraint: NSLayoutConstraint? {
+    var leadingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .leading, for: self)
     }
     
     /// SwifterSwift: First trailing constraint for this view
-    open var trailingConstraint: NSLayoutConstraint? {
+    var trailingConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .trailing, for: self)
     }
     
     /// SwifterSwift: First top constraint for this view
-    open var topConstraint: NSLayoutConstraint? {
+    var topConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .top, for: self)
     }
     
     /// SwifterSwift: First bottom constraint for this view
-    open var bottomConstraint: NSLayoutConstraint? {
+    var bottomConstraint: NSLayoutConstraint? {
         findConstraint(attribute: .bottom, for: self)
     }
 }
@@ -626,7 +626,7 @@ public extension UIView {
 public extension UIView {
     
     // MARK: - 位置
-    open var left: CGFloat {
+    var left: CGFloat {
         get {
             return frame.origin.x
         }
@@ -637,7 +637,7 @@ public extension UIView {
         }
     }
     
-    open var x: CGFloat {
+    var x: CGFloat {
         get {
             return frame.origin.x
         }
@@ -648,7 +648,7 @@ public extension UIView {
         }
     }
     
-    open var top: CGFloat {
+    var top: CGFloat {
         get {
             return frame.origin.y
         }
@@ -660,7 +660,7 @@ public extension UIView {
         }
     }
     
-    open var y: CGFloat {
+    var y: CGFloat {
         get {
             return frame.origin.y
         }
@@ -671,7 +671,7 @@ public extension UIView {
         }
     }
     
-    open var width: CGFloat {
+    var width: CGFloat {
         get {
             return self.frame.size.width
         }
@@ -683,7 +683,7 @@ public extension UIView {
         }
     }
     
-    open var height: CGFloat {
+    var height: CGFloat {
         get {
             return self.frame.size.height
         }
@@ -695,19 +695,19 @@ public extension UIView {
         }
     }
     
-    open var right: CGFloat {
+    var right: CGFloat {
         get {
             return self.left + self.width
         }
     }
     
-    open var bottom: CGFloat {
+    var bottom: CGFloat {
         get {
             return self.top + self.height
         }
     }
     
-    open var centerX: CGFloat {
+    var centerX: CGFloat {
         get {
             return self.center.x
         }
@@ -719,7 +719,7 @@ public extension UIView {
         }
     }
     
-    open var centerY: CGFloat {
+    var centerY: CGFloat {
         get {
             return self.center.y
         }
@@ -731,7 +731,7 @@ public extension UIView {
         }
     }
     
-    open var origin: CGPoint {
+    var origin: CGPoint {
         get {
             return self.frame.origin
         }
@@ -743,7 +743,7 @@ public extension UIView {
         }
     }
     
-    open var size: CGSize {
+    var size: CGSize {
         get {
             return self.frame.size
         }
@@ -757,28 +757,28 @@ public extension UIView {
 
 public extension UIView {
     
-    open var safeTopAnchor: NSLayoutYAxisAnchor {
+    var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.topAnchor
         }
         return self.topAnchor
     }
     
-    open var safeLeftAnchor: NSLayoutXAxisAnchor {
+    var safeLeftAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *){
             return self.safeAreaLayoutGuide.leftAnchor
         }
         return self.leftAnchor
     }
     
-    open var safeRightAnchor: NSLayoutXAxisAnchor {
+    var safeRightAnchor: NSLayoutXAxisAnchor {
         if #available(iOS 11.0, *){
             return self.safeAreaLayoutGuide.rightAnchor
         }
         return self.rightAnchor
     }
     
-    open var safeBottomAnchor: NSLayoutYAxisAnchor {
+    var safeBottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.bottomAnchor
         }
@@ -790,7 +790,7 @@ public extension UIView {
     /**
      This is the function to get subViews of a view of a particular type
      */
-    public func subViews<T : UIView>(type : T.Type) -> [T]{
+    func subViews<T : UIView>(type : T.Type) -> [T]{
         var all = [T]()
         for view in self.subviews {
             if let aView = view as? T{
@@ -803,7 +803,7 @@ public extension UIView {
     /**
      This is a function to get subViews of a particular type from view recursively. It would look recursively in all subviews and return back the subviews of the type T
      */
-    public func allSubViewsOf<T : UIView>(type : T.Type) -> [T]{
+    func allSubViewsOf<T : UIView>(type : T.Type) -> [T]{
         var all = [T]()
         func getSubview(view: UIView) {
             if let aView = view as? T{
