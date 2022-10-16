@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/wenghengcong/NKUtility.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/wenghengcong'
   
-  s.ios.deployment_target = '14.0'
+  s.ios.deployment_target = '13.0'
   
   s.source_files = 'Source/*.{h,m,swift,xib,storyboard,md}','Source/Classes/**/*.{h,m,swift,xib,storyboard,md,xcassets,strings,stringsdict,md,css,html,js}'
   s.resource_bundle = { 'NKUtilityResource' => 'Source/Assets/**/*.{png,jpg,jpeg,json,storyboard,xib,xcassets,strings,stringsdict,md,css,html,js,ttf,txt}' }

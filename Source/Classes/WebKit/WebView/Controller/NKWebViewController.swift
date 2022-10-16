@@ -31,7 +31,7 @@ public enum NKWebViewControllerLoadContentType {
     case loadError
 }
 
-@objc public protocol NKWebViewControllerDelegate: class {
+@objc public protocol NKWebViewControllerDelegate: AnyObject {
     @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeURL newURL: URL?)
     @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didChangeTitle newTitle: NSString?)
     @objc optional func nkwebViewController(_ webViewController: NKWebViewController, didStartLoading loadedURL: URL?)

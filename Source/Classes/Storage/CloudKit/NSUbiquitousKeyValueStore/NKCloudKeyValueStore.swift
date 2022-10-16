@@ -8,6 +8,8 @@
 import Foundation
 #if os(iOS) || os(tvOS)
 import UIKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 /// Enumerates the Local (`UserDefaults`) and Remote (`NSUNSUbiquitousKeyValueStore`) data stores
@@ -233,6 +235,14 @@ private extension Zephyr {
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
         #endif
+        
+        #if os(watchOS)
+        if #available(watchOS 9.0, *) {
+            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground(notification:)),
+                                                   name: WKExtension.applicationWillEnterForegroundNotification,
+                                                   object: nil)
+        }
+        #endif
     }
 
     /// Compares the last sync date between `NSUbiquitousKeyValueStore` and `UserDefaults`.
@@ -348,7 +358,7 @@ private extension Zephyr {
         guard let key = key else {
             for (key, value) in zephyrRemoteStoreDictionary {
                 unregisterObserver(key: key)
-                defaults.set(value, forKey: key)
+                DispatchQueue.main.async { defaults.set(value, forKey: key) }
                 Zephyr.printKeySyncStatus(key: key, value: value, destination: .local)
                 registerObserver(key: key)
             }
@@ -359,10 +369,10 @@ private extension Zephyr {
         unregisterObserver(key: key)
 
         if let value = value {
-            defaults.set(value, forKey: key)
+            DispatchQueue.main.async { defaults.set(value, forKey: key) }
             Zephyr.printKeySyncStatus(key: key, value: value, destination: .local)
         } else {
-            defaults.set(nil, forKey: key)
+            DispatchQueue.main.async { defaults.set(nil, forKey: key) }
             Zephyr.printKeySyncStatus(key: key, value: nil, destination: .local)
         }
 
@@ -457,8 +467,10 @@ extension Zephyr {
                 return
             }
 
-            for key in monitoredKeys where cloudKeys.contains(key) {
-                syncSpecificKeys(keys: [key], dataStore: .remote)
+            zephyrQueue.sync {
+                for key in monitoredKeys where cloudKeys.contains(key) {
+                    syncSpecificKeys(keys: [key], dataStore: .remote)
+                }
             }
 
             Zephyr.postNotificationAfterSyncFromCloud()
@@ -532,7 +544,7 @@ private extension Zephyr {
     ///     - status: The string that should be printed to the console.
     static func printStatus(status: String) {
         if debugEnabled == true {
-            NKlogger.debug("[Zephyr] \(status)")
+            print("[Zephyr] \(status)")
         }
     }
 

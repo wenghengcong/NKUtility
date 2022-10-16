@@ -48,7 +48,7 @@ public class NKNetworkUtil: NSObject {
     override init() {
         super.init()
         self.reachability = try! Reachability()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleConnectionChange(_:)), name: .reachabilityChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleConnectionChange(_:)), name: .NKNetwork.ReachabilityChanged, object: nil)
         try! self.reachability.startNotifier()
         
     }
@@ -81,7 +81,7 @@ public class NKNetworkUtil: NSObject {
     
     /// Starts monitoring the network availability status
     func startMonitoring() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleConnectionChange(_:)), name: .reachabilityChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleConnectionChange(_:)), name: .NKNetwork.ReachabilityChanged, object: nil)
         do {
             try reachability.startNotifier()
         } catch {
@@ -94,11 +94,11 @@ public class NKNetworkUtil: NSObject {
     func stopMonitoring() {
         reachability.stopNotifier()
         lastState = .unavailable
-        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
+        NotificationCenter.default.removeObserver(self, name: .NKNetwork.ReachabilityChanged, object: reachability)
     }
     
     deinit {
         stopMonitoring()
-        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .NKNetwork.ReachabilityChanged, object: nil)
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import CloudKit
 
 /**
  An instance of `NKCoreDataStack` encapsulates the entire Core Data stack.
@@ -51,7 +52,7 @@ public class NKCoreDataStack {
     public var privatePersistentStore: NSPersistentStore {
         return _privatePersistentStore!
     }
-
+    
     private var _sharedPersistentStore: NSPersistentStore?
     public var sharedPersistentStore: NSPersistentStore {
         return _sharedPersistentStore!
@@ -72,7 +73,7 @@ public class NKCoreDataStack {
     public lazy var persistentContainer: NKTestPersistentCloudKitContainer = {
         assert(self.model.name.isNotEmpty, "model name can't be nil");
         var container = NKTestPersistentCloudKitContainer(name: self.model.name)
-
+        
         let cloudManager = NKCloudManager.shared
         if cloudManager.testingEnabled {
             prepareForTesting(container)
@@ -86,51 +87,53 @@ public class NKCoreDataStack {
             privateStoreDescription.url = storesURL.appendingPathComponent("private.sqlite")
             privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
             privateStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-
-            //Add Shared Database
-            let sharedStoreURL = storesURL.appendingPathComponent("shared.sqlite")
-            guard let sharedStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
-                fatalError("Copying the private store description returned an unexpected value.")
-            }
-            sharedStoreDescription.url = sharedStoreURL
             
-            // Add Public Database
-            let publicStoreURL = storesURL.appendingPathComponent("public.sqlite")
-            guard let publicStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
-                fatalError("Copying the private store description returned an unexpected value.")
-            }
-            publicStoreDescription.url = publicStoreURL
-            
-            if cloudManager.allowCloudKitSync {
-                let containerIdentifier = privateStoreDescription.cloudKitContainerOptions!.containerIdentifier
-                // share
-                let sharedStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
-                if #available(iOS 14.0, *) {
-                    sharedStoreOptions.databaseScope = .shared
-                } else {
-                    // Fallback on earlier versions
+            if #available(iOS 15.0, *) {
+                //Add Shared Database
+                let sharedStoreURL = storesURL.appendingPathComponent("shared.sqlite")
+                guard let sharedStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
+                    fatalError("Copying the private store description returned an unexpected value.")
                 }
-                sharedStoreDescription.cloudKitContainerOptions = sharedStoreOptions
-                // publick
-                let publicStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
-                if #available(iOS 14.0, *) {
-                    publicStoreOptions.databaseScope = .public
-                } else {
-                    // Fallback on earlier versions
-                }
-                publicStoreDescription.cloudKitContainerOptions = publicStoreOptions
+                sharedStoreDescription.url = sharedStoreURL
                 
+                // Add Public Database
+                let publicStoreURL = storesURL.appendingPathComponent("public.sqlite")
+                guard let publicStoreDescription = privateStoreDescription.copy() as? NSPersistentStoreDescription else {
+                    fatalError("Copying the private store description returned an unexpected value.")
+                }
+                publicStoreDescription.url = publicStoreURL
+                
+                if cloudManager.allowCloudKitSync {
+                    if let containerIdentifier = privateStoreDescription.cloudKitContainerOptions?.containerIdentifier {
+                        // share
+                        let sharedStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
+                        if #available(iOS 15.0, *) {
+                            sharedStoreOptions.databaseScope = .shared
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                        sharedStoreDescription.cloudKitContainerOptions = sharedStoreOptions
+                        // public
+                        let publicStoreOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: containerIdentifier)
+                        if #available(iOS 14.0, *) {
+                            publicStoreOptions.databaseScope = .public
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                        publicStoreDescription.cloudKitContainerOptions = publicStoreOptions
+                    }
+                } else {
+                    sharedStoreDescription.cloudKitContainerOptions = nil
+                    publicStoreDescription.cloudKitContainerOptions = nil
+                }
+                //Load the persistent stores.
+                container.persistentStoreDescriptions.append(sharedStoreDescription)
+                container.persistentStoreDescriptions.append(publicStoreDescription)
             } else {
                 privateStoreDescription.cloudKitContainerOptions = nil
-                sharedStoreDescription.cloudKitContainerOptions = nil
-                publicStoreDescription.cloudKitContainerOptions = nil
             }
-            
-            //Load the persistent stores.
-            container.persistentStoreDescriptions.append(sharedStoreDescription)
-            container.persistentStoreDescriptions.append(publicStoreDescription)
         }
-     
+        
         container.loadPersistentStores(completionHandler: { (loadedStoreDescription, error) in
             if let loadError = error as NSError? {
                 fatalError("###\(#function): Failed to load persistent stores:\(loadError)")
@@ -166,10 +169,9 @@ public class NKCoreDataStack {
             }
         })
         
-        
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         container.viewContext.transactionAuthor = AppTransactionAuthorName
-
+        
         // Pin the viewContext to the current generation token, and set it to keep itself up to date with local changes.
         container.viewContext.automaticallyMergesChangesFromParent = true
         do {
@@ -196,7 +198,7 @@ public class NKCoreDataStack {
     private var lastHistoryToken: NSPersistentHistoryToken? = nil {
         didSet {
             guard let token = lastHistoryToken,
-                let data = try? NSKeyedArchiver.archivedData( withRootObject: token, requiringSecureCoding: true) else { return }
+                  let data = try? NSKeyedArchiver.archivedData( withRootObject: token, requiringSecureCoding: true) else { return }
             
             do {
                 try data.write(to: tokenFile)
@@ -208,7 +210,7 @@ public class NKCoreDataStack {
     
     /**
      The file URL for persisting the persistent history token.
-    */
+     */
     private lazy var tokenFile: URL = {
         let url = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent(self.model.name, isDirectory: true)
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -304,7 +306,7 @@ public class NKCoreDataStack {
      - returns: A new child managed object context.
      */
     public func newChildContext(concurrencyType: NSManagedObjectContextConcurrencyType = .mainQueueConcurrencyType,
-                             mergePolicyType: NSMergePolicyType = .mergeByPropertyObjectTrumpMergePolicyType) -> NSManagedObjectContext.ChildContext {
+                                mergePolicyType: NSMergePolicyType = .mergeByPropertyObjectTrumpMergePolicyType) -> NSManagedObjectContext.ChildContext {
         let childContext = NSManagedObjectContext(concurrencyType: concurrencyType)
         childContext.mergePolicy = NSMergePolicy(merge: mergePolicyType)
         
@@ -351,7 +353,7 @@ public class NKCoreDataStack {
     }
     
     public func enqueue(_ inContent: NSManagedObjectContext?,
-                 completion: @escaping (_ context: NSManagedObjectContext) -> Void) {
+                        completion: @escaping (_ context: NSManagedObjectContext) -> Void) {
         let context = inContent ?? self.backgroundContext
         persistentContainerQueue.addOperation {
             context.performAndWait {
@@ -368,8 +370,8 @@ public class NKCoreDataStack {
     private func _didReceiveChildContextDidSave(notification: Notification) {
         guard let context = notification.object as? NSManagedObjectContext else {
             assertionFailure("*** Error: \(notification.name) posted from object of type "
-                                + String(describing: notification.object.self)
-                                + ". Expected \(NSManagedObjectContext.self) instead.")
+                             + String(describing: notification.object.self)
+                             + ". Expected \(NSManagedObjectContext.self) instead.")
             return
         }
         
@@ -399,14 +401,6 @@ public class NKCoreDataStack {
 
 
 // MARK: - Notifications
-
-/**
- Custom notifications in this sample.
- */
-public extension Notification.Name {
-    static let didFindRelevantTransactions = Notification.Name("didFindRelevantTransactions")
-}
-
 extension NKCoreDataStack {
     /**
      Handle remote store change notifications (.NSPersistentStoreRemoteChange).
@@ -431,17 +425,17 @@ extension NKCoreDataStack {
             historyFetchRequest.predicate = NSPredicate(format: "author != %@", AppTransactionAuthorName)
             let request = NSPersistentHistoryChangeRequest.fetchHistory(after: lastHistoryToken)
             request.fetchRequest = historyFetchRequest
-
+            
             let result = (try? taskContext.execute(request)) as? NSPersistentHistoryResult
             guard let transactions = result?.result as? [NSPersistentHistoryTransaction],
                   !transactions.isEmpty
-                else { return }
-
+            else { return }
+            
             // Post transactions relevant to the current view.
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .didFindRelevantTransactions, object: self, userInfo: ["transactions": transactions])
+                NotificationCenter.default.post(name: .CoreData.didFindRelevantTransactions, object: self, userInfo: ["transactions": transactions])
             }
-
+            
             processHistoryBlock?(transactions)
             
             // Update the history token using the last transaction.

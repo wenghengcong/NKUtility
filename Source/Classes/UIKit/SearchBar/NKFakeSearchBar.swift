@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import NKUtility
 
 open class NKFakeSearchBar: UIView {
 
@@ -18,7 +17,7 @@ open class NKFakeSearchBar: UIView {
     var title: String?
     var tapBlock: (() -> Void)?
 
-    init(frame: CGRect, title: String, tap: (() -> Void)? = nil) {
+    public init(frame: CGRect, title: String, tap: (() -> Void)? = nil) {
         super.init(frame: frame)
 
         self.title = title

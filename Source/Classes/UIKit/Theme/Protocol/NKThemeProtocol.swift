@@ -87,7 +87,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var name: String {
         set {
-            name = newValue
+            self.name = newValue
         }
         get {
             return "Imp"
@@ -96,7 +96,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tintColor: UIColor {
         set {
-            tintColor = newValue
+            self.tintColor = newValue
         }
         get {
             return UIColor(hex: "#34C759")
@@ -106,7 +106,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     // MARK: - 背景
     open var backgroundColor: UIColor {
         set {
-            backgroundColor = newValue
+            self.backgroundColor = newValue
         }
         get {
             return .white
@@ -115,7 +115,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var backgroundColorLighten: UIColor {
         set {
-            backgroundColorLighten = newValue
+            self.backgroundColorLighten = newValue
         }
         get {
             return .white
@@ -124,7 +124,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var backgroundColorHighlighted: UIColor {
         set {
-            backgroundColorHighlighted = newValue
+            self.backgroundColorHighlighted = newValue
         }
         get {
             return UIColor(rgb: (238, 239, 241))
@@ -134,7 +134,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     // MARK: - Text
     open var titleTextColor: UIColor {
         set {
-            titleTextColor = newValue
+            self.titleTextColor = newValue
         }
         get {
             return .black
@@ -143,7 +143,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var mainTextColor: UIColor {
         set {
-            mainTextColor = newValue
+            self.mainTextColor = newValue
         }
         get {
             return .lightGray
@@ -152,7 +152,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var vipTextColor: UIColor {
         set {
-            vipTextColor = newValue
+            self.vipTextColor = newValue
         }
         get {
             return UIColor(hex: "#e9be7b")
@@ -162,7 +162,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var descriptionTextColor: UIColor {
         set {
-            descriptionTextColor = newValue
+            self.descriptionTextColor = newValue
         }
         get {
             return .lightGray
@@ -180,7 +180,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var codeColor: UIColor {
         set {
-            codeColor = newValue
+            self.codeColor = newValue
         }
         get {
             return self.tintColor
@@ -190,7 +190,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     // MARK: - Cell
     open var tableCellBackgroundColor: UIColor {
         set {
-            tableCellBackgroundColor = newValue
+            self.tableCellBackgroundColor = newValue
         }
         get {
             return .white
@@ -229,7 +229,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     // MARK: - Tabbar
     open var statusBarStyle: UIStatusBarStyle {
         set {
-            statusBarStyle = newValue
+            self.statusBarStyle = newValue
         }
         get {
             return .default
@@ -238,7 +238,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var barBackgroundColor: UIColor {
         set {
-            barBackgroundColor = newValue
+            self.barBackgroundColor = newValue
         }
         get {
             return .clear
@@ -247,7 +247,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemBackgroundColor: UIColor {
         set {
-            tabBarItemBackgroundColor = newValue
+            self.tabBarItemBackgroundColor = newValue
         }
         get {
             return .clear
@@ -256,7 +256,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemBackgroundColorHighlight: UIColor {
         set {
-            tabBarItemBackgroundColorHighlight = newValue
+            self.tabBarItemBackgroundColorHighlight = newValue
         }
         get {
             return .clear
@@ -265,7 +265,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemTextColor: UIColor {
         set {
-            tabBarItemTextColor = newValue
+            self.tabBarItemTextColor = newValue
         }
         get {
             return titleTextColor
@@ -274,7 +274,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemIconColor: UIColor {
         set {
-            tabBarItemIconColor = newValue
+            self.tabBarItemIconColor = newValue
         }
         get {
             return titleTextColor
@@ -283,7 +283,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemTextColorHighlight: UIColor {
         set {
-            tabBarItemTextColorHighlight = newValue
+            self.tabBarItemTextColorHighlight = newValue
         }
         get {
             return tintColor
@@ -292,7 +292,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var tabBarItemIconColorHighlight: UIColor {
         set {
-            tabBarItemIconColorHighlight = newValue
+            self.tabBarItemIconColorHighlight = newValue
         }
         get {
             return tintColor
@@ -302,7 +302,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     // MARK: - 其他
     open var separatorColor: UIColor {
         set {
-            separatorColor = newValue
+            self.separatorColor = newValue
         }
         get {
             return UIColor(rgb: (46, 50, 54))
@@ -311,7 +311,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var borderColor: UIColor {
         set {
-            borderColor = newValue
+            self.borderColor = newValue
         }
         get {
             return UIColor(rgb: (46, 50, 54))
@@ -320,7 +320,7 @@ open class NKThemeImpProtocol: NSObject, NKThemeProtocol {
     
     open var gridItemTintColor: UIColor {
         set {
-            gridItemTintColor = newValue
+            self.gridItemTintColor = newValue
         }
         get {
             return UIColor(rgb: (238, 239, 241))
