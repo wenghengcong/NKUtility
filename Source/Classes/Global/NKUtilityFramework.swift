@@ -10,6 +10,7 @@ import Foundation
 public class NKBundleToken {}
 
 public class NKUtilityFramework: NSObject {
+    
     @objc public static var bundle: Bundle { return Bundle(for: self) }
     @objc public static let resourceBundle: Bundle = {
 #if SWIFT_PACKAGE
@@ -20,5 +21,13 @@ public class NKUtilityFramework: NSObject {
         }
         return bundle
 #endif
+    }()
+    
+    @objc public static let colorsBundle: Bundle = {
+        #if SWIFT_PACKAGE
+        return SharedResources.colorsBundle
+        #else
+        return resourceBundle
+        #endif
     }()
 }

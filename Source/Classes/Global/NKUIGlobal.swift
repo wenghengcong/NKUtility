@@ -8,6 +8,13 @@
 import Foundation
 import UIKit
 
+public class NKUIGlobal {
+    public static let shared = NKUIGlobal()
+    
+    /// 是否按手机屏幕size对UI同比例缩放，调用方法：NKDesignBy**
+    public var zoomUI: Bool = true
+}
+
 // MARK: - Sys Version
 public let NKSystemVersion = NKDevice.SysVersion.current
 public func iOSVersionIsEqual(to version: String) -> Bool {
@@ -39,30 +46,48 @@ public let NKTopBarHeight = UIViewController.topViewController()?.topBarHeight ?
 // MARK: - Design Scale
 /// 设计稿全部以iPhone 12 Pro Max尺寸设计
 public func NKDesignByW428(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase428(x)
 }
 
 /// 设计稿全部以iPhone XS Max， iPhone 11 Pro Max尺寸设计
 public func NKDesignByW414(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase414(x)
 }
 
 /// 设计稿全部以iPhone 5尺寸设计
 public func NKDesignByW320(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase320(x)
 }
 
 /// 设计稿全部以 iPhone 12 mini尺寸设计
 public func NKDesignByW360(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase360(x)
 }
 
 /// 设计稿全部以iPhone 6尺寸设计
 public func NKDesignByW375(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase375(x)
 }
 
 /// 设计稿全部以iPhone 6 Plus, iPhone 12 Pro尺寸设计
 public func NKDesignByW390(_ x: CGFloat) -> CGFloat {
+    if !NKUIGlobal.shared.zoomUI {
+        return x
+    }
     return NKDevice.Screen.scaleBase390(x)
 }

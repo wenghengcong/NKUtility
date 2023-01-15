@@ -492,6 +492,28 @@ public extension String {
         let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading, .truncatesLastVisibleLine]
         return str.boundingRect(with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: [NSAttributedString.Key.font: font], context: nil).size
     }
+    
+    
+    func preferredSize(for font: UIFont, width: CGFloat = .greatestFiniteMagnitude, numberOfLines: Int = 0) -> CGSize {
+        let lineHeightWithLeading = ceil(font.lineHeight + max(0, font.leading))
+        if numberOfLines == 1 {
+            return CGSize(
+                width: ceil(min(self.size(withAttributes: [.font: font]).width, width)),
+                height: lineHeightWithLeading
+            )
+        }
+        let maxHeight = numberOfLines > 1 ? lineHeightWithLeading * CGFloat(numberOfLines) : .greatestFiniteMagnitude
+        let rect = self.boundingRect(
+            with: CGSize(width: width, height: maxHeight),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        )
+        return CGSize(
+            width: ceil(rect.width),
+            height: ceil(rect.height)
+        )
+    }
 }
 
 // MARK: - Methods
@@ -1608,7 +1630,7 @@ public extension String {
 
     /// Returns a new string made by removing the leading String characters contained
     /// in a given character set.
-    func stringByTrimmingLeadingCharactersInSet(_ set: CharacterSet) -> String {
+    func trimmingInSet(_ set: CharacterSet) -> String {
         var trimmed = self
         while trimmed.rangeOfCharacter(from: set)?.lowerBound == trimmed.startIndex {
             trimmed.remove(at: trimmed.startIndex)

@@ -8,7 +8,7 @@
 import UIKit
 import FluentUI
 
-open class NKUICollectionCodeCell: UICollectionViewCell, NKUIReusable {
+open class NKUICollectionViewCodeCell: UICollectionViewCell, NKUIReusable {
     /// MARK: - 骨架图相关字段
 
     /// 先要将 backView 赋值该 tag
@@ -55,7 +55,7 @@ open class NKUICollectionCodeCell: UICollectionViewCell, NKUIReusable {
     }
 }
 
-extension NKUICollectionCodeCell {
+extension NKUICollectionViewCodeCell {
     /// associated object key for shimmer view
     private static var shimmerViewKey: UInt8 = 0
 
